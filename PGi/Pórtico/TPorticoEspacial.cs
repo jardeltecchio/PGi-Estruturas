@@ -1404,9 +1404,6 @@ namespace PG
                 return false;
             }
         }
-        /*            PGiSolver.Solver pp = new PGiSolver.Class1();
-                double se = PGiSolver.Class1.Foo();
-                MessageBox.Show(se.ToString());*/
 
     }
 }

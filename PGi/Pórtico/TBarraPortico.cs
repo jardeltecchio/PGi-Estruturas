@@ -1676,7 +1676,7 @@ namespace PG
                             {
                                 coord1 = new vec3(-secaoCopia_f.poligonos[q].coords[i].X, -secaoCopia_f.poligonos[q].coords[i].Y, 0);
                             }
-                            //
+                            // teste jardel
                             //       coord1 = coord1.Rotate(centroRotacao, (AlfaAlterado * Const.PIDiv180) + ((DeslocamentosLocais[10] * -1) * MultiplicadorAltura));
                         }
                         else
