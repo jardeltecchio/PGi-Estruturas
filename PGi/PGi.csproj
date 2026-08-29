@@ -1,0 +1,1262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2250AF72-F2E7-4403-B607-73E33DD9D090}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PGi</RootNamespace>
+    <AssemblyName>PGi</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\PGi Main\bin\Release\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>pgi.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'gert|AnyCPU'">
+    <OutputPath>bin\gert\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'gert|x64'">
+    <OutputPath>bin\x64\gert\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'gert|x86'">
+    <OutputPath>bin\x86\gert\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="alglib318gpl_net2, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Release\alglib318gpl_net2.dll</HintPath>
+    </Reference>
+    <Reference Include="FlatTabControl">
+      <HintPath>..\..\Users\DELL\Documents\Visual Studio 2022\ribbon\ribbon\bin\Debug\FlatTabControl.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.5.0.0\lib\net461\MathNet.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework, Version=1.2.0.3, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetroFramework.RunTime.1.2.0.3\lib\net40-Client\MetroFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework.Design, Version=1.2.0.3, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetroFramework.Design.1.2.0.3\lib\net40\MetroFramework.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework.Fonts, Version=1.2.0.3, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetroFramework.Fonts.1.2.0.3\lib\net40\MetroFramework.Fonts.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="Microsoft.TeamFoundation.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.TeamFoundation.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.TeamFoundation.Controls, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.VisualBasic.Compatibility" />
+    <Reference Include="Microsoft.VisualStudio.ExtensibilityHosting, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EasyTabs.1.3.3.0\lib\net40\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EasyTabs.1.3.3.0\lib\net40\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK, Version=3.3.3.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenTK.3.3.3\lib\net20\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.Compatibility, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Users\jardel\Documents\OpenTK\1.1\Binaries\OpenTK\Release\OpenTK.Compatibility.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Users\jardel\Documents\OpenTK\1.1\Binaries\OpenTK\Release\OpenTK.GLControl.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationFramework.Aero" />
+    <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Messaging" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms.Ribbon, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\_SOURCES\Ribbon_Release_2018-03-19\Ribbon_Release_2018-03-19_NET45\System.Windows.Forms.Ribbon.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="UIAutomationTypes" />
+    <Reference Include="WeifenLuo.WinFormsUI, Version=1.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\WeifenLuo.WinFormsUI.dll</HintPath>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.5.0.24403, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+    <Reference Include="Win32Interop.Dwmapi, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Win32Interop.Dwmapi.1.0.1\lib\Win32Interop.Dwmapi.dll</HintPath>
+    </Reference>
+    <Reference Include="Win32Interop.Gdi32, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Win32Interop.Gdi32.1.0.1\lib\Win32Interop.Gdi32.dll</HintPath>
+    </Reference>
+    <Reference Include="Win32Interop.Kernel32, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Win32Interop.Kernel32.1.0.1\lib\Win32Interop.Kernel32.dll</HintPath>
+    </Reference>
+    <Reference Include="Win32Interop.User32, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Win32Interop.User32.1.0.1\lib\Win32Interop.User32.dll</HintPath>
+    </Reference>
+    <Reference Include="Win32Interop.Uxtheme, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Win32Interop.Uxtheme.1.0.1\lib\Win32Interop.Uxtheme.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="WinFormAnimation, Version=1.6.0.4, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
+      <HintPath>..\packages\WinFormAnimation.1.6.0.4\lib\net40\WinFormAnimation.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="3rd Party\Poli2Tri\P2T.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Polygon\Polygon_Poly2Tri.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Polygon\PolygonPoint.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Polygon\PolygonSet.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\Delaunay\DelaunayTriangle.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\Delaunay\Sweep\AdvancingFront.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\Delaunay\Sweep\AdvancingFrontNode.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\Delaunay\Sweep\DTSweep.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\Delaunay\Sweep\DTSweepBasin.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\Delaunay\Sweep\DTSweepConstraint.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\Delaunay\Sweep\DTSweepContext.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\Delaunay\Sweep\DTSweepDebugContext.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\Delaunay\Sweep\DTSweepEdgeEvent.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\Delaunay\Sweep\DTSweepPointComparator.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\Delaunay\Sweep\PointOnEdgeException.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\ITriangulatable.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\Orientation.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\Sets\ConstrainedPointSet.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\Sets\PointSet.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\TriangulationAlgorithm.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\TriangulationConstraint.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\TriangulationContext.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\TriangulationDebugContext.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\TriangulationMode.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\TriangulationPoint.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\TriangulationUtil.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\Util\PointGenerator.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Tringulation\Util\PolygonGenerator.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Utility\FixedArray3.cs" />
+    <Compile Include="3rd Party\Poli2Tri\Utility\FixedBitArray3.cs" />
+    <Compile Include="3rd Party\PolygonTriangulation\AnalyticGeometryException.cs" />
+    <Compile Include="3rd Party\PolygonTriangulation\CLine.cs" />
+    <Compile Include="3rd Party\PolygonTriangulation\CPoint2D.cs" />
+    <Compile Include="3rd Party\PolygonTriangulation\CPolygon.cs" />
+    <Compile Include="3rd Party\PolygonTriangulation\CPolygonShape.cs" />
+    <Compile Include="3rd Party\PolygonTriangulation\Definition.cs" />
+    <Compile Include="3rd Party\Triangle.net\Behavior.cs" />
+    <Compile Include="3rd Party\Triangle.net\Configuration.cs" />
+    <Compile Include="3rd Party\Triangle.net\Enums.cs" />
+    <Compile Include="3rd Party\Triangle.net\Geometry\Contour.cs" />
+    <Compile Include="3rd Party\Triangle.net\Geometry\Edge.cs" />
+    <Compile Include="3rd Party\Triangle.net\Geometry\ExtensionMethods.cs" />
+    <Compile Include="3rd Party\Triangle.net\Geometry\IEdge.cs" />
+    <Compile Include="3rd Party\Triangle.net\Geometry\IPolygon.cs" />
+    <Compile Include="3rd Party\Triangle.net\Geometry\ISegment.cs" />
+    <Compile Include="3rd Party\Triangle.net\Geometry\ITriangle.cs" />
+    <Compile Include="3rd Party\Triangle.net\Geometry\Point.cs" />
+    <Compile Include="3rd Party\Triangle.net\Geometry\Polygon_TriangleNET.cs" />
+    <Compile Include="3rd Party\Triangle.net\Geometry\Rectangle.cs" />
+    <Compile Include="3rd Party\Triangle.net\Geometry\RegionPointer.cs" />
+    <Compile Include="3rd Party\Triangle.net\Geometry\Segment.cs" />
+    <Compile Include="3rd Party\Triangle.net\Geometry\Vertex.cs" />
+    <Compile Include="3rd Party\Triangle.net\IO\DebugWriter.cs" />
+    <Compile Include="3rd Party\Triangle.net\IO\FileProcessor.cs" />
+    <Compile Include="3rd Party\Triangle.net\IO\IFileFormat.cs" />
+    <Compile Include="3rd Party\Triangle.net\IO\IMeshFormat.cs" />
+    <Compile Include="3rd Party\Triangle.net\IO\InputTriangle.cs" />
+    <Compile Include="3rd Party\Triangle.net\IO\IPolygonFormat.cs" />
+    <Compile Include="3rd Party\Triangle.net\IO\TriangleFormat.cs" />
+    <Compile Include="3rd Party\Triangle.net\IO\TriangleReader.cs" />
+    <Compile Include="3rd Party\Triangle.net\IO\TriangleWriter.cs" />
+    <Compile Include="3rd Party\Triangle.net\IPredicates.cs" />
+    <Compile Include="3rd Party\Triangle.net\Log.cs" />
+    <Compile Include="3rd Party\Triangle.net\Mesh.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\Algorithm\Dwyer.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\Algorithm\Incremental.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\Algorithm\SweepLine.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\ConstraintMesher.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\ConstraintOptions.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\Converter.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\Data\BadSubseg.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\Data\BadTriangle.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\Data\BadTriQueue.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\GenericMesher.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\IConstraintMesher.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\IMesh.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\IQualityMesher.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\Iterators\EdgeIterator.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\Iterators\RegionIterator.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\Iterators\VertexCirculator.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\ITriangulator.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\QualityMesher.cs" />
+    <Compile Include="3rd Party\Triangle.net\Meshing\QualityOptions.cs" />
+    <Compile Include="3rd Party\Triangle.net\MeshValidator.cs" />
+    <Compile Include="3rd Party\Triangle.net\NewLocation.cs" />
+    <Compile Include="3rd Party\Triangle.net\RobustPredicates.cs" />
+    <Compile Include="3rd Party\Triangle.net\Smoothing\SimpleSmoother.cs" />
+    <Compile Include="3rd Party\Triangle.net\Smoothing\VoronoiFactory.cs" />
+    <Compile Include="3rd Party\Triangle.net\Tools\AdjacencyMatrix.cs" />
+    <Compile Include="3rd Party\Triangle.net\Tools\CuthillMcKee.cs" />
+    <Compile Include="3rd Party\Triangle.net\Tools\Interpolation.cs" />
+    <Compile Include="3rd Party\Triangle.net\Tools\IntersectionHelper.cs" />
+    <Compile Include="3rd Party\Triangle.net\Tools\PolygonValidator.cs" />
+    <Compile Include="3rd Party\Triangle.net\Tools\QualityMeasure.cs" />
+    <Compile Include="3rd Party\Triangle.net\Tools\Statistic.cs" />
+    <Compile Include="3rd Party\Triangle.net\Tools\TriangleQuadTree.cs" />
+    <Compile Include="3rd Party\Triangle.net\Tools\VertexSorter.cs" />
+    <Compile Include="3rd Party\Triangle.net\Topology\DCEL\DcelMesh.cs" />
+    <Compile Include="3rd Party\Triangle.net\Topology\DCEL\Face.cs" />
+    <Compile Include="3rd Party\Triangle.net\Topology\DCEL\HalfEdge.cs" />
+    <Compile Include="3rd Party\Triangle.net\Topology\DCEL\Vertex.cs" />
+    <Compile Include="3rd Party\Triangle.net\Topology\Osub.cs" />
+    <Compile Include="3rd Party\Triangle.net\Topology\Otri.cs" />
+    <Compile Include="3rd Party\Triangle.net\Topology\SubSegment.cs" />
+    <Compile Include="3rd Party\Triangle.net\Topology\Triangle.cs" />
+    <Compile Include="3rd Party\Triangle.net\TriangleLocator.cs" />
+    <Compile Include="3rd Party\Triangle.net\TrianglePool.cs" />
+    <Compile Include="3rd Party\Triangle.net\TriangleSampler.cs" />
+    <Compile Include="3rd Party\Triangle.net\Voronoi\BoundedVoronoi.cs" />
+    <Compile Include="3rd Party\Triangle.net\Voronoi\DefaultVoronoiFactory.cs" />
+    <Compile Include="3rd Party\Triangle.net\Voronoi\IVoronoiFactory.cs" />
+    <Compile Include="3rd Party\Triangle.net\Voronoi\Legacy\BoundedVoronoiLegacy.cs" />
+    <Compile Include="3rd Party\Triangle.net\Voronoi\Legacy\IVoronoi.cs" />
+    <Compile Include="3rd Party\Triangle.net\Voronoi\Legacy\SimpleVoronoi.cs" />
+    <Compile Include="3rd Party\Triangle.net\Voronoi\Legacy\VoronoiRegion.cs" />
+    <Compile Include="3rd Party\Triangle.net\Voronoi\StandardVoronoi.cs" />
+    <Compile Include="3rd Party\Triangle.net\Voronoi\VoronoiBase.cs" />
+    <Compile Include="Base\TGeraCoodenadasLaminado.cs" />
+    <Compile Include="Elementos Finitos\Analise de secao\Q9_Secao.cs" />
+    <Compile Include="Elementos Finitos\Analise de secao\TAnalisePlastica.cs" />
+    <Compile Include="Elementos Finitos\Analise de secao\Q4_Secao.cs" />
+    <Compile Include="Elementos Finitos\Analise de secao\T6_Secao.cs" />
+    <Compile Include="Elementos Finitos\Analise de secao\TCalculoSecao.cs" />
+    <Compile Include="Elementos Finitos\TConverterMalhaEmElementosFinitos.cs" />
+    <Compile Include="Elementos Finitos\TGeracaoMalha2D.cs" />
+    <Compile Include="Elementos Finitos\TNoMEF.cs" />
+    <Compile Include="Elementos Finitos\TTopologiaMalha.cs" />
+    <Compile Include="Edições\AdicionaCargas.cs" />
+    <Compile Include="Edições\EdicoesGerais.cs" />
+    <Compile Include="Edições\EdicoesViga.cs" />
+    <Compile Include="Edições\UndoRedo.cs" />
+    <Compile Include="Forms\FCasosCombinacoes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FCasosCombinacoes.Designer.cs">
+      <DependentUpon>FCasosCombinacoes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FEspelharElementos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FEspelharElementos.Designer.cs">
+      <DependentUpon>FEspelharElementos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FRotacionarElementos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FRotacionarElementos.Designer.cs">
+      <DependentUpon>FRotacionarElementos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\3D\FTestes3D.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\3D\FTestes3D.Designer.cs">
+      <DependentUpon>FTestes3D.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Configuracoes\FGrelhaConfiguracao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Configuracoes\FGrelhaConfiguracao.Designer.cs">
+      <DependentUpon>FGrelhaConfiguracao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Configuracoes\FUnidades.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Configuracoes\FUnidades.Designer.cs">
+      <DependentUpon>FUnidades.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FConfiguraDeformacao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FConfiguraDeformacao.Designer.cs">
+      <DependentUpon>FConfiguraDeformacao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Desenho Unifilar\FGrelhaOpcoesVisualizacao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Desenho Unifilar\FGrelhaOpcoesVisualizacao.Designer.cs">
+      <DependentUpon>FGrelhaOpcoesVisualizacao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Desenho Unifilar\FVisualizadorPortico.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Desenho Unifilar\FVisualizadorPortico.Designer.cs">
+      <DependentUpon>FVisualizadorPortico.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FCalculaSecao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FCalculaSecao.Designer.cs">
+      <DependentUpon>FCalculaSecao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Principal\FDesenhoDXF.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\3D\F3D.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\3D\F3D.Designer.cs">
+      <DependentUpon>F3D.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FApoio.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FApoio.Designer.cs">
+      <DependentUpon>FApoio.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FCargaBarra.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FCargaBarra.Designer.cs">
+      <DependentUpon>FCargaBarra.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FCargaNodal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FCargaNodal.Designer.cs">
+      <DependentUpon>FCargaNodal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FCargasPortico.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FCargasPortico.Designer.cs">
+      <DependentUpon>FCargasPortico.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FCasosCarga.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FCasosCarga.Designer.cs">
+      <DependentUpon>FCasosCarga.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FCombinacoes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FCombinacoes.Designer.cs">
+      <DependentUpon>FCombinacoes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FConfiguracaoPrograma.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FConfiguracaoPrograma.Designer.cs">
+      <DependentUpon>FConfiguracaoPrograma.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FConfiguraDiagramas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FConfiguraDiagramas.Designer.cs">
+      <DependentUpon>FConfiguraDiagramas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FEdicaoNos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FEdicaoNos.Designer.cs">
+      <DependentUpon>FEdicaoNos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FCopiarPavimento.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FCopiarPavimento.Designer.cs">
+      <DependentUpon>FCopiarPavimento.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FDadosBarra.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FDadosBarra.Designer.cs">
+      <DependentUpon>FDadosBarra.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FDadosMaterial.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FDadosMaterial.Designer.cs">
+      <DependentUpon>FDadosMaterial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FDadosPilar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FDadosPilar.Designer.cs">
+      <DependentUpon>FDadosPilar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FDadosLaje.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FDadosLaje.Designer.cs">
+      <DependentUpon>FDadosLaje.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FProcessoCalculo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FProcessoCalculo.Designer.cs">
+      <DependentUpon>FProcessoCalculo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FEsforcosPortico.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FEsforcosPortico.Designer.cs">
+      <DependentUpon>FEsforcosPortico.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FFatorCargas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FFatorCargas.Designer.cs">
+      <DependentUpon>FFatorCargas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FFontes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FFontes.Designer.cs">
+      <DependentUpon>FFontes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FIncrementaPlano.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FIncrementaPlano.Designer.cs">
+      <DependentUpon>FIncrementaPlano.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FInfoBarraPortico.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FInfoBarraPortico.Designer.cs">
+      <DependentUpon>FInfoBarraPortico.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FLayers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FLayers.Designer.cs">
+      <DependentUpon>FLayers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FConfiguraProjeto.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FConfiguraProjeto.Designer.cs">
+      <DependentUpon>FConfiguraProjeto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FMateriais.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FMateriais.Designer.cs">
+      <DependentUpon>FMateriais.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FOpcoesDeformacaoSolida.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FOpcoesDeformacaoSolida.Designer.cs">
+      <DependentUpon>FOpcoesDeformacaoSolida.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FProjetosRecentes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FProjetosRecentes.Designer.cs">
+      <DependentUpon>FProjetosRecentes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FRenomearElementos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FRenomearElementos.Designer.cs">
+      <DependentUpon>FRenomearElementos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FSecaoGenerica.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FSecaoGenerica.Designer.cs">
+      <DependentUpon>FSecaoGenerica.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FEscolheSecao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FEscolheSecao.Designer.cs">
+      <DependentUpon>FEscolheSecao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FSecaoSolida.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FSecaoSolida.Designer.cs">
+      <DependentUpon>FSecaoSolida.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FSobre.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FSobre.Designer.cs">
+      <DependentUpon>FSobre.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FSplash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FSplash.Designer.cs">
+      <DependentUpon>FSplash.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pórtico\TBarraPortico_Diagramas.cs" />
+    <Compile Include="Pórtico\TBibliotecaLaminados.cs" />
+    <Compile Include="Pórtico\TGeradorSecoes.cs" />
+    <Compile Include="Pórtico\TGradienteCoresTensoes.cs" />
+    <Compile Include="Pórtico\TCarregamentoPortico.cs" />
+    <Compile Include="Pórtico\TGradienteCoresDeformacoes.cs" />
+    <Compile Include="Pórtico\TGradienteCoresDiagramas.cs" />
+    <Compile Include="Pórtico\TSuavizacaoDiagramas.cs" />
+    <Compile Include="Utilitários\GeracaoLoopsGeometria.cs" />
+    <Compile Include="Utilitários\TIntersecoes.cs" />
+    <Compile Include="Base\TCota.cs" />
+    <Compile Include="Utilitários\TComp.cs" />
+    <Compile Include="Utilitários\TGraph.cs" />
+    <Compile Include="Pórtico\TCargas.cs" />
+    <Compile Include="Pavimento\TPavimentoMalha_Testes.cs" />
+    <Compile Include="Base\g2d.cs" />
+    <Compile Include="Grelha\TExcecoes.cs" />
+    <Compile Include="Pavimento\TPavimentoMalha.cs" />
+    <Compile Include="Forms\FChecarConectividades.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FChecarConectividades.Designer.cs">
+      <DependentUpon>FChecarConectividades.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Base\TCirculo.cs" />
+    <Compile Include="Edições\IEditTool.cs" />
+    <Compile Include="Base\TLayer.cs" />
+    <Compile Include="Base\TUndoRedo.cs" />
+    <Compile Include="Pórtico\Dados.cs" />
+    <Compile Include="Pavimento\TNoViga.cs" />
+    <Compile Include="Base\TOpenGl.cs" />
+    <Compile Include="Grelha\TBarraGrelha.cs" />
+    <Compile Include="Pavimento\TPavimento.cs" />
+    <Compile Include="Grelha\TReordenaNosGrelha.cs" />
+    <Compile Include="Pavimento\TLaje.cs" />
+    <Compile Include="Base\TArco.cs" />
+    <Compile Include="Grelha\TNoGrelha.cs" />
+    <Compile Include="Pavimento\TPilar.cs" />
+    <Compile Include="Base\TTexto.cs" />
+    <Compile Include="Utilitários\RMath.cs" />
+    <Compile Include="Utilitários\TAlgebra.cs" />
+    <Compile Include="Utilitários\TMatrizBanda.cs" />
+    <Compile Include="Utilitários\TNaoLinearidadeGeometrica.cs" />
+    <Compile Include="Utilitários\vec3.cs" />
+    <Compile Include="Pavimento\Interfaces.cs" />
+    <Compile Include="Projeto\TCfgProjeto.cs" />
+    <Compile Include="Projeto\TEstrutura.cs" />
+    <Compile Include="Projeto\TModeloEstrutural.cs" />
+    <Compile Include="Projeto\TProjeto.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Pórtico\TApoio.cs" />
+    <Compile Include="Pórtico\TBarraGenerica.cs" />
+    <Compile Include="Pórtico\TBarraPortico.cs" />
+    <Compile Include="Pórtico\TNoPortico.cs" />
+    <Compile Include="Pórtico\TPorticoEspacial.cs" />
+    <Compile Include="3rd Party\DockExtender\DockExtender.cs" />
+    <Compile Include="3rd Party\DockExtender\Floaty.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="3rd Party\DockExtender\Overlay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FInicial.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FInicial.Designer.cs">
+      <DependentUpon>FInicial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FNovoPavimento.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FNovoPavimento.Designer.cs">
+      <DependentUpon>FNovoPavimento.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Desenho Unifilar\FVisualizadorGrelha.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Desenho Unifilar\FVisualizadorGrelha.Designer.cs">
+      <DependentUpon>FVisualizadorGrelha.cs</DependentUpon>
+    </Compile>
+    <Compile Include="3rd Party\ToolBar\AllowedBorders.cs" />
+    <Compile Include="3rd Party\ToolBar\DockLocation.cs" />
+    <Compile Include="3rd Party\ToolBar\ToolBarDockArea.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="3rd Party\ToolBar\ToolBarDockHolder.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="3rd Party\ToolBar\ToolBarManager.cs" />
+    <Compile Include="Base\TRetangulo.cs" />
+    <Compile Include="Projeto\TConfiguracoesPGi.cs" />
+    <Compile Include="Geral\Const.cs" />
+    <Compile Include="Forms\Principal\GerenciaSnap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilitários\FuncoesGeometricas.cs" />
+    <Compile Include="Utilitários\FuncoesGerais.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\FDadosViga.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FDadosViga.Designer.cs">
+      <DependentUpon>FDadosViga.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Principal\FPrincipal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Principal\FPrincipal.Designer.cs">
+      <DependentUpon>FPrincipal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FGerenciador.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FGerenciador.Designer.cs">
+      <DependentUpon>FGerenciador.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FOpcoesCaptura.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FOpcoesCaptura.Designer.cs">
+      <DependentUpon>FOpcoesCaptura.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Geral\Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Base\TGrip.cs" />
+    <Compile Include="Base\TLinha.cs" />
+    <Compile Include="Base\TObjetoDesenho.cs" />
+    <Compile Include="Base\TPoligono.cs" />
+    <Compile Include="Base\TPonto.cs" />
+    <Compile Include="Pórtico\TSecao.cs" />
+    <Compile Include="Pavimento\TTrechoViga.cs" />
+    <Compile Include="Pórtico\TPorticoEspacialMalha.cs" />
+    <Compile Include="Pórtico\TReordenaNosPortico.cs" />
+    <Compile Include="Resources\Resource1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource1.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Testes\TTestes.cs" />
+    <EmbeddedResource Include="3rd Party\DockExtender\Floaty.resx" />
+    <EmbeddedResource Include="3rd Party\DockExtender\Overlay.resx" />
+    <EmbeddedResource Include="Forms\FCasosCombinacoes.resx">
+      <DependentUpon>FCasosCombinacoes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FEspelharElementos.resx">
+      <DependentUpon>FEspelharElementos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FRotacionarElementos.resx">
+      <DependentUpon>FRotacionarElementos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\3D\FTestes3D.resx">
+      <DependentUpon>FTestes3D.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Configuracoes\FGrelhaConfiguracao.resx">
+      <DependentUpon>FGrelhaConfiguracao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Configuracoes\FUnidades.resx">
+      <DependentUpon>FUnidades.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FConfiguraDeformacao.resx">
+      <DependentUpon>FConfiguraDeformacao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Desenho Unifilar\FGrelhaOpcoesVisualizacao.resx">
+      <DependentUpon>FGrelhaOpcoesVisualizacao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\3D\F3D.resx">
+      <DependentUpon>F3D.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Desenho Unifilar\FVisualizadorPortico.resx">
+      <DependentUpon>FVisualizadorPortico.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FApoio.resx">
+      <DependentUpon>FApoio.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FCalculaSecao.resx">
+      <DependentUpon>FCalculaSecao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FCargaBarra.resx">
+      <DependentUpon>FCargaBarra.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FCargaNodal.resx">
+      <DependentUpon>FCargaNodal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FCargasPortico.resx">
+      <DependentUpon>FCargasPortico.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FCasosCarga.resx">
+      <DependentUpon>FCasosCarga.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FCombinacoes.resx">
+      <DependentUpon>FCombinacoes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FConfiguracaoPrograma.resx">
+      <DependentUpon>FConfiguracaoPrograma.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FConfiguraDiagramas.resx">
+      <DependentUpon>FConfiguraDiagramas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FEdicaoNos.resx">
+      <DependentUpon>FEdicaoNos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FCopiarPavimento.resx">
+      <DependentUpon>FCopiarPavimento.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FDadosBarra.resx">
+      <DependentUpon>FDadosBarra.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FDadosMaterial.resx">
+      <DependentUpon>FDadosMaterial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FDadosPilar.resx">
+      <DependentUpon>FDadosPilar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FDadosLaje.resx">
+      <DependentUpon>FDadosLaje.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FProcessoCalculo.resx">
+      <DependentUpon>FProcessoCalculo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FEsforcosPortico.resx">
+      <DependentUpon>FEsforcosPortico.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FFatorCargas.resx">
+      <DependentUpon>FFatorCargas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FFontes.resx">
+      <DependentUpon>FFontes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FIncrementaPlano.resx">
+      <DependentUpon>FIncrementaPlano.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FInfoBarraPortico.resx">
+      <DependentUpon>FInfoBarraPortico.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FInicial.resx">
+      <DependentUpon>FInicial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FLayers.resx">
+      <DependentUpon>FLayers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FConfiguraProjeto.resx">
+      <DependentUpon>FConfiguraProjeto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FMateriais.resx">
+      <DependentUpon>FMateriais.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FNovoPavimento.resx">
+      <DependentUpon>FNovoPavimento.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FOpcoesDeformacaoSolida.resx">
+      <DependentUpon>FOpcoesDeformacaoSolida.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FProjetosRecentes.resx">
+      <DependentUpon>FProjetosRecentes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FRenomearElementos.resx">
+      <DependentUpon>FRenomearElementos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FSecaoGenerica.resx">
+      <DependentUpon>FSecaoGenerica.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FEscolheSecao.resx">
+      <DependentUpon>FEscolheSecao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FSecaoSolida.resx">
+      <DependentUpon>FSecaoSolida.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FSobre.resx">
+      <DependentUpon>FSobre.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FSplash.resx">
+      <DependentUpon>FSplash.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Desenho Unifilar\FVisualizadorGrelha.resx">
+      <DependentUpon>FVisualizadorGrelha.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="3rd Party\ToolBar\ToolBarDockArea.resx">
+      <DependentUpon>ToolBarDockArea.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="3rd Party\ToolBar\ToolBarDockHolder.resx">
+      <DependentUpon>ToolBarDockHolder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FDadosViga.resx">
+      <DependentUpon>FDadosViga.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Principal\FPrincipal.resx">
+      <DependentUpon>FPrincipal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FGerenciador.resx">
+      <DependentUpon>FGerenciador.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FOpcoesCaptura.resx">
+      <DependentUpon>FOpcoesCaptura.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FChecarConectividades.resx">
+      <DependentUpon>FChecarConectividades.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Resource1.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Img\fundo branco\Linha.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toolStripDropDownButton2.Image.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Img\cfg viga.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Img\nova viga.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Img\fundo branco\texto.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Img\arco mif.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Img\fundo branco\cfg viga.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Img\fundo branco\nova viga.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Img\Icone.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="calcular-novo-thor-menor.ico" />
+    <Content Include="favicon.ico" />
+    <Content Include="Icone PGi.ico" />
+    <Content Include="icone-teste.ico" />
+    <None Include="Resources\legenda perfil w2.JPG" />
+    <None Include="Resources\PERFIL MACIÇO.bmp" />
+    <None Include="Resources\carga distribuida3.png" />
+    <None Include="Resources\carga distribuida4.png" />
+    <Content Include="MetroFramework.txt" />
+    <Content Include="pgi.ico" />
+    <Content Include="Resources\1.bmp" />
+    <Content Include="rotate.ico" />
+    <None Include="Resources\cima2.bmp" />
+    <None Include="Resources\pra baixo.bmp" />
+    <None Include="Resources\canc cota.bmp" />
+    <None Include="Resources\PERFIL DOBRADO.bmp" />
+    <None Include="Resources\apoio simples.bmp" />
+    <None Include="Resources\Image1.bmp" />
+    <None Include="Resources\Torcor1.bmp" />
+    <None Include="Resources\texto.bmp" />
+    <None Include="Resources\splash1.png" />
+    <None Include="Resources\splash.png" />
+    <None Include="Resources\sentido momentos positivos.bmp" />
+    <None Include="Resources\sentido copia.png" />
+    <None Include="Resources\Selecao piso11.bmp" />
+    <None Include="Resources\Selecao piso2.bmp" />
+    <None Include="Resources\sec U.png" />
+    <None Include="Resources\sec t.png" />
+    <None Include="Resources\sec ret vazada.png" />
+    <None Include="Resources\sec ret.png" />
+    <None Include="Resources\sec L.png" />
+    <None Include="Resources\sec I.png" />
+    <None Include="Resources\sec circ.png" />
+    <None Include="Resources\redo1.png" />
+    <None Include="Resources\projecao1.bmp" />
+    <None Include="Resources\pra cima1.png" />
+    <None Include="Resources\pra cima1.bmp" />
+    <None Include="Resources\pra baixo11.png" />
+    <None Include="Resources\pra baixo2.png" />
+    <None Include="Resources\pontual21.bmp" />
+    <None Include="Resources\pontual11.bmp" />
+    <None Include="Resources\pontual3.bmp" />
+    <None Include="Resources\ponto final1.bmp" />
+    <None Include="Resources\PERFIL DOBRADO11.bmp" />
+    <None Include="Resources\PERFIL DOBRADO2.bmp" />
+    <None Include="Resources\ok1.bmp" />
+    <None Include="Resources\nova viga2.bmp" />
+    <None Include="Resources\nova viga1.bmp" />
+    <None Include="Resources\nova viga.bmp" />
+    <None Include="Resources\no pequeno1.bmp" />
+    <None Include="Resources\new laje1.bmp" />
+    <None Include="Resources\mostrar somente1.bmp" />
+    <None Include="Resources\mostra cargas1.bmp" />
+    <None Include="Resources\modo selecao11.bmp" />
+    <None Include="Resources\modo selecao2.bmp" />
+    <None Include="Resources\Linha.bmp" />
+    <None Include="Resources\legenda perfil w1.JPG" />
+    <None Include="Resources\Icone2.bmp" />
+    <None Include="Resources\Icone1.bmp" />
+    <None Include="Resources\Icone.bmp" />
+    <None Include="Resources\grelha 3d1.bmp" />
+    <None Include="Resources\fundo degrade 11.bmp" />
+    <None Include="Resources\Fletor z1.bmp" />
+    <None Include="Resources\Fletor y1.bmp" />
+    <None Include="Resources\fator11.bmp" />
+    <None Include="Resources\fator2.bmp" />
+    <None Include="Resources\excluir11.bmp" />
+    <None Include="Resources\excluir3.bmp" />
+    <None Include="Resources\excluir2.bmp" />
+    <None Include="Resources\Erase1.bmp" />
+    <None Include="Resources\diagrama cor 55.png" />
+    <None Include="Resources\diagrama cor 44.png" />
+    <None Include="Resources\diagrama cor 33.png" />
+    <None Include="Resources\diagrama cor 22.png" />
+    <None Include="Resources\diagrama cor 111.png" />
+    <None Include="Resources\diagrama cor 11.png" />
+    <None Include="Resources\diagrama cor 1.png" />
+    <None Include="Resources\destravar.png" />
+    <None Include="Resources\Deslocamento11.bmp" />
+    <None Include="Resources\Deslocamento Grelha1.bmp" />
+    <None Include="Resources\Deslocamento2.bmp" />
+    <None Include="Resources\cursor 2.png" />
+    <None Include="Resources\cursor.png" />
+    <None Include="Resources\cota on31.bmp" />
+    <None Include="Resources\cota on21.bmp" />
+    <None Include="Resources\cota on11.bmp" />
+    <None Include="Resources\cota on4.bmp" />
+    <None Include="Resources\Cortante z1.bmp" />
+    <None Include="Resources\Cortante y1.bmp" />
+    <None Include="Resources\copiar elementos.bmp" />
+    <None Include="Resources\coordenada relativa11.bmp" />
+    <None Include="Resources\coordenada relativa - desabilitada11.bmp" />
+    <None Include="Resources\coordenada relativa - desabilitada2.bmp" />
+    <None Include="Resources\coordenada relativa2.bmp" />
+    <None Include="Resources\CONFIRMAR11.bmp" />
+    <None Include="Resources\CONFIRMAR2.bmp" />
+    <None Include="Resources\conf cota11.bmp" />
+    <None Include="Resources\conf cota2.bmp" />
+    <None Include="Resources\CONCRETO ARMADO1.bmp" />
+    <None Include="Resources\cfg viga1.bmp" />
+    <None Include="Resources\cfg viga.bmp" />
+    <None Include="Resources\cfg pilar1.bmp" />
+    <None Include="Resources\carga distribuida11.png" />
+    <None Include="Resources\carga distribuida2.png" />
+    <None Include="Resources\carga distribuida21.bmp" />
+    <None Include="Resources\carga distribuida11.bmp" />
+    <None Include="Resources\carga distribuida3.bmp" />
+    <None Include="Resources\carga concentrada31.png" />
+    <None Include="Resources\carga concentrada21.png" />
+    <None Include="Resources\carga concentrada11.png" />
+    <None Include="Resources\carga concentrada4.png" />
+    <None Include="Resources\cancelar31.bmp" />
+    <None Include="Resources\cancelar21.bmp" />
+    <None Include="Resources\cancelar11.bmp" />
+    <None Include="Resources\cancelar5.bmp" />
+    <None Include="Resources\cancelar4.bmp" />
+    <None Include="Resources\canc cota31.bmp" />
+    <None Include="Resources\canc cota21.bmp" />
+    <None Include="Resources\canc cota11.bmp" />
+    <None Include="Resources\canc cota4.bmp" />
+    <None Include="Resources\barra pequena1.bmp" />
+    <None Include="Resources\Axial1.bmp" />
+    <None Include="Resources\atualizar - Cópia - Cópia1.bmp" />
+    <None Include="Resources\atualizar1.bmp" />
+    <None Include="Resources\atu1.png" />
+    <None Include="Resources\arvore1.bmp" />
+    <None Include="Resources\arco mif.bmp" />
+    <None Include="Resources\apoio simples1.bmp" />
+    <None Include="Resources\apoio pequeno1.bmp" />
+    <None Include="Resources\adicionar1.bmp" />
+    <None Include="Resources\AÇO31.bmp" />
+    <None Include="Resources\AÇO21.bmp" />
+    <None Include="Resources\AÇO11.bmp" />
+    <None Include="Resources\AÇO4.bmp" />
+    <None Include="Resources\mostra cargas.bmp" />
+    <None Include="Resources\AÇO3.bmp" />
+    <None Include="Resources\Deslocamento Grelha.bmp" />
+    <None Include="Resources\cfg pilar.bmp" />
+    <None Include="Resources\redo.png" />
+    <None Include="Resources\apoio pequeno.bmp" />
+    <None Include="Resources\barra pequena.bmp" />
+    <None Include="Resources\no pequeno.bmp" />
+    <None Include="Resources\modo selecao1.bmp" />
+    <None Include="Resources\modo selecao.bmp" />
+    <None Include="Resources\fator1.bmp" />
+    <None Include="Resources\atu.png" />
+    <None Include="Resources\AÇO2.bmp" />
+    <None Include="Resources\AÇO1.bmp" />
+    <None Include="Resources\AÇO.bmp" />
+    <None Include="Resources\CONCRETO ARMADO.bmp" />
+    <None Include="Resources\fator.bmp" />
+    <None Include="Resources\ok.bmp" />
+    <None Include="Resources\carga concentrada3.png" />
+    <None Include="Resources\carga distribuida1.png" />
+    <None Include="Resources\carga concentrada2.png" />
+    <None Include="Resources\carga concentrada1.png" />
+    <None Include="Resources\carga distribuida.png" />
+    <None Include="Resources\carga concentrada.png" />
+    <None Include="Resources\carga distribuida2.bmp" />
+    <None Include="Resources\pontual2.bmp" />
+    <None Include="Resources\pontual1.bmp" />
+    <None Include="Resources\carga distribuida1.bmp" />
+    <None Include="Resources\PERFIL DOBRADO1.bmp" />
+    <None Include="Resources\Erase.bmp" />
+    <None Include="Resources\mostrar somente.bmp" />
+    <None Include="Resources\canc cota3.bmp" />
+    <None Include="Resources\atualizar - Cópia - Cópia.bmp" />
+    <None Include="Resources\legenda perfil w.JPG" />
+    <None Include="Resources\canc cota2.bmp" />
+    <None Include="Resources\canc cota1.bmp" />
+    <None Include="Resources\conf cota1.bmp" />
+    <None Include="Resources\conf cota.bmp" />
+    <None Include="Resources\atualizar.bmp" />
+    <None Include="Resources\excluir1.bmp" />
+    <None Include="Resources\ponto final.bmp" />
+    <None Include="Resources\cota on3.bmp" />
+    <None Include="Resources\coordenada relativa1.bmp" />
+    <None Include="Resources\cota on2.bmp" />
+    <None Include="Resources\cota on1.bmp" />
+    <None Include="Resources\cota on.bmp" />
+    <None Include="Resources\excluir.bmp" />
+    <None Include="Resources\coordenada relativa - desabilitada1.bmp" />
+    <None Include="Resources\coordenada relativa - desabilitada.bmp" />
+    <None Include="Resources\coordenada relativa.bmp" />
+    <None Include="Resources\adicionar.bmp" />
+    <None Include="Resources\fundo degrade 1.bmp" />
+    <None Include="Resources\CONFIRMAR1.bmp" />
+    <None Include="Resources\cancelar3.bmp" />
+    <None Include="Resources\cancelar2.bmp" />
+    <None Include="Resources\cancelar1.bmp" />
+    <None Include="Resources\pra baixo1.png" />
+    <None Include="Resources\pra cima.png" />
+    <None Include="Resources\CONFIRMAR.bmp" />
+    <None Include="Resources\cancelar.bmp" />
+    <None Include="Resources\projecao.bmp" />
+    <None Include="Resources\Selecao piso1.bmp" />
+    <None Include="Resources\Selecao piso.bmp" />
+    <None Include="Resources\pra baixo.png" />
+    <None Include="Resources\arvore.bmp" />
+    <None Include="Resources\new laje.bmp" />
+    <None Include="Resources\rotate.ico" />
+    <None Include="Resources\rotate.bmp" />
+    <None Include="Resources\carga distribuida.bmp" />
+    <None Include="Resources\pontual.bmp" />
+    <None Include="Resources\Deslocamento1.bmp" />
+    <None Include="Resources\Torcor.bmp" />
+    <None Include="Resources\Fletor z.bmp" />
+    <None Include="Resources\Fletor y.bmp" />
+    <None Include="Resources\Axial.bmp" />
+    <None Include="Resources\Cortante z.bmp" />
+    <None Include="Resources\Cortante y.bmp" />
+    <None Include="Resources\Deslocamento.bmp" />
+    <None Include="Img\sentido copia.png" />
+    <None Include="Img\cursor 2.png" />
+    <None Include="Img\cursor.png" />
+    <None Include="Resources\pra cima.bmp" />
+    <None Include="Img\copiar elementos.bmp" />
+    <None Include="Resources\grelha 3d.bmp" />
+    <None Include="Img\Cargas\sentido momentos positivos.bmp" />
+    <None Include="Img\sec circ.png" />
+    <None Include="Img\sec ret vazada.png" />
+    <None Include="Img\sec t.png" />
+    <None Include="Img\sec U.png" />
+    <None Include="Img\sec L.png" />
+    <None Include="Img\sec I.png" />
+    <None Include="Img\sec ret.png" />
+    <None Include="Img\excluir.bmp" />
+    <None Include="Img\cancelar.bmp" />
+    <None Include="Img\destravar.png" />
+    <None Include="Img\travar.png" />
+    <None Include="Img\diagrama cor 55.png" />
+    <None Include="Img\diagrama cor 44.png" />
+    <None Include="Img\diagrama cor 22.png" />
+    <None Include="Img\diagrama cor 33.png" />
+    <None Include="Img\diagrama cor 11.png" />
+    <None Include="Img\diagrama cor 1.png" />
+    <None Include="Img\splash.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

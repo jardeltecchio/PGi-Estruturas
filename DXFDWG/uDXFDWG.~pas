@@ -1,0 +1,621 @@
+
+unit uDXFDWG;
+
+interface
+
+uses
+  Windows, Messages, SysUtils,strutils, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ExtDlgs, ExtCtrls, CADImage, DXFConv, DXF, Math,
+  DWG, HPGL2, SVG, CGM,
+  sgConsts, MVFont,
+  {$IFDEF DEMO}
+  fInfo,
+  {$ENDIF}
+  sgFunction, JvExControls, JvInspector, JvXPCore, JvXPButtons,
+  JvDotNetControls, Buttons, JvExButtons, JvBitBtn;
+
+type
+  TFDXFDWG = class(TForm)
+    SaveDialog1: TSaveDialog;
+    OpenPictureDialog1: TOpenPictureDialog;
+    Panel1: TPanel;
+    lblLayouts: TLabel;
+    cbLayouts: TComboBox;
+    JvXPButton2: TJvXPButton;
+    JvXPButton1: TJvXPButton;
+    pnForm: TPanel;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    Image1: TImage;
+    lbPreparando: TLabel;
+    Panel2: TPanel;
+    procedure FormCreate(Sender: TObject);
+    procedure JvXPButton1Click(Sender: TObject);
+    procedure JvXPButton2Click(Sender: TObject);
+  private
+    TextFile: TStringList;
+    FCADParams: TsgCADIterate;
+    procedure ImportSolid(Sender: TObject);
+    procedure ImportLine(Sender: TObject);
+    procedure ImportPoint(Sender: TObject);
+    procedure ImportEllipse(Sender: TObject);
+    procedure ImportArc(Sender: TObject);
+    procedure ImportCircle(Sender: TObject);
+    procedure ImportPolyLine(Sender: TObject);
+    procedure ImportLWPolyLine(Sender: TObject);
+    procedure ImportAttdef(Sender: TObject);
+    procedure ImportText(Sender: TObject);
+    function LimpaChrEspecial(Str: string): string;
+
+    procedure ImportSpline(Sender: TObject);
+    procedure ImportViewPortBegin(Sender: TObject);
+    procedure ImportViewPortEnd(Sender: TObject);
+    procedure ImportFlatPolyLine(Sender: TObject);
+  public
+    function ReadCADEntities(Entity: TsgDXFEntity): Integer;
+    function FinishReadCADEntities(Entity: TsgDXFEntity): Integer;
+  end;
+
+var
+  FDXFDWG: TFDXFDWG;
+   Img: TsgCADImage;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFDXFDWG.FormCreate(Sender: TObject);
+const
+  Exts: array[0..17] of string = ( '.dxf', '.dwg', '.plt', '.hgl', '.rtl',
+    '.hg', '.plo', '.hp', '.hp1', '.hp2', '.hpg', '.hpgl', '.hpgl2', '.gl2',
+    '.prn', '.spl', '.svg', '.cgm');
+var
+  vFileExt, caminho: string;
+
+  procedure ViewLayouts;
+  var
+    I: Integer;
+  begin
+    if Img <> nil then
+    begin
+      cbLayouts.Visible := false;
+      lblLayouts.Visible := false;
+      cbLayouts.Items.Clear;
+      for I := 0 to Img.LayoutsCount - 1 do
+        cbLayouts.Items.AddObject(Img.Layouts[I].Name, Img.Layouts[I]);
+      cbLayouts.ItemIndex := Img.Converter.DefaultLayoutIndex;
+      Img.CurrentLayout := Img.Layouts[cbLayouts.ItemIndex];
+    end;
+  end;
+begin
+  DeleteFile(Caminho + 'DWGDXF_Importando_FECHOU.txt');
+  DeleteFile(Caminho + 'DWGDXF_Importando.txt');
+  lbpreparando.Visible := false;
+
+  OpenPictureDialog1.Filter := GraphicFilter(TGraphic);
+  {$IFDEF DEMO}
+  fInfo.CreateInfoFrame(Handle, Point(10, 50));
+  {$ENDIF}
+  OpenPictureDialog1.FileName := '';
+  if OpenPictureDialog1.Execute then
+  begin
+    Self.Show;
+    lbPreparando.Visible := true;
+    self.Refresh;
+    vFileExt := ExtractFileExt(LowerCase(OpenPictureDialog1.FileName));
+    Img.Free;
+    Img := nil;
+    case StrIndex(vFileExt, Exts) of
+      0:	Img := TsgCADdxfImage.Create;
+      {$IFNDEF sgDFONLY}
+      1:	Img := TsgDWGImage.Create;
+      2..15:	Img := TsgHPGLImage.Create;
+      16:     Img := TsgSVGImage.Create;
+      17:     Img := TsgCGMImage.Create;
+      {$ENDIF}
+    end;
+    if Img <> nil then
+    begin
+      Img.LoadFromFile(OpenPictureDialog1.FileName);
+      img.BackgroundColor := clblack;
+      ViewLayouts;
+      Image1.Picture.Assign(Img);
+    end;
+    lbpreparando.Visible := false;
+    pnForm.Caption := 'Arquivo: ' + OpenPictureDialog1.FileName;
+  end
+  else
+  begin
+     TextFile := TStringList.Create;
+     Caminho  := ExtractFilePath(Application.ExeName);
+     TextFile.SaveToFile(Caminho + 'DWGDXF_Importando_FECHOU.txt');
+     Application.Terminate;
+  end;
+end;
+
+procedure TFDXFDWG.JvXPButton1Click(Sender: TObject);
+var
+  Caminho, S: string;
+  I,R,G,B:integer;
+  cor: tcolor;
+begin
+ TextFile := TStringList.Create;
+  try
+    if Image1.Picture.Graphic is TsgCADImage then
+    begin
+      FCADParams.Matrix := cnstIdentityMat;
+
+      S := '';
+
+      for I := 0 to (Image1.Picture.Graphic as TsgCADImage).Converter.Counts[csLayers] - 1 do
+      begin
+        cor := (Image1.Picture.Graphic as TsgCADImage).Converter.Layers[I].Color;
+
+        S := S + '$LAYER$' + #13#10;
+        S := S + LimpaChrEspecial( (Image1.Picture.Graphic as TsgCADImage).Converter.Layers[I].Name) + #13#10;
+
+        r := GetRValue(cor);
+        g := GetGValue(cor);
+        b := GetBValue(cor);
+
+        S := S + IntToStr(r)+ #13#10;
+        S := S + IntToStr(g)+ #13#10;
+        S := S + IntToStr(b)+ #13#10;
+
+        S := S + ifthen((Image1.Picture.Graphic as TsgCADImage).Converter.Layers[I].Frozen,'S','N') +#13#10;
+   
+        S := S + #13#10;
+
+      {   P^.Color := AImage.Converter.Layers[I].Color;
+        P^.Layer := AImage.Converter.Layers[I];
+        P^.Frozen := AImage.Converter.Layers[I].Frozen;
+        P^.IsPlotting := AImage.Converter.Layers[I].IsPlotting;
+        P^.Visible := AImage.Converter.Layers[I].Visible;
+                      }
+     end;
+
+      TextFile.Add(S);
+
+      TsgCADImage(Image1.Picture.Graphic).Converter.ImportMode := imImport;
+      TsgCADImage(Image1.Picture.Graphic).Converter.AutoInsert := True; // to get all the elements inside of inserts
+      TsgCADImage(Image1.Picture.Graphic).Converter.Params := @FCADParams;
+      TsgCADImage(Image1.Picture.Graphic).CurrentLayout.Iterate(TsgCADImage(Image1.Picture.Graphic).Converter, ReadCADEntities, FinishReadCADEntities);
+      SaveDialog1.FileName := ChangeFileExt(OpenPictureDialog1.FileName, '.txt');
+
+      Caminho := ExtractFilePath(Application.ExeName);
+      textfile.Add('EOF');
+      TextFile.SaveToFile(Caminho + 'DWGDXF_Importando.txt');
+
+      Close;
+    end;
+  finally
+    TextFile.Free;
+    TextFile := nil;
+  end;
+
+end;
+
+function PointToString(const P: TFPoint): string;
+begin
+  Result := ' X='+ FloatToStr(P.X)+ ' Y='+ FloatToStr(P.Y)+ ' Z='+ FloatToStr(P.Z);
+end;
+
+{ All elements inside inserts can be reached in the next procedure.
+  Proc called for Inserts too }
+function tFDXFDWG.ReadCADEntities(Entity: TsgDXFEntity): Integer;
+const
+  PS: array[psSolid..psDashDot] of string =
+    ('psSolid','psDash','psDot','psDashDot');
+var
+  S: string;
+  L: TsgDXFLayer;
+  C: TColor;
+begin
+  Result := 0;
+  S := #13#10'ClassName=' + Entity.ClassName + '; Entity name=' + Entity.EntName;
+  DoScale2D(FCADParams); // calculates 2d scale and rotation
+
+  // layer
+  L := EntLayer(Entity, FCADParams.Insert);
+  if L <> nil then
+    S := S + ' layer = ' + L.Name;
+
+  // color
+  S := S + ' style = ' + PS[EntStyle(Entity)];
+  C := EntColor(Entity, FCADParams.Insert);
+  if C = clNone then
+    S := S + ' color=black/white'
+  else
+    S := S + ' color = ' +  IntToHex(C, -6) + ' (' + ColorToString(C) + ')';
+
+
+  // particular properties
+  TextFile.Add(S);
+  case Entity.EntType of
+    ceLine:      ImportLine(Entity);    //Line - see cadmage.pas TsgCADImage.DrawArc
+    cePoint:     ImportPoint(Entity);   //Point - see cadmage.pas TsgCADImage.DrawPoint
+    ceCircle:    ImportCircle(Entity);  //Circle - see cadmage.pas TsgCADImage.DrawArc
+    ceArc:       ImportArc(Entity);     //Arc - see cadmage.pas TsgCADImage.DrawArc
+    ceEllipse:   ImportEllipse(Entity); //Ellipse - see cadmage.pas TsgCADImage.DrawArc
+    cePolyline, cePath:    ImportPolyLine(Entity);//PolyLine - see cadmage.pas TsgCADImage.DrawPolyLine
+    ceLWPolyline:    ImportLWPolyLine(Entity);
+    ceFlatPoly:  ImportFlatPolyLine(Entity);//FlatPoly - see cadmage.pas TsgCADImage.DrawPolyLine
+    ceSpline,                           //Spline - see cadmage.pas TsgCADImage.DrawSpline
+      ceLeader:  ImportSpline(Entity);  //Leader - see cadmage.pas TsgCADImage.DrawLeader
+    ceText:      ImportText(Entity);    //Text - see cadmage.pas TsgCADImage.DrawText
+    ceAttdef,
+      ceAttrib:  ImportAttdef(Entity);  //Attdef - see cadmage.pas TsgCADImage.DrawText
+    ceSolid,                            //Solid  - see cadmage.pas TsgCADImage.DrawSolid
+      ce3dFace:  ImportSolid(Entity);   //Face - see cadmage.pas TsgCADImage.DrawFace
+    ceViewport:
+      begin
+        Result := 1;
+        ImportViewPortBegin(Entity);    //ViewPort - see cadmage.pas TsgCADImage.DrawViewPort
+      end;
+  end;
+end;
+
+function tFDXFDWG.FinishReadCADEntities(Entity: TsgDXFEntity): Integer;
+begin
+  case Entity.EntType of
+    ceViewport:
+      begin
+        Result := 1;
+        ImportViewPortEnd(Entity);
+      end;
+  else
+    Result := 0;
+  end;
+end;
+
+procedure tFDXFDWG.ImportSolid(Sender: TObject);
+var
+  P: TFPoint;
+  S: string;
+begin
+  P := FPointXMat(TsgDXFSolid(Sender).Point, FCADParams.Matrix);
+  S := S + ' P1: ';
+  S := S + ' X=' + FloatToStr(P.X);
+  S := S + ' Y=' + FloatToStr(P.Y);
+  S := S + ' Z=' + FloatToStr(P.Z);
+  S := S + #13#10;
+  P := FPointXMat(TsgDXFSolid(Sender).Point1, FCADParams.Matrix);
+  S := S + ' P2: ';
+  S := S + ' X=' + FloatToStr(P.X);
+  S := S + ' Y=' + FloatToStr(P.Y);
+  S := S + ' Z=' + FloatToStr(P.Z);
+  S := S + #13#10;
+  P := FPointXMat(TsgDXFSolid(Sender).Point3, FCADParams.Matrix);
+  S := S + ' P3: ';
+  S := S + ' X=' + FloatToStr(P.X);
+  S := S + ' Y=' + FloatToStr(P.Y);
+  S := S + ' Z=' + FloatToStr(P.Z);
+  S := S + #13#10;
+  P := FPointXMat(TsgDXFSolid(Sender).Point2, FCADParams.Matrix);
+  S := S + ' P4: ';
+  S := S + ' X=' + FloatToStr(P.X);
+  S := S + ' Y=' + FloatToStr(P.Y);
+  S := S + ' Z=' + FloatToStr(P.Z);
+  TextFile.Add(S);
+end;
+
+procedure tFDXFDWG.ImportLine(Sender: TObject);
+var
+  P: TFPoint;
+  S: string;
+begin
+ // S := S + ' LineWeight=' + FloatToStr(TsgDXFLine(Sender).LineWeight) + '; ';
+ // S := S + 'LineTypeScale=' + FloatToStr(TsgDXFLine(Sender).LineTypeScale) + '; ';
+  //S := S + #13#10;
+  //S := S + 'ZThick=' + FloatToStr(TsgDXFLine(Sender).ZThick) + '; ';
+ // S := S + #13#10;
+  P := FPointXMat(TsgDXFLine(Sender).Point, FCADParams.Matrix);
+  S := S + 'X=' + FloatToStr(P.X);
+  S := S + ' Y=' + FloatToStr(P.Y);
+  S := S + ' Z=' + FloatToStr(P.Z);
+  S := S + #13#10;
+  P := FPointXMat(TsgDXFLine(Sender).Point1, FCADParams.Matrix);
+//  S := S + ' End point: ';
+ // S := S + #13#10;
+  S := S + 'X=' + FloatToStr(P.X);
+  S := S + ' Y=' + FloatToStr(P.Y);
+  S := S + ' Z=' + FloatToStr(P.Z);
+  S := S + #13#10;
+  S := S + TsgDXFLine(Sender).Layer.Name;
+
+  TextFile.Add(S);
+end;
+
+procedure tFDXFDWG.ImportPoint(Sender: TObject);
+var
+  P: TFPoint;
+  S: string;
+begin
+  P := FPointXMat(TsgDXFPoint(Sender).Point, FCADParams.Matrix);
+  S := ' Point: ' + #13#10 + PointToString(P);
+  S := S + #13#10;
+end;
+
+procedure tFDXFDWG.ImportEllipse(Sender: TObject);
+var
+  P: TFPoint;
+  S: string;
+begin
+    P := FPointXMat(TsgDXFEllipse(Sender).Point, FCADParams.Matrix);
+    S := S + ' Center point: ';
+    S := S + ' X=' + FloatToStr(P.X);
+    S := S + ' Y=' + FloatToStr(P.Y);
+    S := S + ' Z=' + FloatToStr(P.Z);
+    S := S + #13#10;
+    S := S + ' Start Angle: ' + FloatToStr(TsgDXFEllipse(Sender).StartAngle);
+    S := S + #13#10;
+    S := S + ' End Angle: ' + FloatToStr(TsgDXFEllipse(Sender).EndAngle);
+    S := S + #13#10;
+    S := S + ' Rx: ' + FloatToStr(TsgDXFEllipse(Sender).Radius);
+    S := S + ' Ry: ' + FloatToStr(TsgDXFEllipse(Sender).Radius * TsgDXFEllipse(Sender).Ratio);
+    TextFile.Add(S);
+end;
+
+procedure tFDXFDWG.ImportArc(Sender: TObject);
+var
+  P: TFPoint;
+  S: string;
+begin
+  P := FPointXMat(TsgDXFArc(Sender).Point, FCADParams.Matrix);
+  S := S + 'X=' + FloatToStr(P.X);
+  S := S + 'Y=' + FloatToStr(P.Y);
+  S := S + 'Z=' + FloatToStr(P.Z);
+  S := S + #13#10' S= ' + FloatToStr(TsgDXFArc(Sender).StartAngle);
+  S := S + #13#10' E= ' + FloatToStr(TsgDXFArc(Sender).EndAngle);
+  S := S + #13#10' R= ' + FloatToStr(TsgDXFArc(Sender).Radius);
+  TextFile.Add(S);
+end;
+
+procedure tFDXFDWG.ImportCircle(Sender: TObject);
+var
+  P: TFPoint;
+  S: string;
+  raio: double;
+begin
+    P    := FPointXMat(TsgDXFCircle(Sender).Point, FCADParams.Matrix);
+    raio := TsgDXFCircle(Sender).Radius;
+
+    S := S + 'X=' + FloatToStr(P.X);
+    S := S + ' Y=' + FloatToStr(P.Y);
+    S := S + ' Z=' + FloatToStr(P.Z);
+    S := S + ' R=' + FloatToStr(raio);
+    S := S + #13#10;
+    S := S + TsgDXFCircle(Sender).Layer.Name;
+    TextFile.Add(S);
+end;
+
+procedure tFDXFDWG.ImportPolyLine(Sender: TObject);
+var
+  P: TFPoint;
+  S: string;
+  I: Integer;
+  Vertex: TsgDXFVertex;
+begin
+  for I := 0 to TsgDXFPolyLine(Sender).Count - 1 do
+  begin
+   // S := S + ' P' + IntToStr(I + 1) + ': ';
+    Vertex := TsgDXFVertex(TsgDXFPolyLine(Sender).Entities[I]);
+    P := FPointXMat(Vertex.Point, FCADParams.Matrix);
+    S := S + ' X=' + FloatToStr(P.X);
+    S := S + ' Y=' + FloatToStr(P.Y);
+    S := S + ' Z=' + FloatToStr(P.Z);
+    S := S + #13#10;
+  end;
+  S := S + ' L=' + TsgDXFPolyLine(Sender).Layer.Name;
+
+  TextFile.Add(S);
+end;
+
+procedure tFDXFDWG.ImportLWPolyLine(Sender: TObject);
+var
+  P: TFPoint;
+  S: string;
+  I: Integer;
+  Vertex: TsgDXFVertex;
+begin
+  for I := 0 to TsgDXFLWPolyline(Sender).Count - 1 do
+  begin
+   // S := S + ' P' + IntToStr(I + 1) + ': ';
+    Vertex := TsgDXFVertex(TsgDXFPolyLine(Sender).Entities[I]);
+    P := FPointXMat(Vertex.Point, FCADParams.Matrix);
+    S := S + ' X=' + FloatToStr(P.X);
+    S := S + ' Y=' + FloatToStr(P.Y);
+    S := S + ' Z=' + FloatToStr(P.Z);
+    S := S + #13#10;
+  end;
+
+  S := s + ' L=' + TsgDXFLWPolyline(Sender).Layer.Name;
+  TextFile.Add(S);
+end;
+
+procedure tFDXFDWG.ImportFlatPolyLine(Sender: TObject);
+var
+  Point: TFPoint;
+  S: string;
+  I, J, vCount, vIndex: Integer;
+
+  procedure AddPoints(I: Integer);
+  begin
+    S := S + '   P' + ': ' + #13#10;
+    Point := TsgFlatPoly(Sender).XY[I];
+    S := S + '    X=' + FloatToStr(Point.X);
+    S := S + '    Y=' + FloatToStr(Point.Y) + #13#10;;
+  end;
+begin
+  S := S + ' 2D Points: ';
+  S := S + #13#10;
+
+  vIndex := 0;
+  for I := 0 to TsgFlatPoly(Sender).Counts.Count-1 do
+  begin
+    vCount := Integer(TsgFlatPoly(Sender).Counts[I]);
+    //if (vIndex + vCount) > FP.PCount then Break;
+    if vCount > 2 then
+    begin
+      S := S + '   SubEntity π ' + IntToStr(I) + ' - polyline' + #13#10;
+      for J := vIndex to (vIndex + vCount - 1) do
+      begin
+        AddPoints(J);
+      end;
+    end
+    else
+      if vCount = 2 then
+      begin
+        S := S + '   SubEntity π ' + IntToStr(I) + ' - single line' + #13#10;
+        AddPoints(vIndex);
+        AddPoints(vIndex+1);
+      end;
+    Inc(vIndex, vCount);
+  end;
+  TextFile.Add(S);
+end;
+
+
+function ImportTextFont(Sender: TObject): string;
+var
+  vText: TsgDXFText;
+
+  function ImportMTextFontStyle(AStyle: TmvFontStyles): string;
+  begin
+    if fmBold in AStyle then Result := '  fmBold' + #13#10;
+    if fmItalic in AStyle then Result := Result + '  fmItalic' + #13#10;
+    if fmUnderline in AStyle then Result := Result + '  fmUnderline' + #13#10;
+    if fmStrikeOut in AStyle then Result := Result + '  fmStrikeOut' + #13#10;
+    if fmCondensed in AStyle then Result := Result + '  fmCondensed' + #13#10;
+    if fmUpward in AStyle then Result := Result + '  fmUpward' + #13#10;
+    if fmDownward in AStyle then Result := Result + '  fmDownward' + #13#10;
+  end;
+
+begin
+  vText := TsgDXFText(Sender);
+  if vText.Style <> nil then
+  begin
+    Result := Result + ' Text Style:' + #13#10;
+    Result := Result + ' BigFont=' + vText.Style.BigFont + #13#10;
+    Result := Result + ' WidthFactor=' + FloatToStr(vText.Style.WidthFactor) + #13#10;
+  end;
+  //Result := ' Font: Name=' + vText.FontName + '; ';
+  Result := vText.FontName + '; ';
+  Result := Result + #13#10+ 'H=' + IntToStr(vText.Font.Height) + '; ';
+  Result := Result + #13#10+ 'C=$' + IntToHex(vText.Font.Color, 8) + '; ' + #13#10;
+  Result := Result + 'S=' + trim(ImportMTextFontStyle(vText.Font.Style));
+  Result := Result + 'Thickness=' + FloatToStr(vText.GetThickness);
+  Result := Result + #13#10'Generation=' + IntToStr(vText.Generation);
+  //Result := Result + #13#10'VAlign=' + IntToStr(vText.VAlign);
+ // Result := Result + #13#10'_hAlign=' + IntToStr(vText.HAlign);
+end;
+
+procedure tFDXFDWG.ImportAttdef(Sender: TObject);
+begin
+  ImportText(Sender);
+  TextFile.Add('Tag: '+TsgDXFAttdef(Sender).Tag);
+end;
+
+procedure tFDXFDWG.ImportText(Sender: TObject);
+var
+  P: TFPoint;
+  S,texto: string;
+begin
+  DoScale2D(FCADParams);
+  P := FPointXMat(TsgDXFText(Sender).StartPoint, FCADParams.Matrix);
+  //S := S + ' Start point: ';
+  S := S + 'X=' + FloatToStr(P.X);
+  S := S + ' Y=' + FloatToStr(P.Y);
+  S := S + ' Z=' + FloatToStr(P.Z);
+  S := S + ' A=' + FloatToStr(TsgDXFText(Sender).Rotation + FCADParams.Angle);
+  S := S + #13#10 +ImportTextFont(Sender);
+
+  texto := LimpaChrEspecial(TsgDXFText(Sender).Text);
+
+  S := S + #13#10'T=' + texto;
+  S := S + #13#10;
+  S := S + TsgDXFText(Sender).Layer.Name;
+  TextFile.Add(S);
+end;
+
+function tFDXFDWG.LimpaChrEspecial(Str: string): string;
+const
+  cS1 = '‡‚‰„·ÍÈÎËÌÔÏÓÙˆıÛÚ˚˙¸˘ÁÒ˝ˇ¿¬ƒ√¡ …À»ÕœÃŒ‘÷’”“€⁄‹Ÿ«—›ü';
+  cS2 = 'aaaaaeeeeiiiiooooouuuucnyyAAAAAEEEEIIIIOOOOOUUUUCNYY';
+var
+  I: integer;
+begin
+  for I := 1 to Length(Str) do
+    if Pos(Str[I], cS1) <> 0 then
+      Str[I] := cS2[Pos(Str[I], cS1)];
+  Result := Str;
+end;
+
+procedure tFDXFDWG.ImportSpline(Sender: TObject);
+var
+  vSpline: TsgDXFSpline absolute Sender;
+  P: TFPoint;
+  S: string;
+  I: Integer;
+begin
+  if vSpline.FitCount > 0 then
+  begin
+    S := S + ' Fit points of Spline: ';
+    for I := 0 to vSpline.FitCount - 1 do
+    begin
+      S := S + #13#10 + ' P' + IntToStr(I + 1) + ': ';
+      P := FPointXMat(vSpline.Fit[I], FCADParams.Matrix);
+      S := S + PointToString(P);
+    end;
+    S := S + #13#10;
+  end;
+  if vSpline.ControlCount > 0 then
+  begin
+    S := S + ' Control points of Spline: ';
+    for I := 0 to vSpline.ControlCount - 1 do
+    begin
+      S := S + #13#10 + ' P' + IntToStr(I + 1) + ': ';
+      P := FPointXMat(vSpline.Controls[I], FCADParams.Matrix);
+      S := S + PointToString(P);
+    end;
+    S := S + #13#10;
+  end;
+  TextFile.Add(S);
+end;
+
+procedure tFDXFDWG.ImportViewPortBegin(Sender: TObject);
+var
+  V: TsgDXFViewPort absolute Sender;
+  S: string;
+begin
+  S := 'Rect:'
+    + #13#10'   Left= ' + FloatToStr(V.Rect.Left)
+    + #13#10'   Top= ' + FloatToStr(V.Rect.Top)
+    + #13#10'   Z1= ' + FloatToStr(V.Rect.Z1)
+    + #13#10'   Right= ' + FloatToStr(V.Rect.Right)
+    + #13#10'   Bottom= ' + FloatToStr(V.Rect.Bottom)
+    + #13#10'   Z2= ' + FloatToStr(V.Rect.Z2);
+  S := S + #13#10'---ENTITIES below are displayed in this VIEWPORT---';
+  TextFile.Add(S);
+end;
+
+procedure tFDXFDWG.ImportViewPortEnd(Sender: TObject);
+begin
+  TextFile.Add('-----ENTITIES above are displayed in VIEWPORT-----');
+end;
+
+procedure TFDXFDWG.JvXPButton2Click(Sender: TObject);
+var
+  caminho: string;
+begin
+  //salva um arquivo que sinaliza que o usuario cancelou a importaÁ„o, entao o PGi aborta o timer que
+  //fica lendo se existe um arquivo de importaÁ„o
+
+  TextFile := TStringList.Create;
+  Caminho  := ExtractFilePath(Application.ExeName);
+  TextFile.SaveToFile(Caminho + 'DWGDXF_Importando_FECHOU.txt');
+
+  Application.Terminate;
+end;
+
+end.

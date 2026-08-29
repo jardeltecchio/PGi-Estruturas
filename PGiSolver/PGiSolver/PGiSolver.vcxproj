@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3E5620F6-6E32-4D2E-839E-9D3239432B00}</ProjectGuid>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <Keyword>ManagedCProj</Keyword>
+    <RootNamespace>PGiSolver</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CLRSupport>true</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CLRSupport>true</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies />
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>C:\PGi\alglib-3.15.0\cpp\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies />
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\alglib-3.15.0\cpp\src\alglibinternal.h" />
+    <ClInclude Include="..\..\alglib-3.15.0\cpp\src\alglibmisc.h" />
+    <ClInclude Include="..\..\alglib-3.15.0\cpp\src\ap.h" />
+    <ClInclude Include="..\..\alglib-3.15.0\cpp\src\dataanalysis.h" />
+    <ClInclude Include="..\..\alglib-3.15.0\cpp\src\diffequations.h" />
+    <ClInclude Include="..\..\alglib-3.15.0\cpp\src\fasttransforms.h" />
+    <ClInclude Include="..\..\alglib-3.15.0\cpp\src\integration.h" />
+    <ClInclude Include="..\..\alglib-3.15.0\cpp\src\interpolation.h" />
+    <ClInclude Include="..\..\alglib-3.15.0\cpp\src\linalg.h" />
+    <ClInclude Include="..\..\alglib-3.15.0\cpp\src\optimization.h" />
+    <ClInclude Include="..\..\alglib-3.15.0\cpp\src\solvers.h" />
+    <ClInclude Include="..\..\alglib-3.15.0\cpp\src\specialfunctions.h" />
+    <ClInclude Include="..\..\alglib-3.15.0\cpp\src\statistics.h" />
+    <ClInclude Include="..\..\alglib-3.15.0\cpp\src\stdafx.h" />
+    <ClInclude Include="PGiSolver.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\alglib-3.15.0\cpp\src\alglibinternal.cpp" />
+    <ClCompile Include="..\..\alglib-3.15.0\cpp\src\alglibmisc.cpp" />
+    <ClCompile Include="..\..\alglib-3.15.0\cpp\src\ap.cpp" />
+    <ClCompile Include="..\..\alglib-3.15.0\cpp\src\dataanalysis.cpp" />
+    <ClCompile Include="..\..\alglib-3.15.0\cpp\src\diffequations.cpp" />
+    <ClCompile Include="..\..\alglib-3.15.0\cpp\src\fasttransforms.cpp" />
+    <ClCompile Include="..\..\alglib-3.15.0\cpp\src\integration.cpp" />
+    <ClCompile Include="..\..\alglib-3.15.0\cpp\src\interpolation.cpp" />
+    <ClCompile Include="..\..\alglib-3.15.0\cpp\src\linalg.cpp" />
+    <ClCompile Include="..\..\alglib-3.15.0\cpp\src\optimization.cpp" />
+    <ClCompile Include="..\..\alglib-3.15.0\cpp\src\solvers.cpp" />
+    <ClCompile Include="..\..\alglib-3.15.0\cpp\src\specialfunctions.cpp" />
+    <ClCompile Include="..\..\alglib-3.15.0\cpp\src\statistics.cpp" />
+    <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="PGiSolver.cpp" />
+    <ClCompile Include="Stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="app.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="app.ico" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
