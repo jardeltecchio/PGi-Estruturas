@@ -360,7 +360,7 @@ namespace PG
 
                 barragenerica = barrasgenericas.Find(o => o.IDBarra == barrasDivididas[i].IDBarra);
 
-                if (barragenerica.Dados.Tipo == 4)
+                if (barragenerica.Dados.Tipo == 4 || barragenerica.Dados.Tipo == 1) // barra rigida ou somente tração (tirante)
                     div = 1;
 
                 bool art_ini = (barrasDivididas[i].Dados.Articulacao_my == 1 || barrasDivididas[i].Dados.Articulacao_my == 2 ||
@@ -544,6 +544,8 @@ namespace PG
                         barras[nBarras].barraOriginal = barragenerica;
 
                         barras[nBarras].Dados = barragenerica.Dados;
+
+                        barras[nBarras].SomenteTracao = barragenerica.Dados.Tipo == 1;
 
                         /*   barras[nBarras].A1 = barragenerica.Dados.secao.area;
                            barras[nBarras].Iz1 = barragenerica.Dados.secao.inercia_flexao_z;

@@ -1314,11 +1314,12 @@ namespace PG
                     b2 = bars[j];
                     if (b2 == null) continue;
 
-                    if (b2.Dados.Tipo == 1) // tirante
+                    /*if (b2.Dados.Tipo == 1) // tirante
                     {
                         b2.Dados.Tipo = 1;
                         continue;
                     }
+                    */
                     if ((Object)b1 != (Object)b2)
                     {
                   //      if (b1.IDBarra == 261 && (b2.IDBarra == 257))

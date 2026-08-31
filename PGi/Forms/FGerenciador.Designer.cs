@@ -2862,7 +2862,7 @@ namespace PG
             this.dockPanel.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.dockPanel.Location = new System.Drawing.Point(907, 172);
             this.dockPanel.Name = "dockPanel";
-            this.dockPanel.Size = new System.Drawing.Size(30122, 30163);
+            this.dockPanel.Size = new System.Drawing.Size(30146, 30187);
             dockPanelGradient1.EndColor = System.Drawing.SystemColors.ActiveCaptionText;
             dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
             autoHideStripSkin1.DockStripGradient = dockPanelGradient1;

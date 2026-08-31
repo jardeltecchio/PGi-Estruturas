@@ -105,6 +105,9 @@ namespace PG
     {
         #region Variáveis
         int i, j, k;
+        public bool SomenteTracao;
+        public bool ativoNaIteracao = true;  // rastreia se a barra está ativa no loop iterativo de tension-only
+        public double FatorRigidezTensionOnly = 1.0;  // 1.0 = rigidez total, 1e-8 = reduzida para compression
 
         public List<ForcasLocais_Barra> combinacoes_x_forcasLocais;
         public List<ForcasLocais_Barra> casos_x_forcasLocais;
@@ -2850,7 +2853,15 @@ namespace PG
             l2 = Math.Pow(L, 2);
             l3 = Math.Pow(L, 3);
             ea = A1 * E1;
-            
+
+            // Aplica fator de rigidez para elementos tension-only (comprimidos)
+            // Feito aqui na matriz LOCAL antes de qualquer transformação (offset/rotação)
+          /*  if (SomenteTracao && FatorRigidezTensionOnly != 1.0)
+            {
+               // A1 *= .1;
+                ea *= 0.01;
+            }*/
+
             if (barraRigida)
             {
                 eiz = 150000000;
@@ -2937,8 +2948,17 @@ namespace PG
 
            if (!Geom.Iguais(barraOriginal.Dados.secao.propriedades.anguloEixosPrincipais, 0))
               TransformaMatrizLocal_EixosPrincipais_Para_EixosGeometricos();
-        }
 
+            // Aplica fator de rigidez para elementos tension-only (comprimidos)
+            // Feito aqui na matriz LOCAL antes de qualquer transformação (offset/rotação)
+            if (SomenteTracao && FatorRigidezTensionOnly != 1.0)
+            {
+                for (int i = 1; i <= 12; i++)
+                    for (int j = 1; j <= 12; j++)
+                        MatrizLocal[i, j] *= FatorRigidezTensionOnly;
+            }
+        }
+        public bool desativarTensionOnly;
         void TransformaMatrizLocal_EixosPrincipais_Para_EixosGeometricos()
         {
             /*               27/06/2026
@@ -3469,6 +3489,23 @@ namespace PG
         }
 
         double[] DeslocamentosLocaisBarraSemiRigida ;
+        /// <summary>
+        /// Calcula o deslocamento axial local de uma barra dado um vetor de deslocamentos globais.
+        /// Deslocamento axial local = DeslocLocal[7] - DeslocLocal[1] (nó final - nó inicial no eixo local x)
+        /// Valor negativo indica compressão (encurtamento)
+        /// </summary>
+        public double CalcularDeslocamentoAxialLocal(double[] _deslocamentosGlobais)
+        {
+            if (MatrizRotacao == null)
+                return 0;
+
+            double[] deslocamentosLocais = new double[13];
+            TAlgebra.Multiplica_Matriz_Vetor(ref MatrizRotacao, ref _deslocamentosGlobais, ref deslocamentosLocais, 12, 12);
+            
+            // Deslocamento axial local: diferença entre nó final e inicial no eixo local x
+            return deslocamentosLocais[7] - deslocamentosLocais[1];
+        }
+
         public void CalcularEsforcos(string tipo, int id)
         {
             try
