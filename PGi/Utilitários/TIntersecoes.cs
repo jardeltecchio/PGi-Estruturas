@@ -1305,6 +1305,7 @@ namespace PG
 
                 if (b1.Dados.Tipo == 1) // tirante
                     continue;
+
                 p_1 = new vec3(b1.pIni.x, b1.pIni.y, b1.pIni.z);
                 p_2 = new vec3(b1.pFin.x, b1.pFin.y, b1.pFin.z);
 
@@ -1314,12 +1315,6 @@ namespace PG
                     b2 = bars[j];
                     if (b2 == null) continue;
 
-                    /*if (b2.Dados.Tipo == 1) // tirante
-                    {
-                        b2.Dados.Tipo = 1;
-                        continue;
-                    }
-                    */
                     if ((Object)b1 != (Object)b2)
                     {
                   //      if (b1.IDBarra == 261 && (b2.IDBarra == 257))

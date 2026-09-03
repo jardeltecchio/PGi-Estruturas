@@ -52,7 +52,7 @@
             this.PanelCalculo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PanelCalculo.Location = new System.Drawing.Point(0, 0);
             this.PanelCalculo.Name = "PanelCalculo";
-            this.PanelCalculo.Size = new System.Drawing.Size(613, 231);
+            this.PanelCalculo.Size = new System.Drawing.Size(613, 290);
             this.PanelCalculo.TabIndex = 94;
             // 
             // panel4
@@ -67,7 +67,7 @@
             this.panel4.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(613, 231);
+            this.panel4.Size = new System.Drawing.Size(613, 290);
             this.panel4.TabIndex = 37;
             // 
             // LabelProcesso
@@ -76,7 +76,7 @@
             this.LabelProcesso.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.LabelProcesso.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelProcesso.ForeColor = System.Drawing.Color.Red;
-            this.LabelProcesso.Location = new System.Drawing.Point(0, 169);
+            this.LabelProcesso.Location = new System.Drawing.Point(0, 228);
             this.LabelProcesso.Name = "LabelProcesso";
             this.LabelProcesso.Size = new System.Drawing.Size(611, 35);
             this.LabelProcesso.TabIndex = 144;
@@ -91,7 +91,7 @@
             this.PanelTitulo.Controls.Add(this.Progresso);
             this.PanelTitulo.Controls.Add(this.lbErro);
             this.PanelTitulo.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.PanelTitulo.Location = new System.Drawing.Point(0, 204);
+            this.PanelTitulo.Location = new System.Drawing.Point(0, 263);
             this.PanelTitulo.Name = "PanelTitulo";
             this.PanelTitulo.Size = new System.Drawing.Size(611, 25);
             this.PanelTitulo.TabIndex = 143;
@@ -142,7 +142,7 @@
             this.ListaCalculo.ItemHeight = 14;
             this.ListaCalculo.Location = new System.Drawing.Point(0, 0);
             this.ListaCalculo.Name = "ListaCalculo";
-            this.ListaCalculo.Size = new System.Drawing.Size(611, 168);
+            this.ListaCalculo.Size = new System.Drawing.Size(611, 224);
             this.ListaCalculo.TabIndex = 134;
             // 
             // panel2
@@ -177,7 +177,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(613, 231);
+            this.ClientSize = new System.Drawing.Size(613, 290);
             this.Controls.Add(this.pnMatrizRigidez);
             this.Controls.Add(this.PanelCalculo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;

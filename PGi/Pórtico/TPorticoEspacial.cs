@@ -645,7 +645,7 @@ namespace PG
         private bool VerificaBarrasSomenteTracao(double[] deslocamentosGlobais, double tolerancia = -1e-7)
         {
             bool algumaMudou = false;
-            const double FATOR_REDUCAO = 1e-8;  // Reduz para 1e-6 de rigidez original
+            const double FATOR_REDUCAO = 1e-8;  // Reduz para 1e-8 de rigidez original
 
             // Verifica deslocamento axial de cada barra tension-only
             for (int idx = 1; idx <= nBarras; idx++)
@@ -678,7 +678,7 @@ namespace PG
                     // Barra está comprimida: reduz rigidez se não estava já reduzida
                     if (barras[idx].FatorRigidezTensionOnly != FATOR_REDUCAO)
                     {
-                        HistoricoCalculo("          > Tirante número " + barras[idx].barraOriginal.IDBarra + " reduzido a 1e-6 da sua rigidez (encurtamento de " + (deslocAxialLocal*1000).ToString("e3") + " mm )");
+                        HistoricoCalculo("          > Tirante número " + barras[idx].barraOriginal.IDBarra + " reduzido a 1e-8 da sua rigidez (encurtamento de " + (deslocAxialLocal*1000).ToString("e3") + " mm )");
                         
                         barras[idx].FatorRigidezTensionOnly = FATOR_REDUCAO;
                         
@@ -845,12 +845,42 @@ namespace PG
         public struct Deslocamentos_Portico
         {
             public double[] df;
+            public double[] fatoresRigidezTensionOnly;
             public int id; //id da combinacao ou do caso 
-            public Deslocamentos_Portico(double[] _df, int _id)
+            public Deslocamentos_Portico(double[] _df, double[] _fatoresRigidezTensionOnly, int _id)
             {
                 df = _df;
+                fatoresRigidezTensionOnly = _fatoresRigidezTensionOnly;
                 this.id = _id;
             }
+        }
+
+        private double[] ObterFatoresRigidezTensionOnly()
+        {
+            double[] fatores = new double[nBarras + 1];
+
+            for (int idx = 1; idx <= nBarras; idx++)
+                fatores[idx] = barras[idx].FatorRigidezTensionOnly;
+
+            return fatores;
+        }
+
+        private void RestaurarFatoresRigidezTensionOnly(double[] fatores)
+        {
+            if (fatores == null)
+                return;
+
+            for (int idx = 1; idx <= nBarras && idx < fatores.Length; idx++)
+                barras[idx].FatorRigidezTensionOnly = fatores[idx];
+        }
+
+        private bool PossuiBarrasSomenteTracao()
+        {
+            for (int idx = 1; idx <= nBarras; idx++)
+                if (barras[idx].SomenteTracao)
+                    return true;
+
+            return false;
         }
 
         private bool Resultados()
@@ -862,13 +892,25 @@ namespace PG
                 int glGlobal, jr, gl, numero;
 
                 double[] dj = new double[NLinhas + 1];
+                bool possuiTirantes = PossuiBarrasSomenteTracao();
 
+                HistoricoCalculo("");
                 HistoricoCalculo("      > Calculando esforços..");
                 Application.DoEvents();
 
                 for (int caso = 0; caso < casos_x_deslocamentos.Count; caso++)
                 {
                     Atualiza(1);
+
+                    // Cada caso deve usar no pós-processamento o estado de rigidez
+                    // com o qual o processo tension-only convergiu.
+                    if (possuiTirantes)
+                    {
+                        RestaurarFatoresRigidezTensionOnly(casos_x_deslocamentos[caso].fatoresRigidezTensionOnly);
+
+                        if (!SetMatrizesBarras())
+                            throw new TErroPavimento(this, "   >ERRO: ERRO AO RESTAURAR MATRIZES DO CASO.");
+                    }
 
                     for (j = 1; j <= nNos; j++)
                     {
@@ -907,6 +949,15 @@ namespace PG
                 for (int comb = 0; comb < combinacoes_x_deslocamentos.Count; comb++)
                 {
                     Atualiza(1);
+
+                    // Não reutiliza no resultado desta combinação a matriz local
+                    // deixada pelo último caso ou combinação processada.
+                    if (possuiTirantes)
+                    {
+                        RestaurarFatoresRigidezTensionOnly(combinacoes_x_deslocamentos[comb].fatoresRigidezTensionOnly);
+                        if (!SetMatrizesBarras())
+                            throw new TErroPavimento(this, "   >ERRO: ERRO AO RESTAURAR MATRIZES DA COMBINAÇÃO.");
+                    }
 
                     for (j = 1; j <= nNos; j++)
                     {
@@ -1153,13 +1204,27 @@ namespace PG
             //     Progresso.Visible = true;
             
             Progresso.Value = 0;
-            Progresso.Maximum = 20 + nNos + (gerenciador.formDesenho.Estrutura.combinacoes.Count*3) + (gerenciador.formDesenho.CasosCarga.Count*3);
+            int quantidadeCarregamentos = gerenciador.formDesenho.CasosCarga.Count +
+                gerenciador.formDesenho.Estrutura.combinacoes.Count;
+            int etapasInternasSolver = gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_cholesky_supernodal
+                ? quantidadeCarregamentos
+                : 0;
+
+            // Fluxo linear: 17 etapas fixas, 3 etapas por caso/combinação
+            // e uma etapa interna adicional por solução no Cholesky supernodal.
+            Progresso.Maximum = Math.Max(1, 17 + quantidadeCarregamentos * 3 + etapasInternasSolver);
         }
         public void Atualiza(int inc)
         {
             Progresso.Increment(inc);
         
          //   Application.DoEvents();
+        }
+
+        private void AdicionarEtapasProgresso(int quantidade)
+        {
+            if (quantidade > 0)
+                Progresso.Maximum += quantidade;
         }
 
         void AtualizaNos()
@@ -1391,7 +1456,6 @@ namespace PG
 
                 span1 = DateTime.Now;
 
-            //    HistoricoCalculo("      > Resolvendo o sistema de equações...");
                 Application.DoEvents();
 
                 casos_x_deslocamentos = new List<Deslocamentos_Portico>();
@@ -1399,6 +1463,23 @@ namespace PG
 
                 const int maxIteracoesTensionOnly = 20;
                 int resultado;
+                bool possuiTirantes = PossuiBarrasSomenteTracao();
+
+                int quantidadeCarregamentos = casos_x_forcas.Count + combinacoes_x_forcas.Count;
+                int etapaInternaSolver = gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_cholesky_supernodal ? 1 : 0;
+
+                if (possuiTirantes && quantidadeCarregamentos > 0)
+                {
+                    // Em relação ao fluxo linear, cada carregamento passa a ter
+                    // sua própria montagem (3 etapas) e suas matrizes são restauradas
+                    // no pós-processamento (1 etapa). A primeira montagem já estava
+                    // incluída nas etapas fixas da análise linear.
+                    AdicionarEtapasProgresso(quantidadeCarregamentos * 4 - 3);
+                }
+
+                // A fatoração esparsa pode ser reutilizada entre diferentes
+                // vetores de carga enquanto a matriz de rigidez não mudar.
+                bool matrizLinearDisponivel = false;
                 // ========== LOOP SOBRE CASOS DE CARGA ==========
                 for (int i = 0; i < casos_x_forcas.Count; i++)
                 {
@@ -1419,66 +1500,61 @@ namespace PG
 
                     while (iteracao < maxIteracoesTensionOnly && precisaIterar)
                     {
-                        // Se não é primeira iteração do caso, reconstrói a matriz
+                        bool fatorarNestaSolucao = possuiTirantes || !matrizLinearDisponivel;
+
                         if (iteracao > 0)
                         {
-                            /*  MatrizRigidez = new TMatrizBanda(NLinhas, LarguraBanda, Ngl, this,
-                                  gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_choleskypadrao,
-                                  gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.UsarDll);
-                              */
-                            // Recalcula matrizes locais com fatores de rigidez atualizados
-                            HistoricoCalculo("      ---- Início da " + iteracao + "° iteração para o(s) tirante(s) - caso: " + caso.Nome + " ----");
+                            // Não é possível prever quantas iterações tension-only
+                            // serão necessárias. Inclui a nova iteração no total somente
+                            // quando ela efetivamente for iniciada.
+                            AdicionarEtapasProgresso(4 + etapaInternaSolver);
 
+                            HistoricoCalculo("");
+                            HistoricoCalculo("      ---- Início da " + iteracao + "° iteração para o(s) tirante(s) - caso: " + caso.Nome + " ----");
+                        }
+
+                        if (fatorarNestaSolucao || gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_choleskypadrao)
+                        {
                             if (!SetMatrizesBarras())
                                 throw new TErroPavimento(this, "   >ERRO: ERRO AO RECALCULAR MATRIZES.");
 
                             if (!CriarMatrizSFF(UsarDll))
-                                continue;
+                                throw new TErroPavimento(this, "   >ERRO: ERRO AO CRIAR MATRIZ DE RIGIDEZ.");
 
+                            HistoricoCalculo("");
                             HistoricoCalculo("      > Gerando o sistema de equações...");
                             if (!MatrizDeRigidez(UsarDll))
                                 throw new TErroPavimento(this, "   >ERRO: ERRO NA MONTAGEM DO SISTEMA DE EQUAÇÕES.");
-                            HistoricoCalculo("      - Geração do sistema de equações para o caso: " + caso.Nome + " - [" + NLinhas + "] - [Ok]", true);
+                            HistoricoCalculo("      - Geração do sistema de equações - [Ok]", true);
+                        }
 
-                            /*  if (!MatrizRigidez.FatoraMatrizBanda(this.Descricao, "Pórtico - Resolvendo matriz...", UsarDll))
-                                  throw new TErroPavimento(this, "Pórtico - Erro ao fatorar a matriz de rigidez!");*/
+                        Atualiza(1);
 
+                    ///   if (possuiTirantes)
                             HistoricoCalculo("      > Resolvendo o sistema de equações para o caso: " + caso.Nome);
-                            resultado = MatrizRigidez.ResolveMatrizBanda(this, ref forcas_caso, ref df,
-                                this.Descricao, "Pórtico - Resolvendo matriz - Caso: " + caso.Nome,
-                                gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_cholesky_supernodal,
-                                gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_gradiente_conjugado,
-                                true);
+                  //      else
+                    //        HistoricoCalculo("      > Resolvendo o sistema de equações...");
 
-                            HistoricoCalculo("      - Resolução do sistema de equações para o caso: " + caso.Nome +" - "+ iteracao + "° iteração - [Ok]", true);
+                        resultado = MatrizRigidez.ResolveMatrizBanda(this, ref forcas_caso,
+                            ref df,
+                            this.Descricao, "Pórtico - Resolvendo matriz - Caso: " + caso.Nome,
+                            gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_cholesky_supernodal,
+                            gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_gradiente_conjugado,
+                            fatorarNestaSolucao);
 
+                        if (possuiTirantes)
+                        {
+                            if (iteracao > 0)
+                                HistoricoCalculo("      - Resolução para o caso: " +
+                                    caso.Nome + " - " + iteracao + "° iteração - [Ok]", true);
+                            else
+                                HistoricoCalculo("      - Resolução para o caso: " +
+                                    caso.Nome + " - [Ok]", true);
                         }
                         else
-                        {
-                            Atualiza(1);
+                            HistoricoCalculo("      - Resolução para o caso: " + caso.Nome +" - [Ok]", true);
 
-                            if (!SetMatrizesBarras())
-                                throw new TErroPavimento(this, "   >ERRO: ERRO AO RECALCULAR MATRIZES.");
-
-                            if (!CriarMatrizSFF(UsarDll))
-                                continue;
-
-                            HistoricoCalculo("      > Gerando o sistema de equações...");
-                            if (!MatrizDeRigidez(UsarDll))
-                                throw new TErroPavimento(this, "   >ERRO: ERRO NA MONTAGEM DO SISTEMA DE EQUAÇÕES.");
-                            HistoricoCalculo("      - Geração do sistema de equações para o caso: " + caso.Nome+ " - [" + NLinhas + "] - [Ok]", true);
-
-                            HistoricoCalculo("      > Resolvendo o sistema de equações para o caso: " + caso.Nome);
-
-                            resultado = MatrizRigidez.ResolveMatrizBanda(this, ref forcas_caso,
-                                ref df,
-                                this.Descricao, "Pórtico - Resolvendo matriz - Caso: " + caso.Nome,
-                                gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_cholesky_supernodal,
-                                gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_gradiente_conjugado,
-                                true);
-
-                            HistoricoCalculo("      - Resolução do sistema de equações para o caso: " + caso.Nome + " - [Ok]", true);
-                        }
+                        matrizLinearDisponivel = !gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_choleskypadrao;
 
                         if (resultado == -6)
                         {
@@ -1505,16 +1581,25 @@ namespace PG
                     }
                     else
                     {
-                        HistoricoCalculo("      - Caso: " + caso.Nome + " convergiu - [OK]");
+                        if (possuiTirantes)
+                            HistoricoCalculo("      - Caso: " + caso.Nome + " convergiu - [OK]");
                     }
 
                     span2 = DateTime.Now;
-                    casos_x_deslocamentos.Add(new Deslocamentos_Portico(df.ToArray(), caso.ID));
+                    casos_x_deslocamentos.Add(new Deslocamentos_Portico(df.ToArray(), possuiTirantes ? ObterFatoresRigidezTensionOnly() : null, caso.ID));
                 }
 
                 // ========== LOOP SOBRE COMBINAÇÕES DE CARGA ==========
                 for (int i = 0; i < combinacoes_x_forcas.Count; i++)
                 {
+                    // Cada combinação inicia independente do estado convergido
+                    // deixado pelo caso ou combinação anterior.
+                    for (int idx = 1; idx <= nBarras; idx++)
+                    {
+                        if (barras[idx].SomenteTracao)
+                            barras[idx].FatorRigidezTensionOnly = 1.0;
+                    }
+
                     combinacao = gerenciador.formDesenho.Estrutura.combinacoes.Find(o => o.Id == combinacoes_x_forcas[i].id);
                     double[] forcas_combinacao = combinacoes_x_forcas[i].forcasBarras;
 
@@ -1524,34 +1609,57 @@ namespace PG
 
                     while (iteracao < maxIteracoesTensionOnly && precisaIterar)
                     {
-                        // Se não é primeira iteração da combinação, reconstrói a matriz
+                        bool fatorarNestaSolucao = possuiTirantes || !matrizLinearDisponivel;
+
                         if (iteracao > 0)
                         {
-                            MatrizRigidez = new TMatrizBanda(NLinhas, LarguraBanda, Ngl, this,
-                                gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_choleskypadrao,
-                                gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.UsarDll);
+                            AdicionarEtapasProgresso(4 + etapaInternaSolver);
 
-                            // Recalcula matrizes locais com fatores de rigidez atualizados
+                            HistoricoCalculo("");
+                            HistoricoCalculo("      ---- Início da " + iteracao + "° iteração para o(s) tirante(s) - combinação: " + combinacao.Nome + " ----");
+                        }
+
+                        if (fatorarNestaSolucao || gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_choleskypadrao)
+                        {
                             if (!SetMatrizesBarras())
                                 throw new TErroPavimento(this, "   >ERRO: ERRO AO RECALCULAR MATRIZES.");
 
+                            if (!CriarMatrizSFF(UsarDll))
+                                throw new TErroPavimento(this, "   >ERRO: ERRO AO CRIAR MATRIZ DE RIGIDEZ.");
+
+                            HistoricoCalculo("");
+                            HistoricoCalculo("      > Gerando o sistema de equações...");
                             if (!MatrizDeRigidez(UsarDll))
                                 throw new TErroPavimento(this, "   >ERRO: ERRO NA MONTAGEM DO SISTEMA DE EQUAÇÕES.");
+                            HistoricoCalculo("      - Geração do sistema de equações - [Ok]", true);
 
-                            if (!MatrizRigidez.FatoraMatrizBanda(this.Descricao, "Pórtico - Resolvendo matriz...", UsarDll))
-                                throw new TErroPavimento(this, "Pórtico - Erro ao fatorar a matriz de rigidez!");
-
-                            HistoricoCalculo("      > Combinação " + combinacao.Descricao + " - Iteração tension-only " + iteracao);
                         }
 
                         Atualiza(1);
+
+                    //    if (possuiTirantes)
+                            HistoricoCalculo("      > Resolvendo o sistema de equações para a combinação: " + combinacao.Nome);
 
                         resultado = MatrizRigidez.ResolveMatrizBanda(this, ref forcas_combinacao,
                             ref df,
                             this.Descricao, "Pórtico - Resolvendo matriz - Combinação: " + combinacao.Descricao,
                             gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_cholesky_supernodal,
                             gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_gradiente_conjugado,
-                            false);
+                            fatorarNestaSolucao);
+
+                        if (possuiTirantes)
+                        {
+                            if (iteracao > 0)
+                                HistoricoCalculo("      - Resolução para a combinação: " +
+                                    combinacao.Nome + " - " + iteracao + "° iteração - [Ok]", true);
+                            else
+                                HistoricoCalculo("      - Resolução para a combinação: " +
+                                    combinacao.Nome + " - [Ok]", true);
+                        }
+                        else
+                            HistoricoCalculo("      - Resolução para a combinação: " + combinacao.Nome + " - [Ok]", true);
+
+                        matrizLinearDisponivel = !gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_choleskypadrao;
 
                         if (resultado == -6)
                         {
@@ -1576,14 +1684,19 @@ namespace PG
                         HistoricoCalculo("⚠️  AVISO: Combinação '" + combinacao.Descricao + "' - Máximo de iterações (" + 
                             maxIteracoesTensionOnly + ") atingido sem convergência. Aceitando resultado.");
                     }
+                    else
+                    {
+                        if (possuiTirantes)
+                            HistoricoCalculo("      - Combinação: " + combinacao.Descricao + " convergiu - [OK]");
+                    }
 
                     span2 = DateTime.Now;
-                    combinacoes_x_deslocamentos.Add(new Deslocamentos_Portico(df.ToArray(), combinacao.Id));
+                    combinacoes_x_deslocamentos.Add(new Deslocamentos_Portico(df.ToArray(), possuiTirantes ? ObterFatoresRigidezTensionOnly() : null, combinacao.Id));
                 }
 
-                HistoricoCalculo("      - Resolução das equações lineares - [Ok] - " +
+                HistoricoCalculo("      - Solução finalizada - " +
                     span2.Subtract(span1).ToString("mm") + ":" +
-                    span2.Subtract(span1).ToString("ss"), true);
+                    span2.Subtract(span1).ToString("ss"));
                 MatrizRigidez.s = null;
 
                 return true;  // Sempre retorna true (aceita resultado com ou sem convergência)
