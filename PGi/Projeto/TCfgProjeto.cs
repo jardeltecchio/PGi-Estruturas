@@ -193,9 +193,9 @@ namespace PG
     [Serializable]
     public class SSistema
     {
-        public bool Solver_cholesky_supernodal, Solver_gradiente_conjugado, Solver_choleskypadrao,UsarDll,
+        public bool CalculaModosVibracao, Solver_cholesky_supernodal, Solver_gradiente_conjugado, Solver_choleskypadrao,UsarDll,
             Interromper_calculo_elementos_sobrepostos,Interromper_calculo_conexao_perdida;
-        public int toleranciaConexaoPerdida;
+        public int toleranciaConexaoPerdida, numeroModos;
         public SSistema(bool padrao = true)
         {
             Solver_cholesky_supernodal = true;
@@ -205,6 +205,8 @@ namespace PG
             Interromper_calculo_conexao_perdida = true;
             toleranciaConexaoPerdida = 20;
             Interromper_calculo_elementos_sobrepostos = true;
+            numeroModos = 5;
+            CalculaModosVibracao = false;
         }
     }
 

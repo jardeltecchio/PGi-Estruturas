@@ -33,21 +33,21 @@ namespace PG
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Gerenciador));
-            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
-            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin1 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient1 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient2 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient3 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient4 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient5 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient6 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient7 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
+            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin2 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient4 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient8 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient9 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient5 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient10 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient11 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient12 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient6 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient13 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient14 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             this.imgPrincipal = new System.Windows.Forms.ImageList(this.components);
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -406,7 +406,7 @@ namespace PG
             this.label16 = new System.Windows.Forms.Label();
             this.panel36 = new System.Windows.Forms.Panel();
             this.panelDeformacoes = new System.Windows.Forms.Panel();
-            this.panel37 = new System.Windows.Forms.Panel();
+            this.pnDeformacaoRibbon = new System.Windows.Forms.Panel();
             this.btConfirmaDeslocamentos = new System.Windows.Forms.Button();
             this.cbFiltroDeslocamentos = new System.Windows.Forms.ComboBox();
             this.label23 = new System.Windows.Forms.Label();
@@ -431,6 +431,7 @@ namespace PG
             this.panel35 = new System.Windows.Forms.Panel();
             this.panel33 = new System.Windows.Forms.Panel();
             this.panel34 = new System.Windows.Forms.Panel();
+            this.btDinamica1 = new System.Windows.Forms.Button();
             this.btReacao = new System.Windows.Forms.Button();
             this.btTensoes = new System.Windows.Forms.Button();
             this.btDiagrama = new System.Windows.Forms.Button();
@@ -495,6 +496,21 @@ namespace PG
             this.grad4 = new System.Windows.Forms.Panel();
             this.grad3 = new System.Windows.Forms.Panel();
             this.grad2 = new System.Windows.Forms.Panel();
+            this.panelDinamica1 = new System.Windows.Forms.Panel();
+            this.panel41 = new System.Windows.Forms.Panel();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.btConfirmaModos = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button44 = new System.Windows.Forms.Button();
+            this.panel52 = new System.Windows.Forms.Panel();
+            this.label26 = new System.Windows.Forms.Label();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.button45 = new System.Windows.Forms.Button();
+            this.button49 = new System.Windows.Forms.Button();
+            this.button50 = new System.Windows.Forms.Button();
+            this.button51 = new System.Windows.Forms.Button();
+            this.label27 = new System.Windows.Forms.Label();
             this.menuPanelCalculo.SuspendLayout();
             this.stripPrincipal.SuspendLayout();
             this.PanelAguarde.SuspendLayout();
@@ -540,7 +556,7 @@ namespace PG
             ((System.ComponentModel.ISupportInitialize)(this.trackValorDiagramas)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.EscalaDiagrama_UpDown)).BeginInit();
             this.panelDeformacoes.SuspendLayout();
-            this.panel37.SuspendLayout();
+            this.pnDeformacaoRibbon.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackValorDeformacao)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.EscalaDeformacao_UpDown)).BeginInit();
             this.panel33.SuspendLayout();
@@ -554,6 +570,9 @@ namespace PG
             this.panel6.SuspendLayout();
             this.pnCorResultados.SuspendLayout();
             this.PanelCores.SuspendLayout();
+            this.panelDinamica1.SuspendLayout();
+            this.panel41.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // imgPrincipal
@@ -2862,54 +2881,54 @@ namespace PG
             this.dockPanel.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.dockPanel.Location = new System.Drawing.Point(907, 172);
             this.dockPanel.Name = "dockPanel";
-            this.dockPanel.Size = new System.Drawing.Size(30146, 30187);
-            dockPanelGradient1.EndColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
-            autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
-            tabGradient1.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient1.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient1.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            autoHideStripSkin1.TabGradient = tabGradient1;
-            autoHideStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            dockPanelSkin1.AutoHideStripSkin = autoHideStripSkin1;
-            tabGradient2.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            tabGradient2.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient2.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            tabGradient2.TextColor = System.Drawing.SystemColors.ControlLightLight;
-            dockPaneStripGradient1.ActiveTabGradient = tabGradient2;
-            dockPanelGradient2.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            dockPanelGradient2.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            dockPaneStripGradient1.DockStripGradient = dockPanelGradient2;
-            tabGradient3.EndColor = System.Drawing.SystemColors.ActiveCaptionText;
-            tabGradient3.StartColor = System.Drawing.SystemColors.ActiveCaptionText;
-            tabGradient3.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient1.InactiveTabGradient = tabGradient3;
-            dockPaneStripSkin1.DocumentGradient = dockPaneStripGradient1;
-            dockPaneStripSkin1.TextFont = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            tabGradient4.EndColor = System.Drawing.SystemColors.ActiveCaption;
-            tabGradient4.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient4.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
-            tabGradient4.TextColor = System.Drawing.SystemColors.ButtonHighlight;
-            dockPaneStripToolWindowGradient1.ActiveCaptionGradient = tabGradient4;
-            tabGradient5.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient5.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient5.TextColor = System.Drawing.SystemColors.Control;
-            dockPaneStripToolWindowGradient1.ActiveTabGradient = tabGradient5;
-            dockPanelGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
-            dockPaneStripToolWindowGradient1.DockStripGradient = dockPanelGradient3;
-            tabGradient6.EndColor = System.Drawing.SystemColors.InactiveCaption;
-            tabGradient6.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient6.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            tabGradient6.TextColor = System.Drawing.SystemColors.ControlLightLight;
-            dockPaneStripToolWindowGradient1.InactiveCaptionGradient = tabGradient6;
-            tabGradient7.EndColor = System.Drawing.Color.Transparent;
-            tabGradient7.StartColor = System.Drawing.Color.Transparent;
-            tabGradient7.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            dockPaneStripToolWindowGradient1.InactiveTabGradient = tabGradient7;
-            dockPaneStripSkin1.ToolWindowGradient = dockPaneStripToolWindowGradient1;
-            dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
-            this.dockPanel.Skin = dockPanelSkin1;
+            this.dockPanel.Size = new System.Drawing.Size(30455, 30496);
+            dockPanelGradient4.EndColor = System.Drawing.SystemColors.ActiveCaptionText;
+            dockPanelGradient4.StartColor = System.Drawing.SystemColors.ControlLight;
+            autoHideStripSkin2.DockStripGradient = dockPanelGradient4;
+            tabGradient8.EndColor = System.Drawing.SystemColors.Control;
+            tabGradient8.StartColor = System.Drawing.SystemColors.Control;
+            tabGradient8.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            autoHideStripSkin2.TabGradient = tabGradient8;
+            autoHideStripSkin2.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            dockPanelSkin2.AutoHideStripSkin = autoHideStripSkin2;
+            tabGradient9.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            tabGradient9.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient9.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            tabGradient9.TextColor = System.Drawing.SystemColors.ControlLightLight;
+            dockPaneStripGradient2.ActiveTabGradient = tabGradient9;
+            dockPanelGradient5.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            dockPanelGradient5.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            dockPaneStripGradient2.DockStripGradient = dockPanelGradient5;
+            tabGradient10.EndColor = System.Drawing.SystemColors.ActiveCaptionText;
+            tabGradient10.StartColor = System.Drawing.SystemColors.ActiveCaptionText;
+            tabGradient10.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient2.InactiveTabGradient = tabGradient10;
+            dockPaneStripSkin2.DocumentGradient = dockPaneStripGradient2;
+            dockPaneStripSkin2.TextFont = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            tabGradient11.EndColor = System.Drawing.SystemColors.ActiveCaption;
+            tabGradient11.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient11.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
+            tabGradient11.TextColor = System.Drawing.SystemColors.ButtonHighlight;
+            dockPaneStripToolWindowGradient2.ActiveCaptionGradient = tabGradient11;
+            tabGradient12.EndColor = System.Drawing.SystemColors.Control;
+            tabGradient12.StartColor = System.Drawing.SystemColors.Control;
+            tabGradient12.TextColor = System.Drawing.SystemColors.Control;
+            dockPaneStripToolWindowGradient2.ActiveTabGradient = tabGradient12;
+            dockPanelGradient6.EndColor = System.Drawing.SystemColors.ControlLight;
+            dockPanelGradient6.StartColor = System.Drawing.SystemColors.ControlLight;
+            dockPaneStripToolWindowGradient2.DockStripGradient = dockPanelGradient6;
+            tabGradient13.EndColor = System.Drawing.SystemColors.InactiveCaption;
+            tabGradient13.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient13.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            tabGradient13.TextColor = System.Drawing.SystemColors.ControlLightLight;
+            dockPaneStripToolWindowGradient2.InactiveCaptionGradient = tabGradient13;
+            tabGradient14.EndColor = System.Drawing.Color.Transparent;
+            tabGradient14.StartColor = System.Drawing.Color.Transparent;
+            tabGradient14.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            dockPaneStripToolWindowGradient2.InactiveTabGradient = tabGradient14;
+            dockPaneStripSkin2.ToolWindowGradient = dockPaneStripToolWindowGradient2;
+            dockPanelSkin2.DockPaneStripSkin = dockPaneStripSkin2;
+            this.dockPanel.Skin = dockPanelSkin2;
             this.dockPanel.TabIndex = 149;
             // 
             // ribbonButton27
@@ -4171,7 +4190,7 @@ namespace PG
             this.panel47.Controls.Add(this.panel48);
             this.panel47.Controls.Add(this.label20);
             this.panel47.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel47.Location = new System.Drawing.Point(1176, 3);
+            this.panel47.Location = new System.Drawing.Point(1211, 3);
             this.panel47.Name = "panel47";
             this.panel47.Size = new System.Drawing.Size(50, 62);
             this.panel47.TabIndex = 52;
@@ -4234,6 +4253,7 @@ namespace PG
             this.imgTemaEscuroResultados_24x24.Images.SetKeyName(19, "tensao von mises.bmp");
             this.imgTemaEscuroResultados_24x24.Images.SetKeyName(20, "tensao cisalhamento 1.bmp");
             this.imgTemaEscuroResultados_24x24.Images.SetKeyName(21, "tensao cisalhamento 2.bmp");
+            this.imgTemaEscuroResultados_24x24.Images.SetKeyName(22, "modos_vibracao_24x24.png");
             // 
             // label20
             // 
@@ -4252,7 +4272,7 @@ namespace PG
             this.panel44.Controls.Add(this.panel45);
             this.panel44.Controls.Add(this.label19);
             this.panel44.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel44.Location = new System.Drawing.Point(1125, 3);
+            this.panel44.Location = new System.Drawing.Point(1160, 3);
             this.panel44.Name = "panel44";
             this.panel44.Size = new System.Drawing.Size(51, 62);
             this.panel44.TabIndex = 51;
@@ -4306,7 +4326,7 @@ namespace PG
             this.panel29.BackColor = System.Drawing.Color.Black;
             this.panel29.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel29.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel29.Location = new System.Drawing.Point(1122, 3);
+            this.panel29.Location = new System.Drawing.Point(1157, 3);
             this.panel29.Name = "panel29";
             this.panel29.Size = new System.Drawing.Size(3, 62);
             this.panel29.TabIndex = 50;
@@ -4315,7 +4335,7 @@ namespace PG
             // 
             this.panelTensoes.Controls.Add(this.panel28);
             this.panelTensoes.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panelTensoes.Location = new System.Drawing.Point(811, 3);
+            this.panelTensoes.Location = new System.Drawing.Point(846, 3);
             this.panelTensoes.Name = "panelTensoes";
             this.panelTensoes.Size = new System.Drawing.Size(311, 62);
             this.panelTensoes.TabIndex = 47;
@@ -4577,7 +4597,7 @@ namespace PG
             this.panel46.BackColor = System.Drawing.Color.Black;
             this.panel46.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel46.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel46.Location = new System.Drawing.Point(808, 3);
+            this.panel46.Location = new System.Drawing.Point(843, 3);
             this.panel46.Name = "panel46";
             this.panel46.Size = new System.Drawing.Size(3, 62);
             this.panel46.TabIndex = 45;
@@ -4587,7 +4607,7 @@ namespace PG
             this.panel43.BackColor = System.Drawing.Color.Gray;
             this.panel43.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel43.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel43.Location = new System.Drawing.Point(805, 3);
+            this.panel43.Location = new System.Drawing.Point(840, 3);
             this.panel43.Name = "panel43";
             this.panel43.Size = new System.Drawing.Size(3, 62);
             this.panel43.TabIndex = 40;
@@ -4598,7 +4618,7 @@ namespace PG
             this.panelDiagramas.Controls.Add(this.panel39);
             this.panelDiagramas.Controls.Add(this.label16);
             this.panelDiagramas.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panelDiagramas.Location = new System.Drawing.Point(481, 3);
+            this.panelDiagramas.Location = new System.Drawing.Point(516, 3);
             this.panelDiagramas.Name = "panelDiagramas";
             this.panelDiagramas.Size = new System.Drawing.Size(324, 62);
             this.panelDiagramas.TabIndex = 39;
@@ -4942,7 +4962,7 @@ namespace PG
             this.panel36.BackColor = System.Drawing.Color.Gray;
             this.panel36.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel36.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel36.Location = new System.Drawing.Point(477, 3);
+            this.panel36.Location = new System.Drawing.Point(512, 3);
             this.panel36.Name = "panel36";
             this.panel36.Size = new System.Drawing.Size(4, 62);
             this.panel36.TabIndex = 38;
@@ -4950,41 +4970,41 @@ namespace PG
             // panelDeformacoes
             // 
             this.panelDeformacoes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.panelDeformacoes.Controls.Add(this.panel37);
+            this.panelDeformacoes.Controls.Add(this.pnDeformacaoRibbon);
             this.panelDeformacoes.Controls.Add(this.label15);
             this.panelDeformacoes.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panelDeformacoes.Location = new System.Drawing.Point(140, 3);
+            this.panelDeformacoes.Location = new System.Drawing.Point(175, 3);
             this.panelDeformacoes.Name = "panelDeformacoes";
             this.panelDeformacoes.Size = new System.Drawing.Size(337, 62);
             this.panelDeformacoes.TabIndex = 37;
             // 
-            // panel37
+            // pnDeformacaoRibbon
             // 
-            this.panel37.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.panel37.Controls.Add(this.btConfirmaDeslocamentos);
-            this.panel37.Controls.Add(this.cbFiltroDeslocamentos);
-            this.panel37.Controls.Add(this.label23);
-            this.panel37.Controls.Add(this.panel38);
-            this.panel37.Controls.Add(this.lbValoresDef);
-            this.panel37.Controls.Add(this.trackValorDeformacao);
-            this.panel37.Controls.Add(this.edEscalaDeformacao);
-            this.panel37.Controls.Add(this.btAnimarDeformacao);
-            this.panel37.Controls.Add(this.panel40);
-            this.panel37.Controls.Add(this.label17);
-            this.panel37.Controls.Add(this.EscalaDeformacao_UpDown);
-            this.panel37.Controls.Add(this.button46);
-            this.panel37.Controls.Add(this.btDeformacaoTextos);
-            this.panel37.Controls.Add(this.btDeformacaoSolida);
-            this.panel37.Controls.Add(this.btDeformacaoColorida);
-            this.panel37.Controls.Add(this.btDefZ);
-            this.panel37.Controls.Add(this.btDefY);
-            this.panel37.Controls.Add(this.btDefX);
-            this.panel37.Controls.Add(this.btDefTotal);
-            this.panel37.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel37.Location = new System.Drawing.Point(0, 0);
-            this.panel37.Name = "panel37";
-            this.panel37.Size = new System.Drawing.Size(337, 63);
-            this.panel37.TabIndex = 21;
+            this.pnDeformacaoRibbon.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.pnDeformacaoRibbon.Controls.Add(this.btConfirmaDeslocamentos);
+            this.pnDeformacaoRibbon.Controls.Add(this.cbFiltroDeslocamentos);
+            this.pnDeformacaoRibbon.Controls.Add(this.label23);
+            this.pnDeformacaoRibbon.Controls.Add(this.panel38);
+            this.pnDeformacaoRibbon.Controls.Add(this.lbValoresDef);
+            this.pnDeformacaoRibbon.Controls.Add(this.trackValorDeformacao);
+            this.pnDeformacaoRibbon.Controls.Add(this.edEscalaDeformacao);
+            this.pnDeformacaoRibbon.Controls.Add(this.btAnimarDeformacao);
+            this.pnDeformacaoRibbon.Controls.Add(this.panel40);
+            this.pnDeformacaoRibbon.Controls.Add(this.label17);
+            this.pnDeformacaoRibbon.Controls.Add(this.EscalaDeformacao_UpDown);
+            this.pnDeformacaoRibbon.Controls.Add(this.button46);
+            this.pnDeformacaoRibbon.Controls.Add(this.btDeformacaoTextos);
+            this.pnDeformacaoRibbon.Controls.Add(this.btDeformacaoSolida);
+            this.pnDeformacaoRibbon.Controls.Add(this.btDeformacaoColorida);
+            this.pnDeformacaoRibbon.Controls.Add(this.btDefZ);
+            this.pnDeformacaoRibbon.Controls.Add(this.btDefY);
+            this.pnDeformacaoRibbon.Controls.Add(this.btDefX);
+            this.pnDeformacaoRibbon.Controls.Add(this.btDefTotal);
+            this.pnDeformacaoRibbon.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnDeformacaoRibbon.Location = new System.Drawing.Point(0, 0);
+            this.pnDeformacaoRibbon.Name = "pnDeformacaoRibbon";
+            this.pnDeformacaoRibbon.Size = new System.Drawing.Size(337, 63);
+            this.pnDeformacaoRibbon.TabIndex = 21;
             // 
             // btConfirmaDeslocamentos
             // 
@@ -5339,7 +5359,7 @@ namespace PG
             this.panel35.BackColor = System.Drawing.Color.Gray;
             this.panel35.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel35.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel35.Location = new System.Drawing.Point(136, 3);
+            this.panel35.Location = new System.Drawing.Point(171, 3);
             this.panel35.Name = "panel35";
             this.panel35.Size = new System.Drawing.Size(4, 62);
             this.panel35.TabIndex = 36;
@@ -5351,11 +5371,12 @@ namespace PG
             this.panel33.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel33.Location = new System.Drawing.Point(3, 3);
             this.panel33.Name = "panel33";
-            this.panel33.Size = new System.Drawing.Size(133, 62);
+            this.panel33.Size = new System.Drawing.Size(168, 62);
             this.panel33.TabIndex = 31;
             // 
             // panel34
             // 
+            this.panel34.Controls.Add(this.btDinamica1);
             this.panel34.Controls.Add(this.btReacao);
             this.panel34.Controls.Add(this.btTensoes);
             this.panel34.Controls.Add(this.btDiagrama);
@@ -5363,8 +5384,30 @@ namespace PG
             this.panel34.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel34.Location = new System.Drawing.Point(0, 0);
             this.panel34.Name = "panel34";
-            this.panel34.Size = new System.Drawing.Size(133, 47);
+            this.panel34.Size = new System.Drawing.Size(168, 47);
             this.panel34.TabIndex = 21;
+            // 
+            // btDinamica1
+            // 
+            this.btDinamica1.AccessibleName = "Modos/Frequências";
+            this.btDinamica1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.btDinamica1.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.btDinamica1.FlatAppearance.BorderSize = 0;
+            this.btDinamica1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
+            this.btDinamica1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.btDinamica1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btDinamica1.ForeColor = System.Drawing.Color.White;
+            this.btDinamica1.ImageIndex = 22;
+            this.btDinamica1.ImageList = this.imgTemaEscuroResultados_24x24;
+            this.btDinamica1.Location = new System.Drawing.Point(134, 5);
+            this.btDinamica1.Name = "btDinamica1";
+            this.btDinamica1.Size = new System.Drawing.Size(28, 38);
+            this.btDinamica1.TabIndex = 26;
+            this.btDinamica1.Tag = "0";
+            this.btDinamica1.Text = "  ";
+            this.btDinamica1.UseVisualStyleBackColor = false;
+            this.btDinamica1.Click += new System.EventHandler(this.btDinamica1_Click);
+            this.btDinamica1.MouseEnter += new System.EventHandler(this.btBarra_MouseEnter);
             // 
             // btReacao
             // 
@@ -5461,7 +5504,7 @@ namespace PG
             this.label14.ForeColor = System.Drawing.SystemColors.ActiveBorder;
             this.label14.Location = new System.Drawing.Point(0, 49);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(133, 13);
+            this.label14.Size = new System.Drawing.Size(168, 13);
             this.label14.TabIndex = 17;
             this.label14.Text = "Tipo de resultados";
             this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -5615,7 +5658,7 @@ namespace PG
             this.pnCargasCombinacoes.Controls.Add(this.pnCombinacoes);
             this.pnCargasCombinacoes.Controls.Add(this.btVisualizarCargas);
             this.pnCargasCombinacoes.Controls.Add(this.button2);
-            this.pnCargasCombinacoes.Location = new System.Drawing.Point(44, 148);
+            this.pnCargasCombinacoes.Location = new System.Drawing.Point(247, 107);
             this.pnCargasCombinacoes.Name = "pnCargasCombinacoes";
             this.pnCargasCombinacoes.Size = new System.Drawing.Size(486, 26);
             this.pnCargasCombinacoes.TabIndex = 166;
@@ -5713,7 +5756,7 @@ namespace PG
             this.pnUtilitarios.Controls.Add(this.btMostrarNos);
             this.pnUtilitarios.Controls.Add(this.panel6);
             this.pnUtilitarios.Controls.Add(this.button12);
-            this.pnUtilitarios.Location = new System.Drawing.Point(258, 214);
+            this.pnUtilitarios.Location = new System.Drawing.Point(6, 106);
             this.pnUtilitarios.Name = "pnUtilitarios";
             this.pnUtilitarios.Size = new System.Drawing.Size(235, 26);
             this.pnUtilitarios.TabIndex = 169;
@@ -6223,12 +6266,247 @@ namespace PG
             this.grad2.Size = new System.Drawing.Size(13, 22);
             this.grad2.TabIndex = 82;
             // 
+            // panelDinamica1
+            // 
+            this.panelDinamica1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.panelDinamica1.Controls.Add(this.panel41);
+            this.panelDinamica1.Controls.Add(this.label27);
+            this.panelDinamica1.Location = new System.Drawing.Point(308, 157);
+            this.panelDinamica1.Name = "panelDinamica1";
+            this.panelDinamica1.Size = new System.Drawing.Size(243, 62);
+            this.panelDinamica1.TabIndex = 175;
+            // 
+            // panel41
+            // 
+            this.panel41.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.panel41.Controls.Add(this.comboBox1);
+            this.panel41.Controls.Add(this.label24);
+            this.panel41.Controls.Add(this.btConfirmaModos);
+            this.panel41.Controls.Add(this.textBox1);
+            this.panel41.Controls.Add(this.button44);
+            this.panel41.Controls.Add(this.panel52);
+            this.panel41.Controls.Add(this.label26);
+            this.panel41.Controls.Add(this.numericUpDown1);
+            this.panel41.Controls.Add(this.button45);
+            this.panel41.Controls.Add(this.button49);
+            this.panel41.Controls.Add(this.button50);
+            this.panel41.Controls.Add(this.button51);
+            this.panel41.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel41.Location = new System.Drawing.Point(0, 0);
+            this.panel41.Name = "panel41";
+            this.panel41.Size = new System.Drawing.Size(243, 63);
+            this.panel41.TabIndex = 21;
+            this.panel41.Paint += new System.Windows.Forms.PaintEventHandler(this.panel41_Paint);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Todos",
+            "Selecionados"});
+            this.comboBox1.Location = new System.Drawing.Point(111, 5);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(88, 21);
+            this.comboBox1.TabIndex = 181;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.ForeColor = System.Drawing.Color.White;
+            this.label24.Location = new System.Drawing.Point(76, 15);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(33, 13);
+            this.label24.TabIndex = 180;
+            this.label24.Text = "Modo";
+            // 
+            // btConfirmaModos
+            // 
+            this.btConfirmaModos.BackColor = System.Drawing.SystemColors.Control;
+            this.btConfirmaModos.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.btConfirmaModos.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.btConfirmaModos.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.btConfirmaModos.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.btConfirmaModos.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btConfirmaModos.Location = new System.Drawing.Point(179, 33);
+            this.btConfirmaModos.Margin = new System.Windows.Forms.Padding(0);
+            this.btConfirmaModos.Name = "btConfirmaModos";
+            this.btConfirmaModos.Size = new System.Drawing.Size(59, 24);
+            this.btConfirmaModos.TabIndex = 179;
+            this.btConfirmaModos.Tag = "Nova";
+            this.btConfirmaModos.Text = "Ok";
+            this.btConfirmaModos.UseVisualStyleBackColor = false;
+            // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.textBox1.Location = new System.Drawing.Point(111, 35);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(47, 21);
+            this.textBox1.TabIndex = 149;
+            this.textBox1.Text = "0";
+            // 
+            // button44
+            // 
+            this.button44.AccessibleName = "Animar os deslocamentos";
+            this.button44.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.button44.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.button44.FlatAppearance.BorderSize = 0;
+            this.button44.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
+            this.button44.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.button44.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button44.ForeColor = System.Drawing.Color.White;
+            this.button44.ImageIndex = 7;
+            this.button44.ImageList = this.imgTemaEscuroResultados_24x24;
+            this.button44.Location = new System.Drawing.Point(204, 0);
+            this.button44.Name = "button44";
+            this.button44.Size = new System.Drawing.Size(28, 28);
+            this.button44.TabIndex = 45;
+            this.button44.Tag = "0";
+            this.button44.Text = "  ";
+            this.button44.UseVisualStyleBackColor = false;
+            // 
+            // panel52
+            // 
+            this.panel52.BackColor = System.Drawing.Color.Black;
+            this.panel52.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel52.Location = new System.Drawing.Point(70, 1);
+            this.panel52.Name = "panel52";
+            this.panel52.Size = new System.Drawing.Size(3, 60);
+            this.panel52.TabIndex = 44;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.ForeColor = System.Drawing.Color.White;
+            this.label26.Location = new System.Drawing.Point(75, 45);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(37, 13);
+            this.label26.TabIndex = 43;
+            this.label26.Text = "Escala";
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(159, 35);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(16, 21);
+            this.numericUpDown1.TabIndex = 42;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // button45
+            // 
+            this.button45.AccessibleName = "Configurações de visualização dos deslocamentos";
+            this.button45.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.button45.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.button45.FlatAppearance.BorderSize = 0;
+            this.button45.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
+            this.button45.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.button45.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button45.ForeColor = System.Drawing.Color.White;
+            this.button45.ImageIndex = 6;
+            this.button45.ImageList = this.imgTemaEscuroResultados_24x24;
+            this.button45.Location = new System.Drawing.Point(38, 32);
+            this.button45.Name = "button45";
+            this.button45.Size = new System.Drawing.Size(28, 28);
+            this.button45.TabIndex = 41;
+            this.button45.Tag = "0";
+            this.button45.Text = "  ";
+            this.button45.UseVisualStyleBackColor = false;
+            // 
+            // button49
+            // 
+            this.button49.AccessibleName = "Mostrar os valores dos deslocamentos";
+            this.button49.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.button49.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.button49.FlatAppearance.BorderSize = 0;
+            this.button49.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
+            this.button49.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.button49.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button49.ForeColor = System.Drawing.Color.White;
+            this.button49.ImageIndex = 5;
+            this.button49.ImageList = this.imgTemaEscuroResultados_24x24;
+            this.button49.Location = new System.Drawing.Point(38, 1);
+            this.button49.Name = "button49";
+            this.button49.Size = new System.Drawing.Size(28, 28);
+            this.button49.TabIndex = 40;
+            this.button49.Tag = "0";
+            this.button49.Text = "  ";
+            this.button49.UseVisualStyleBackColor = false;
+            // 
+            // button50
+            // 
+            this.button50.AccessibleName = "Deslocamento renderizado";
+            this.button50.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.button50.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.button50.FlatAppearance.BorderSize = 0;
+            this.button50.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
+            this.button50.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.button50.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button50.ForeColor = System.Drawing.Color.White;
+            this.button50.ImageIndex = 4;
+            this.button50.ImageList = this.imgTemaEscuroResultados_24x24;
+            this.button50.Location = new System.Drawing.Point(3, 30);
+            this.button50.Name = "button50";
+            this.button50.Size = new System.Drawing.Size(28, 28);
+            this.button50.TabIndex = 39;
+            this.button50.Tag = "0";
+            this.button50.Text = "  ";
+            this.button50.UseVisualStyleBackColor = false;
+            // 
+            // button51
+            // 
+            this.button51.AccessibleName = "Deslocamento colorido";
+            this.button51.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.button51.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.button51.FlatAppearance.BorderSize = 0;
+            this.button51.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
+            this.button51.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.button51.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button51.ForeColor = System.Drawing.Color.White;
+            this.button51.ImageIndex = 3;
+            this.button51.ImageList = this.imgTemaEscuroResultados_24x24;
+            this.button51.Location = new System.Drawing.Point(3, 1);
+            this.button51.Name = "button51";
+            this.button51.Size = new System.Drawing.Size(28, 28);
+            this.button51.TabIndex = 38;
+            this.button51.Tag = "0";
+            this.button51.Text = "  ";
+            this.button51.UseVisualStyleBackColor = false;
+            // 
+            // label27
+            // 
+            this.label27.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label27.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label27.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.ForeColor = System.Drawing.SystemColors.ActiveBorder;
+            this.label27.Location = new System.Drawing.Point(0, 49);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(243, 13);
+            this.label27.TabIndex = 17;
+            this.label27.Text = "Deslocamentos";
+            this.label27.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // Gerenciador
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Menu;
             this.ClientSize = new System.Drawing.Size(1370, 574);
+            this.Controls.Add(this.panelDinamica1);
             this.Controls.Add(this.pnCorResultados);
             this.Controls.Add(this.pnUtilitarios);
             this.Controls.Add(this.pnCargasCombinacoes);
@@ -6316,8 +6594,8 @@ namespace PG
             ((System.ComponentModel.ISupportInitialize)(this.trackValorDiagramas)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.EscalaDiagrama_UpDown)).EndInit();
             this.panelDeformacoes.ResumeLayout(false);
-            this.panel37.ResumeLayout(false);
-            this.panel37.PerformLayout();
+            this.pnDeformacaoRibbon.ResumeLayout(false);
+            this.pnDeformacaoRibbon.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackValorDeformacao)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.EscalaDeformacao_UpDown)).EndInit();
             this.panel33.ResumeLayout(false);
@@ -6333,6 +6611,10 @@ namespace PG
             this.pnCorResultados.ResumeLayout(false);
             this.pnCorResultados.PerformLayout();
             this.PanelCores.ResumeLayout(false);
+            this.panelDinamica1.ResumeLayout(false);
+            this.panel41.ResumeLayout(false);
+            this.panel41.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -6659,7 +6941,7 @@ namespace PG
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ImageList imgTemaEscuroResultados_24x24;
         private System.Windows.Forms.Panel panelDeformacoes;
-        private System.Windows.Forms.Panel panel37;
+        private System.Windows.Forms.Panel pnDeformacaoRibbon;
         private System.Windows.Forms.Button btDefY;
         private System.Windows.Forms.Button btDefX;
         private System.Windows.Forms.Button btDefTotal;
@@ -6788,6 +7070,22 @@ namespace PG
         public System.Windows.Forms.Button btOkTensoes;
         public System.Windows.Forms.Button btConfirmaDeslocamentos;
         public System.Windows.Forms.ComboBox cbFiltroTensao;
+        private System.Windows.Forms.Panel panelDinamica1;
+        private System.Windows.Forms.Panel panel41;
+        public System.Windows.Forms.Button btConfirmaModos;
+        public System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button button44;
+        private System.Windows.Forms.Panel panel52;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.Button button45;
+        private System.Windows.Forms.Button button49;
+        private System.Windows.Forms.Button button50;
+        private System.Windows.Forms.Button button51;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Button btDinamica1;
     }
 }
 

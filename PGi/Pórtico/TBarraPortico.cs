@@ -133,7 +133,7 @@ namespace PG
         private double cos_alpha, cos_teta, sen_alpha, sen_teta;
         public double alfa;
         public bool InseridaManualmente;
-        public double comprimento,
+        public double comprimento, pesoLinear, // pesoLinar é usado na analise modal
                       carga,
                       E1, Iz1, Iy1, J1, G1, L, A1,
                       angulo,
@@ -183,7 +183,7 @@ namespace PG
         [NonSerialized]
         public double[,] RGB_CortantesPositivos;
 
-        public double[,] MatrizLocal, MatrizLocal_sem_offset, MatrizOffset, MatrizGeometrica,
+        public double[,] MatrizLocal, MatrizMassaLocal, MatrizMassaGlobal, MatrizLocal_sem_offset, MatrizOffset, MatrizGeometrica,
                          MatrizGlobal, MatrizOffset_Transposta,
                          MatrizRotacao,SubMatrizRotacao,
                          MatRotacaoTransposta,
@@ -2958,6 +2958,145 @@ namespace PG
                         MatrizLocal[i, j] *= FatorRigidezTensionOnly;
             }
         }
+
+        /// <summary>
+        /// Monta a matriz de massa consistente local do elemento espacial.
+        /// Os índices seguem a convenção existente da barra:
+        /// [ux, uy, uz, rx, ry, rz] para cada um dos dois nós.
+        /// </summary>
+        public void SetMatrizMassaLocal(double massaLinear)
+        {
+            if (massaLinear <= 0.0 || double.IsNaN(massaLinear) || double.IsInfinity(massaLinear))
+                throw new ArgumentOutOfRangeException(nameof(massaLinear),
+                    "A massa linear da barra deve ser maior que zero.");
+
+            if (L <= 0.0 || double.IsNaN(L) || double.IsInfinity(L))
+                throw new InvalidOperationException(
+                    "O comprimento da barra deve ser maior que zero.");
+
+            if (A1 <= 0.0 || double.IsNaN(A1) || double.IsInfinity(A1))
+                throw new InvalidOperationException(
+                    "A área da seção da barra deve ser maior que zero.");
+
+            MatrizMassaLocal = new double[13, 13];
+
+            double fator = massaLinear * L / 420.0;
+            double l2 = L * L;
+
+            // Inércia polar de massa por unidade de área: (Iy + Iz) / A.
+            // Iy1, Iz1 e A1 já estão convertidos para m4 e m2 na geração da malha.
+            double raioPolarQuadrado = (Iy1 + Iz1) / A1;
+
+            // Deslocamento axial ux.
+            MatrizMassaLocal[1, 1] = 140.0 * fator;
+            MatrizMassaLocal[1, 7] = 70.0 * fator;
+            MatrizMassaLocal[7, 7] = 140.0 * fator;
+
+            // Torção rx, incluindo a inércia rotacional da seção.
+            MatrizMassaLocal[4, 4] = 140.0 * raioPolarQuadrado * fator;
+            MatrizMassaLocal[4, 10] = 70.0 * raioPolarQuadrado * fator;
+            MatrizMassaLocal[10, 10] = 140.0 * raioPolarQuadrado * fator;
+
+            // Flexão no plano local x-y: uy e rz.
+            MatrizMassaLocal[2, 2] = 156.0 * fator;
+            MatrizMassaLocal[2, 6] = 22.0 * L * fator;
+            MatrizMassaLocal[2, 8] = 54.0 * fator;
+            MatrizMassaLocal[2, 12] = -13.0 * L * fator;
+
+            MatrizMassaLocal[6, 6] = 4.0 * l2 * fator;
+            MatrizMassaLocal[6, 8] = 13.0 * L * fator;
+            MatrizMassaLocal[6, 12] = -3.0 * l2 * fator;
+
+            MatrizMassaLocal[8, 8] = 156.0 * fator;
+            MatrizMassaLocal[8, 12] = -22.0 * L * fator;
+            MatrizMassaLocal[12, 12] = 4.0 * l2 * fator;
+
+            // Flexão no plano local x-z: uz e ry.
+            // Os sinais das rotações acompanham os adotados em SetMatrizLocal().
+            MatrizMassaLocal[3, 3] = 156.0 * fator;
+            MatrizMassaLocal[3, 5] = -22.0 * L * fator;
+            MatrizMassaLocal[3, 9] = 54.0 * fator;
+            MatrizMassaLocal[3, 11] = 13.0 * L * fator;
+
+            MatrizMassaLocal[5, 5] = 4.0 * l2 * fator;
+            MatrizMassaLocal[5, 9] = -13.0 * L * fator;
+            MatrizMassaLocal[5, 11] = -3.0 * l2 * fator;
+
+            MatrizMassaLocal[9, 9] = 156.0 * fator;
+            MatrizMassaLocal[9, 11] = 22.0 * L * fator;
+            MatrizMassaLocal[11, 11] = 4.0 * l2 * fator;
+
+            // Completa o triângulo inferior para garantir simetria exata.
+            for (int linha = 1; linha <= 12; linha++)
+                for (int coluna = linha + 1; coluna <= 12; coluna++)
+                    MatrizMassaLocal[coluna, linha] = MatrizMassaLocal[linha, coluna];
+        }
+
+        /// <summary>
+        /// Transforma a matriz de massa consistente do sistema local para o global.
+        /// Quando existem offsets, aplica a mesma transformação cinemática
+        /// utilizada pela matriz de rigidez.
+        /// </summary>
+        public void SetMatrizMassaGlobal()
+        {
+            if (MatrizMassaLocal == null)
+                throw new InvalidOperationException(
+                    "A matriz de massa local deve ser montada antes da transformação global.");
+
+            if (MatrizRotacao == null)
+                throw new InvalidOperationException(
+                    "A matriz de rotação da barra não foi montada.");
+
+            double[,] massaParaRotacionar = (double[,])MatrizMassaLocal.Clone();
+
+            bool possuiOffset = !Geom.Iguais(barraOriginal.Dados.ez, 0) ||
+                                !Geom.Iguais(barraOriginal.Dados.ey, 0) ||
+                                tem_ex_f || tem_ex_i;
+
+            if (possuiOffset)
+            {
+                SetMatrizOffset(
+                    0,
+                    barraOriginal.Dados.ey / 1000,
+                    barraOriginal.Dados.ez / 1000,
+                    0,
+                    barraOriginal.Dados.ey / 1000,
+                    barraOriginal.Dados.ez / 1000);
+
+                double[,] offsetTransposta = new double[13, 13];
+                double[,] produtoIntermediario = new double[13, 13];
+                double[,] massaComOffset = new double[13, 13];
+
+                TAlgebra.Transposta(ref MatrizOffset, ref offsetTransposta, 12, 12);
+                TAlgebra.Multiplica_Matriz_Matriz(ref offsetTransposta, ref massaParaRotacionar,ref produtoIntermediario, 12, 12);
+
+                TAlgebra.Multiplica_Matriz_Matriz(ref produtoIntermediario, ref MatrizOffset,ref massaComOffset, 12, 12);
+
+                massaParaRotacionar = massaComOffset;
+            }
+
+            double[,] rotacaoTransposta = new double[13, 13];
+            double[,] produtoRotacao = new double[13, 13];
+            MatrizMassaGlobal = new double[13, 13];
+
+            TAlgebra.Transposta(ref MatrizRotacao, ref rotacaoTransposta, 12, 12);
+            TAlgebra.Multiplica_Matriz_Matriz(ref rotacaoTransposta, ref massaParaRotacionar,ref produtoRotacao, 12, 12);
+            TAlgebra.Multiplica_Matriz_Matriz(ref produtoRotacao, ref MatrizRotacao,ref MatrizMassaGlobal, 12, 12);
+
+            // Remove apenas diferenças de arredondamento entre os triângulos.
+            for (int linha = 1; linha <= 12; linha++)
+            {
+                for (int coluna = linha + 1; coluna <= 12; coluna++)
+                {
+                    double valorSimetrico = 0.5 *
+                        (MatrizMassaGlobal[linha, coluna] + MatrizMassaGlobal[coluna, linha]);
+
+                    MatrizMassaGlobal[linha, coluna] = valorSimetrico;
+                    MatrizMassaGlobal[coluna, linha] = valorSimetrico;
+                }
+            }
+        }
+
         public bool desativarTensionOnly;
         void TransformaMatrizLocal_EixosPrincipais_Para_EixosGeometricos()
         {

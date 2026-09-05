@@ -647,6 +647,7 @@
     <Compile Include="Pórtico\TCarregamentoPortico.cs" />
     <Compile Include="Pórtico\TGradienteCoresDeformacoes.cs" />
     <Compile Include="Pórtico\TGradienteCoresDiagramas.cs" />
+    <Compile Include="Pórtico\TPorticoEspacialModal.cs" />
     <Compile Include="Pórtico\TSuavizacaoDiagramas.cs" />
     <Compile Include="Utilitários\GeracaoLoopsGeometria.cs" />
     <Compile Include="Utilitários\TIntersecoes.cs" />

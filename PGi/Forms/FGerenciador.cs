@@ -242,6 +242,7 @@ namespace PG
         void SetBotoes()
         {
             panelDeformacoes.Visible = false;
+            panelDinamica1.Visible = false;
             panelDiagramas.Visible = false;
             panelTensoes.Visible = false;
 
@@ -2275,6 +2276,7 @@ namespace PG
                     // CalculaPavimentos();
 
                     CalculaPortico();
+
                     processo.pnMatrizRigidez.Refresh();
                  //   MsgCalculo("Cálculo", "CÁLCULO CONCLUÍDO DO SUCESSO - [" + DateTime.Now.Subtract(HoraInicio).ToString("mm") + ":" + DateTime.Now.Subtract(HoraInicio).ToString("ss") + "]", 0, true);
                     
@@ -2381,7 +2383,10 @@ namespace PG
             if (ConfiguracoesPGi.CfgProjeto.portico == null)
                 throw new TErroPortico(PorticoEspacial, "Não há configurações de pórtico.");
 
-            bool calculoOk = formDesenho.Estrutura.PorticoEspacial.Calcular(ConfiguracoesPGi.CfgProjeto.portico.calcularEsforcos, ConfiguracoesPGi.CfgProjeto.sistema.UsarDll);
+            bool calculoOk = formDesenho.Estrutura.PorticoEspacial.Calcular(ConfiguracoesPGi.CfgProjeto.portico.calcularEsforcos, 
+                                                                            ConfiguracoesPGi.CfgProjeto.sistema.UsarDll, 
+                                                                            ConfiguracoesPGi.CfgProjeto.sistema.CalculaModosVibracao, 
+                                                                            ConfiguracoesPGi.CfgProjeto.sistema.numeroModos);
 
             HistoricoCalculo("");
             if (calculoOk)
@@ -4682,7 +4687,7 @@ namespace PG
 
         private void button35_Click(object sender, EventArgs e)
         {
-            formDesenho.ObjetosSelecionados.RemoveAll(obj => obj.NaoPermiteMoverOuCopiar == true);
+            formDesenho.RemeverDosObjetosSelecionados_Nao_Copiaveis();
 
             if (formDesenho.ObjetosSelecionados.Count > 0)
             {
@@ -4699,7 +4704,7 @@ namespace PG
 
         private void button33_Click(object sender, EventArgs e)
         {
-            formDesenho.ObjetosSelecionados.RemoveAll(obj => obj.NaoPermiteMoverOuCopiar == true);
+            formDesenho.RemeverDosObjetosSelecionados_Nao_Copiaveis();
 
             if (formDesenho.ObjetosSelecionados.Count > 0)
             {
@@ -4712,7 +4717,7 @@ namespace PG
 
         private void button32_Click(object sender, EventArgs e)
         {
-            formDesenho.ObjetosSelecionados.RemoveAll(obj => obj.NaoPermiteMoverOuCopiar == true);
+            formDesenho.RemeverDosObjetosSelecionados_Nao_Copiaveis();
 
             if (formDesenho.ObjetosSelecionados.Count > 0)
             {
@@ -5809,11 +5814,11 @@ namespace PG
         public FEdicaoNos fRotacionarElementos;
         private void button36_Click(object sender, EventArgs e)
         {
-           /* if (fRotacionarElementos == null)
-                fRotacionarElementos = new FRotacionarElementos(this);
+            /* if (fRotacionarElementos == null)
+                 fRotacionarElementos = new FRotacionarElementos(this);
 
-            fRotacionarElementos.Show();*/
-            formDesenho.ObjetosSelecionados.RemoveAll(obj => obj.NaoPermiteMoverOuCopiar == true);
+             fRotacionarElementos.Show();*/
+            formDesenho.RemeverDosObjetosSelecionados_Nao_Copiaveis();
 
             if (formDesenho.ObjetosSelecionados.Count > 0)
             {
@@ -5867,7 +5872,7 @@ namespace PG
         public FEspelharElementos fEspelharelementos;
         private void button31_Click(object sender, EventArgs e)
         {
-            formDesenho.ObjetosSelecionados.RemoveAll(obj => obj.NaoPermiteMoverOuCopiar == true);
+            formDesenho.RemeverDosObjetosSelecionados_Nao_Copiaveis();
             formDesenho.ObjetosSelecionados.RemoveAll(o => o.Tipo != Const.ID_BARRAGENERICA);
 
             if (formDesenho.ObjetosSelecionados.Count > 0)
@@ -6439,7 +6444,7 @@ namespace PG
 
         private void button27_Click(object sender, EventArgs e)
         {
-            formDesenho.ObjetosSelecionados.RemoveAll(obj => obj.NaoPermiteMoverOuCopiar == true);
+            formDesenho.RemeverDosObjetosSelecionados_Nao_Copiaveis();
 
             if (formDesenho.ObjetosSelecionados.Count > 0)
             {
@@ -6769,6 +6774,12 @@ namespace PG
 
         private void button44_Click(object sender, EventArgs e)
         {
+            if (!formDesenho.Estrutura.barras.Exists(o => o.Selecionado) && cbFiltroTensao.SelectedIndex == 1)
+            {
+                MessageBox.Show("Nenhum elemento foi selecionado!");
+                return;
+            }
+            
             ConfirmaEscalaTensao(); 
             ChamaAguardar(this, "Processando. Aguarde...");
             if ((string)btTensaoNormal.Tag == "1")
@@ -6789,6 +6800,12 @@ namespace PG
 
         private void button43_Click(object sender, EventArgs e)
         {
+            if (!formDesenho.Estrutura.barras.Exists(o => o.Selecionado) && cbFiltroEsforcos.SelectedIndex == 1)
+            {
+                MessageBox.Show("Nenhum elemento foi selecionado!");
+                return;
+            }
+            
             ChamaAguardar(this, "Processando. Aguarde...");
 
             if (!formDesenho.fx && !formDesenho.fy && !formDesenho.fz && !formDesenho.mz && !formDesenho.my && !formDesenho.mx)
@@ -6845,7 +6862,13 @@ namespace PG
         private void btConfirmaDeslocamentos_Click(object sender, EventArgs e)
         {
             //   formDesenho.DirtyPortico();
-           // ConfirmaEscalaDef();
+            // ConfirmaEscalaDef();
+            if (!formDesenho.Estrutura.barras.Exists(o => o.Selecionado) && cbFiltroDeslocamentos.SelectedIndex == 1)
+            {
+                MessageBox.Show("Nenhum elemento foi selecionado!");
+                return;
+            }
+
             ChamaAguardar(this, "Processando. Aguarde...");
 
             bool texto = (string)btDeformacaoTextos.Tag == "1";
@@ -6898,10 +6921,108 @@ namespace PG
         {
             ChamarAtualizacaoResultados(btConfirmaDeslocamentos, true);
         }
-
+        
         private void btReacao_Click_1(object sender, EventArgs e)
         {
 
+        }
+
+        private void panel41_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void btDinamica1_Click(object sender, EventArgs e)
+        {
+            this.tabResultados.Controls.Add(this.panelDinamica1);
+            panelDinamica1.Visible = true;
+            panelDinamica1.Dock = DockStyle.Left;
+
+            formDesenho.AtualizaShaders();
+            if ((string)btDeformacao.Tag == "1")
+            {
+                btDeformacao.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
+                btDeformacao.Tag = "0";
+            }
+            else
+            {
+                if (necessitaCalculo)
+                {
+                    MessageBox.Show("Modificações foram feitas. É necessário calcular a estrutura.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+
+                btDeformacao.BackColor = System.Drawing.Color.White;
+                btDeformacao.Tag = "1";
+            }
+
+            //  if ((string)btTensoes.Tag == "1")
+            //      btTensoes_Click(btTensoes, null);
+            cbFiltroDeslocamentos.SelectedIndex = 0;
+
+            bool deformar = (string)btDeformacao.Tag == "1";
+
+            formDesenho.MostraDeformacoes = deformar;
+
+            panelDeformacoes.Visible = deformar;
+
+            btDefTotal_Click(btDefTotal, null);
+
+            if (!deformar)
+            {
+                btDefTotal.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
+                btDefTotal.Tag = "0";
+
+                if ((string)btDeformacaoTextos.Tag == "1")
+                    btDeformacaoTextos_Click(btDeformacaoTextos, null);
+
+                if ((string)btDeformacaoSolida.Tag == "1")
+                    btDeformacaoSolida_Click_1(btDeformacaoSolida, null);
+
+                if ((string)btDeformacaoColorida.Tag == "1")
+                    btDeformacaoColorida_Click(btDeformacaoColorida, null);
+
+                if ((string)btMostraIndeformada.Tag == "1")
+                    btMostraIndeformada_Click_1(btMostraIndeformada, null);
+
+                formDesenho.MostraTextoDeformacoes = false;
+
+                foreach (TBarraGenerica b in formDesenho.Estrutura.barras)
+                {
+                    b.Visivel = !btDeformacoes2.Checked;
+                    b.DirtyTriangulos = true;
+                    b.DirtyArestas = true;
+                    b.DirtySelecao = true;
+                }
+
+                btAnimarDeformacao.Tag = "0";
+                btAnimarDeformacao.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
+
+                formDesenho.AnimarDeformacoes(false);
+            }
+            else
+            {
+                if ((string)btAnimarDeformacao.Tag == "1")
+                {
+                    btAnimarDeformacao_Click_1(btAnimarDeformacao, null);
+                }
+                if ((string)btfx.Tag == "1" || (string)btfy.Tag == "1" || (string)btfz.Tag == "1" || (string)btmx.Tag == "1" || (string)btmy.Tag == "1" || (string)btmz.Tag == "1")
+                    return;
+
+                foreach (TBarraGenerica b in formDesenho.Estrutura.barras)
+                {
+                    b.Visivel = false;
+                    b.DirtyTriangulos = true;
+                    b.DirtyArestas = true;
+                    b.DirtySelecao = true;
+                }
+
+                formDesenho.DirtyPortico();
+
+            }
+
+            formDesenho.AtualizaShaders();
+            AtualizaDesenho();
         }
 
         private void cbFiltroEsforcos_SelectedIndexChanged(object sender, EventArgs e)

@@ -30,13 +30,15 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FConfiguraProjeto));
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Visualização");
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Pórtico");
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Solver");
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Análise", new System.Windows.Forms.TreeNode[] {
-            treeNode12,
-            treeNode13});
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Unidades");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Visualização");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Pórtico");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Dinâmica");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Solver");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Análise", new System.Windows.Forms.TreeNode[] {
+            treeNode2,
+            treeNode3,
+            treeNode4});
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Unidades");
             this.panel1 = new System.Windows.Forms.Panel();
             this.button3 = new System.Windows.Forms.Button();
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
@@ -136,6 +138,8 @@
             this.button6 = new System.Windows.Forms.Button();
             this.CorArestas = new System.Windows.Forms.Button();
             this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.label24 = new System.Windows.Forms.Label();
+            this.btCorEstruturaGeral = new System.Windows.Forms.Button();
             this.MostrarNumeroElementos = new System.Windows.Forms.CheckBox();
             this.MostrarDescricaoElementos = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -147,8 +151,10 @@
             this.label11 = new System.Windows.Forms.Label();
             this.btCorCima = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.label24 = new System.Windows.Forms.Label();
-            this.btCorEstruturaGeral = new System.Windows.Forms.Button();
+            this.tabPage10 = new System.Windows.Forms.TabPage();
+            this.label25 = new System.Windows.Forms.Label();
+            this.numModos = new System.Windows.Forms.NumericUpDown();
+            this.chCalcularModos = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -187,6 +193,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.TamanhoNo)).BeginInit();
             this.tabPage8.SuspendLayout();
             this.tabPage9.SuspendLayout();
+            this.tabPage10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numModos)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -249,20 +257,22 @@
             this.tv.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tv.Location = new System.Drawing.Point(0, 0);
             this.tv.Name = "tv";
-            treeNode11.Name = "Nó0";
-            treeNode11.Text = "Visualização";
-            treeNode12.Name = "Node0";
-            treeNode12.Text = "Pórtico";
-            treeNode13.Name = "Node0";
-            treeNode13.Text = "Solver";
-            treeNode14.Name = "Node0";
-            treeNode14.Text = "Análise";
-            treeNode15.Name = "Node4";
-            treeNode15.Text = "Unidades";
+            treeNode1.Name = "Nó0";
+            treeNode1.Text = "Visualização";
+            treeNode2.Name = "Node0";
+            treeNode2.Text = "Pórtico";
+            treeNode3.Name = "Dinâmica";
+            treeNode3.Text = "Dinâmica";
+            treeNode4.Name = "Node0";
+            treeNode4.Text = "Solver";
+            treeNode5.Name = "Node0";
+            treeNode5.Text = "Análise";
+            treeNode6.Name = "Node4";
+            treeNode6.Text = "Unidades";
             this.tv.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode11,
-            treeNode14,
-            treeNode15});
+            treeNode1,
+            treeNode5,
+            treeNode6});
             this.tv.Size = new System.Drawing.Size(171, 405);
             this.tv.TabIndex = 19;
             this.tv.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -283,6 +293,7 @@
             this.tbForm.Controls.Add(this.tabPage4);
             this.tbForm.Controls.Add(this.tabPage5);
             this.tbForm.Controls.Add(this.tabPage2);
+            this.tbForm.Controls.Add(this.tabPage10);
             this.tbForm.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbForm.Location = new System.Drawing.Point(0, 0);
             this.tbForm.Name = "tbForm";
@@ -917,6 +928,7 @@
             this.sisSolver_cholesky.Tag = "200";
             this.sisSolver_cholesky.Text = "Direto - Cholesky Supernodal";
             this.sisSolver_cholesky.UseVisualStyleBackColor = true;
+            this.sisSolver_cholesky.CheckedChanged += new System.EventHandler(this.sisSolver_cholesky_CheckedChanged);
             // 
             // tabPage5
             // 
@@ -1405,6 +1417,26 @@
             this.tabPage8.Text = "Elementos";
             this.tabPage8.UseVisualStyleBackColor = true;
             // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(10, 72);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(74, 13);
+            this.label24.TabIndex = 109;
+            this.label24.Text = "Cor elementos";
+            // 
+            // btCorEstruturaGeral
+            // 
+            this.btCorEstruturaGeral.BackColor = System.Drawing.Color.Olive;
+            this.btCorEstruturaGeral.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btCorEstruturaGeral.Location = new System.Drawing.Point(90, 65);
+            this.btCorEstruturaGeral.Name = "btCorEstruturaGeral";
+            this.btCorEstruturaGeral.Size = new System.Drawing.Size(24, 20);
+            this.btCorEstruturaGeral.TabIndex = 108;
+            this.btCorEstruturaGeral.UseVisualStyleBackColor = false;
+            this.btCorEstruturaGeral.Click += new System.EventHandler(this.btCorEstruturaGeral_Click);
+            // 
             // MostrarNumeroElementos
             // 
             this.MostrarNumeroElementos.AutoSize = true;
@@ -1511,25 +1543,59 @@
             this.btCorCima.UseVisualStyleBackColor = false;
             this.btCorCima.Click += new System.EventHandler(this.btCorCima_Click);
             // 
-            // label24
+            // tabPage10
             // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(10, 72);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(74, 13);
-            this.label24.TabIndex = 109;
-            this.label24.Text = "Cor elementos";
+            this.tabPage10.Controls.Add(this.chCalcularModos);
+            this.tabPage10.Controls.Add(this.label25);
+            this.tabPage10.Controls.Add(this.numModos);
+            this.tabPage10.Location = new System.Drawing.Point(4, 22);
+            this.tabPage10.Name = "tabPage10";
+            this.tabPage10.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage10.Size = new System.Drawing.Size(543, 379);
+            this.tabPage10.TabIndex = 7;
+            this.tabPage10.Text = "Dinâmica";
+            this.tabPage10.UseVisualStyleBackColor = true;
             // 
-            // btCorEstruturaGeral
+            // label25
             // 
-            this.btCorEstruturaGeral.BackColor = System.Drawing.Color.Olive;
-            this.btCorEstruturaGeral.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btCorEstruturaGeral.Location = new System.Drawing.Point(90, 65);
-            this.btCorEstruturaGeral.Name = "btCorEstruturaGeral";
-            this.btCorEstruturaGeral.Size = new System.Drawing.Size(24, 20);
-            this.btCorEstruturaGeral.TabIndex = 108;
-            this.btCorEstruturaGeral.UseVisualStyleBackColor = false;
-            this.btCorEstruturaGeral.Click += new System.EventHandler(this.btCorEstruturaGeral_Click);
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(6, 45);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(93, 13);
+            this.label25.TabIndex = 62;
+            this.label25.Text = "Número de modos";
+            // 
+            // numModos
+            // 
+            this.numModos.Location = new System.Drawing.Point(103, 38);
+            this.numModos.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.numModos.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numModos.Name = "numModos";
+            this.numModos.Size = new System.Drawing.Size(44, 20);
+            this.numModos.TabIndex = 61;
+            this.numModos.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            // 
+            // chCalcularModos
+            // 
+            this.chCalcularModos.AutoSize = true;
+            this.chCalcularModos.Location = new System.Drawing.Point(9, 15);
+            this.chCalcularModos.Name = "chCalcularModos";
+            this.chCalcularModos.Size = new System.Drawing.Size(157, 17);
+            this.chCalcularModos.TabIndex = 100;
+            this.chCalcularModos.Text = "Calcular modos de vibração";
+            this.chCalcularModos.UseVisualStyleBackColor = true;
             // 
             // FConfiguraProjeto
             // 
@@ -1601,6 +1667,9 @@
             this.tabPage8.PerformLayout();
             this.tabPage9.ResumeLayout(false);
             this.tabPage9.PerformLayout();
+            this.tabPage10.ResumeLayout(false);
+            this.tabPage10.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numModos)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1719,5 +1788,9 @@
         private System.Windows.Forms.CheckBox MostrarNumeroElementos;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Button btCorEstruturaGeral;
+        private System.Windows.Forms.TabPage tabPage10;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.NumericUpDown numModos;
+        private System.Windows.Forms.CheckBox chCalcularModos;
     }
 }

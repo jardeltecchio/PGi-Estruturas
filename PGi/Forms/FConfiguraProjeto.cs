@@ -75,6 +75,11 @@ namespace PG
               sisSolver_Cholheskypadrao.Checked = Cfg.sistema.Solver_choleskypadrao;
               sisSolver_cg.Checked = Cfg.sistema.Solver_gradiente_conjugado;
               sisDll.Checked     = Cfg.sistema.UsarDll;
+
+                if (Cfg.sistema.numeroModos == 0) Cfg.sistema.numeroModos = 1;
+
+              numModos.Value = Cfg.sistema.numeroModos;
+              chCalcularModos.Checked = Cfg.sistema.CalculaModosVibracao;
               InterromperCalculoConexoesPerdidas.Checked = Cfg.sistema.Interromper_calculo_conexao_perdida;
               InterromperCalculoElementosSobrepostos.Checked = Cfg.sistema.Interromper_calculo_elementos_sobrepostos;
                 if (Cfg.sistema.toleranciaConexaoPerdida == 0)
@@ -94,9 +99,12 @@ namespace PG
                 Cfg.sistema.Solver_gradiente_conjugado = sisSolver_cg.Checked;
                 Cfg.sistema.Solver_choleskypadrao = sisSolver_Cholheskypadrao.Checked;
                 Cfg.sistema.UsarDll = sisDll.Checked;
+                Cfg.sistema.CalculaModosVibracao= chCalcularModos.Checked;
+
                 Cfg.sistema.Interromper_calculo_conexao_perdida = InterromperCalculoConexoesPerdidas.Checked;
                 Cfg.sistema.Interromper_calculo_elementos_sobrepostos= InterromperCalculoElementosSobrepostos.Checked;
                 Cfg.sistema.toleranciaConexaoPerdida = (int)toleranciaInterromperCalculo.Value;
+                Cfg.sistema.numeroModos = (int)numModos.Value;
             }
         }
 
@@ -494,6 +502,11 @@ namespace PG
         {
             if (colorDialog1.ShowDialog() == DialogResult.OK)
                 btCorEstruturaGeral.BackColor = colorDialog1.Color;
+        }
+
+        private void sisSolver_cholesky_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

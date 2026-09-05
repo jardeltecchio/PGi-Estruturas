@@ -48,7 +48,7 @@ namespace PG
         [NonSerialized]
         double[] K_Mola;
         [NonSerialized]
-        bool[] glRestrito;
+        public bool[] glRestrito;
         List<TTrechoViga> trechos;
         List<TPilar> pilares;
         [NonSerialized]
@@ -62,8 +62,6 @@ namespace PG
         List<Forcas_Portico> casos_x_forcas;
         List<Forcas_Portico> combinacoes_x_forcas;
         List<Deslocamentos_Portico> casos_x_deslocamentos, combinacoes_x_deslocamentos;
-        [NonSerialized]
-        bool[] barrasAtivasTensionOnly;  // rastreia quais barras tension-only estão ativas na iteração
 
         public TPorticoEspacial()
         {
@@ -1311,9 +1309,23 @@ namespace PG
                 Atualiza(1);
                 Progresso.Value = 0;
             }
-            catch
+            catch (Exception ex)
             {
+                calculoOk = false;
+                CalculouEsforcos = false;
 
+                string mensagemErro = "ERRO NO CÁLCULO DO PÓRTICO: " + ex.Message;
+
+                HistoricoCalculo(mensagemErro);
+
+                MessageBox.Show(
+                    ex.Message,
+                    "Erro no cálculo do pórtico",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
+                if (Progresso != null)
+                    Progresso.Value = 0;
             }
             //  MatrizRigidez = null;
             glRestrito = null;
@@ -1324,7 +1336,7 @@ namespace PG
             return calculoOk;
         }
 
-        public bool Calcular(bool calculaEsforco, bool UsarDll)
+        public bool Calcular(bool calculaEsforco, bool UsarDll, bool modal, int numModos)
         {
             try
             {
@@ -1367,8 +1379,8 @@ namespace PG
 
                 CriarMatrizSFF(UsarDll);
                 SetCoeficientesMola();
-
-               // if (!MatrizDeRigidez(UsarDll))
+                
+                // if (!MatrizDeRigidez(UsarDll))
                 //    throw new TErroPavimento(this, "   >ERRO: ERRO NA MONTAGEM DO SISTEMA DE EQUAÇÕES.");
 
                 // ResolveEquacoes() contém o loop iterativo POR CASO/COMBINAÇÃO
@@ -1385,11 +1397,93 @@ namespace PG
                         return false;
                 }
                 Atualiza(1);
-                Progresso.Value = 0;
-            }
-            catch
-            {
+                if (modal)
+                {
+                    // A análise estática e seus resultados já foram concluídos.
+                    Progresso.Value = 0;
+                    Progresso.Minimum = 0;
+                    Progresso.Maximum = 100;
 
+                    HistoricoCalculo("");
+                    HistoricoCalculo("      ---- Início da análise modal ----");
+
+                    HistoricoCalculo("      > Montagem da rigidez");
+                    Progresso.Refresh();
+
+                    // O solver estático pode ter sobrescrito K com seus fatores.
+                    // Remontar em uma matriz nova antes da análise modal.
+                    if (!SetMatrizesBarras() || !CriarMatrizSFF(UsarDll) || !MatrizDeRigidez(UsarDll))
+                        throw new TErroPavimento(this,
+                            "ERRO NA MONTAGEM DA MATRIZ DE RIGIDEZ PARA ANÁLISE MODAL.");
+                    Progresso.Value = 0;
+                    HistoricoCalculo("      > Montagem da rigidez - [Ok]", true);
+
+                    TPorticoEspacialModal porticoModal = new TPorticoEspacialModal(this, numModos);
+                    string etapaModalEmAndamento = null;
+                    string mensagemModalEmAndamento = null;
+                    porticoModal.ProgressoAlterado += (percentual, etapa) =>
+                    {
+                        Progresso.Value = percentual;
+                        string mensagem = null;
+                        if (etapa == "Análise modal: montagem da matriz de massa")
+                            mensagem = "Montagem da matriz de massa";
+                        else if (etapa == "Análise modal: fatoração da rigidez")
+                            mensagem = "Fatoração da rigidez";
+                        else if (etapa.StartsWith("Análise modal: Lanczos,"))
+                            mensagem = "Lanczos:" + etapa.Substring("Análise modal: Lanczos,".Length);
+                        else if (etapa == "Análise modal: recuperação dos modos e frequências")
+                            mensagem = "Recuperação";
+                        else if (etapa == "Análise modal concluída")
+                            mensagem = "Análise modal concluída";
+
+                        if (mensagem != null)
+                        {
+                            string chaveEtapa = mensagem.StartsWith("Lanczos:") ? "Lanczos" : mensagem;
+                            if (chaveEtapa == etapaModalEmAndamento)
+                            {
+                                // Atualizar o vetor na linha atual, sem adicionar uma linha por iteração.
+                                HistoricoCalculo("      > " + mensagem, true);
+                            }
+                            else
+                            {
+                                if (mensagemModalEmAndamento != null)
+                                    HistoricoCalculo("      > " + mensagemModalEmAndamento + " - [Ok]", true);
+                                HistoricoCalculo("      > " + mensagem);
+                                etapaModalEmAndamento = chaveEtapa;
+                            }
+                            mensagemModalEmAndamento = mensagem;
+                        }
+                        Progresso.Refresh();
+                    };
+                    porticoModal.Calcular(numModos);
+                    if (mensagemModalEmAndamento != null)
+                        HistoricoCalculo("      > " + mensagemModalEmAndamento + " - [Ok]", true);
+                }
+                else
+                    Progresso.Value = 0;
+            }
+            catch (Exception ex)
+            {
+                calculoOk = false;
+                CalculouEsforcos = false;
+
+                string mensagemErro = "ERRO NO CÁLCULO DO PÓRTICO";
+
+                if (modal)
+                    mensagemErro += " / ANÁLISE MODAL";
+
+                mensagemErro += ": " + ex.Message;
+
+                HistoricoCalculo(mensagemErro);
+
+                MessageBox.Show(
+                    ex.Message,
+                    modal ? "Erro na análise modal" : "Erro no cálculo do pórtico",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
+                if (Progresso != null)
+                    Progresso.Value = 0;
             }
           //  MatrizRigidez = null;
             glRestrito = null;

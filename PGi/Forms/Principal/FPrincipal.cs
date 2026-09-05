@@ -2772,6 +2772,14 @@ namespace PG
                 MessageBox.Show("erro handlemousedownedit" + ee.Message);
             }
         }
+        public void RemeverDosObjetosSelecionados_Nao_Copiaveis()
+        {
+            foreach (TObjetoDesenho obj in ObjetosSelecionados)
+                if (obj.NaoPermiteMoverOuCopiar)
+                    obj.SetaSelecao(false, false);
+
+            ObjetosSelecionados.RemoveAll(obj => obj.NaoPermiteMoverOuCopiar == true);
+        }
 
         public void MouseEdit(double x, double y, double z, double arg1, string arg2, double ang)
         {
