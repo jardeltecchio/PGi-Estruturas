@@ -129,6 +129,23 @@ namespace PG
         public int NEE; // número externo do elemento. Ordem em que foi inserido na geração da malha
 
         public int[] GlGlobal; /*vetor que retorna o gl global em função do gl local*/
+        // GL globais das duas extremidades, índices 1..12; colunas = modos.
+        public double[,] DeslocamentosModais { get; private set; }
+        public double[] MaximosDeslocamentosModais { get; private set; }
+
+        public void PrepararDesenhoModal(double[,] modos, int[] equacoes, bool[] restritos,
+            double[] maximos)
+        {
+            DeslocamentosModais = new double[13, modos.GetLength(1)];
+            MaximosDeslocamentosModais = maximos;
+            for (int gl = 1; gl <= 12; gl++)
+            {
+                int global = GlGlobal[gl];
+                if (restritos[global]) continue;
+                for (int modo = 0; modo < modos.GetLength(1); modo++)
+                    DeslocamentosModais[gl, modo] = modos[equacoes[global] - 1, modo];
+            }
+        }
         public bool PreSelecionada;
         private double cos_alpha, cos_teta, sen_alpha, sen_teta;
         public double alfa;
@@ -867,6 +884,131 @@ namespace PG
         public float[] BatchTriangulos;
         [NonSerialized]
         public Triangulo[] TriangulosSelecao;
+        public void AtualizaTriangulos_ModoVibracao(ref List<float> coords_triangulos,
+                                ref List<Triangulo> triangulos_selecao,
+                                ref double MultiplicadorAltura,
+                                ref bool arestas,
+                                ref bool LinhaContorno,
+                                int modoVibracao,
+                                bool moodo_colorido)
+        {
+            List<float> coords = new List<float>();
+            List<Triangulo> selecao = new List<Triangulo>();
+
+            PreencheTriangulos_ModoVibracao(ref coords, ref selecao, ref MultiplicadorAltura, ref arestas, ref LinhaContorno, modoVibracao, moodo_colorido);
+
+            BatchTriangulos = coords.ToArray();
+            TriangulosSelecao = selecao.ToArray();
+
+            DirtyTriangulos = false;
+            DirtySelecao = false;
+        }
+        public void PreencheTriangulos_ModoVibracao(ref List<float> coords_triangulos,
+                                ref List<Triangulo> triangulos_selecao,
+                                ref double MultiplicadorAltura,
+                                ref bool arestas,
+                                ref bool LinhaContorno,
+                                int modoVibracao,
+                                bool modo_colorido)
+        {
+            if (barra_de_articulacao || barraRigida || !Visivel || DeslocamentosModais == null ||
+                modoVibracao < 0 || modoVibracao >= DeslocamentosModais.GetLength(1) ||
+                coordssecao_i == null || coordssecao_f == null ||
+                double.IsNaN(MultiplicadorAltura) || double.IsInfinity(MultiplicadorAltura))
+                return;
+
+            // Manter as seções originais: cada quadro parte da geometria indeformada.
+            coordssecao_i_temp = new List<vec3[]>();
+            coordssecao_f_temp = new List<vec3[]>();
+            vec3 corI = CorSolidoModal(0, modoVibracao, modo_colorido);
+            vec3 corF = CorSolidoModal(1, modoVibracao, modo_colorido);
+            for (int q = 0; q < coordssecao_i.Count; q++)
+            {
+                int quantidade = coordssecao_i[q].Length;
+                if (q >= coordssecao_f.Count || coordssecao_f[q].Length != quantidade)
+                    throw new InvalidOperationException("Seções incompatíveis no desenho modal da barra " + IDBarra);
+                vec3[] inicio = new vec3[quantidade];
+                vec3[] fim = new vec3[quantidade];
+                vec3[] tempI = new vec3[quantidade];
+                vec3[] tempF = new vec3[quantidade];
+                for (int k = 0; k < quantidade; k++)
+                {
+                    // coordssecao usa (x,-y,-z) em relação ao espaço gráfico.
+                    vec3 pi = coordssecao_i[q][k];
+                    vec3 pf = coordssecao_f[q][k];
+                    inicio[k] = PontoSolidoModal(new vec3(pi.x, -pi.y, -pi.z), 0, modoVibracao, MultiplicadorAltura);
+                    fim[k] = PontoSolidoModal(new vec3(pf.x, -pf.y, -pf.z), 1, modoVibracao, MultiplicadorAltura);
+                    tempI[k] = new vec3(inicio[k].x, -inicio[k].y, -inicio[k].z);
+                    tempF[k] = new vec3(fim[k].x, -fim[k].y, -fim[k].z);
+                    tempI[k].pontoEmRaio = pi.pontoEmRaio;
+                    tempF[k].pontoEmRaio = pf.pontoEmRaio;
+                }
+                coordssecao_i_temp.Add(tempI);
+                coordssecao_f_temp.Add(tempF);
+                if (quantidade < 3) continue;
+                bool fechado = (coordssecao_i[q][0] - coordssecao_i[q][quantidade - 1]).Magnitude() < 1e-12;
+                int lados = fechado ? quantidade - 1 : quantidade;
+                for (int k = 0; k < lados; k++)
+                {
+                    int proximo = (k + 1) % quantidade;
+                    AdicionarTrianguloModal(fim[k], inicio[k], inicio[proximo], corF, corI, corI,
+                        ref coords_triangulos, ref triangulos_selecao);
+                    AdicionarTrianguloModal(fim[k], inicio[proximo], fim[proximo], corF, corI, corF,
+                        ref coords_triangulos, ref triangulos_selecao);
+                }
+            }
+            for (int ponta = 0; ponta < 2; ponta++)
+            {
+                TNoPortico no = ponta == 0 ? pIni : pFin;
+                TNoPortico offset = (ponta == 0 ? pIni_offset : pFin_offset) ?? no;
+                vec3 posicao = PontoSolidoModal(new vec3(offset.x, offset.y, offset.z), ponta, modoVibracao, MultiplicadorAltura);
+                no.coordx_tela = posicao.x;
+                no.coordy_tela = posicao.y;
+                no.coordz_tela = posicao.z;
+            }
+        }
+
+        private vec3 PontoSolidoModal(vec3 ponto, int ponta, int modo, double escala)
+        {
+            TNoPortico no = ponta == 0 ? pIni : pFin;
+            int gl = 1 + 6 * ponta;
+
+            // Braço em coordenadas estruturais; inclui excentricidade e seção.
+            double rx = ponto.x - no.x, ry = -(ponto.z - no.z), rz = -(ponto.y - no.y);
+            double tx = DeslocamentosModais[gl + 3, modo];
+            double ty = DeslocamentosModais[gl + 4, modo];
+            double tz = DeslocamentosModais[gl + 5, modo];
+            double ux = DeslocamentosModais[gl, modo] + ty * rz - tz * ry;
+            double uy = DeslocamentosModais[gl + 1, modo] + tz * rx - tx * rz;
+            double uz = DeslocamentosModais[gl + 2, modo] + tx * ry - ty * rx;
+            return new vec3(ponto.x + escala * ux, ponto.y - escala * uz, ponto.z - escala * uy);
+        }
+
+        private vec3 CorSolidoModal(int ponta, int modo, bool colorido)
+        {
+            if (Selecionado) return new vec3(1, 0, 0);
+            if (!colorido) return new vec3(Rgb[0] / 255.0, Rgb[1] / 255.0, Rgb[2] / 255.0);
+            TNoPortico no = ponta == 0 ? pIni : pFin;
+            TNoPortico offset = (ponta == 0 ? pIni_offset : pFin_offset) ?? no;
+            vec3 origem = new vec3(offset.x, offset.y, offset.z);
+            double amplitude = (PontoSolidoModal(origem, ponta, modo, 1.0) - origem).Magnitude();
+            double maximo = MaximosDeslocamentosModais == null ? 0.0 : MaximosDeslocamentosModais[modo];
+            double t = maximo > 0.0 ? Math.Min(1.0, amplitude / maximo) : 0.0;
+            return new vec3(Math.Max(0.0, 2 * t - 1), 1 - Math.Abs(2 * t - 1), Math.Max(0.0, 1 - 2 * t));
+        }
+
+        private void AdicionarTrianguloModal(vec3 a, vec3 b, vec3 c, vec3 ca, vec3 cb, vec3 cc,
+            ref List<float> coords, ref List<Triangulo> selecao)
+        {
+            vec3 normal = (b - a).CrossProduct(c - a);
+            double norma = normal.Magnitude();
+            if (norma == 0.0 || double.IsNaN(norma) || double.IsInfinity(norma)) return;
+            normal.Normalize();
+            SetaTriangulo(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z,
+                ref coords, ref selecao, ref normal.x, ref normal.y, ref normal.z,
+                ca.x, ca.y, ca.z, cb.x, cb.y, cb.z, cc.x, cc.y, cc.z);
+        }
+
         public void AtualizaTriangulos(ref List<float> coords_triangulos,
                                         ref List<Triangulo> triangulos_selecao,
                                         bool MostrarIndeformada,
@@ -1356,7 +1498,64 @@ namespace PG
 
             return true;
         }
+        public void Preenche_Barra_ModoVibracao(
+            ref List<float> coords_arestas,
+            ref double MultiplicadorAltura,
+            ref bool Colorido,
+            ref bool arestas,
+            int modoVibracao)
+        {
+            if (barra_de_articulacao || !Visivel || DeslocamentosModais == null ||
+                modoVibracao < 0 || modoVibracao >= DeslocamentosModais.GetLength(1))
+                return;
+            if (double.IsNaN(MultiplicadorAltura) || double.IsInfinity(MultiplicadorAltura))
+                return;
 
+            // Segmento unifilar entre as extremidades deslocadas da barra da malha.
+            for (int ponta = 0; ponta < 2; ponta++)
+            {
+                int gl = ponta * 6 + 1;
+                TNoPortico no = ponta == 0 ? pIni : pFin;
+                TNoPortico offset = (ponta == 0 ? pIni_offset : pFin_offset) ?? no;
+                double ux = DeslocamentosModais[gl, modoVibracao];
+                double uy = DeslocamentosModais[gl + 1, modoVibracao];
+                double uz = DeslocamentosModais[gl + 2, modoVibracao];
+                // Deslocamento do braço rígido: u_offset = u_no + theta x r.
+                // Converter primeiro o braço gráfico (X,-Z,-Y) para os eixos estruturais.
+                double rx = offset.x - no.x;
+                double ry = -(offset.z - no.z);
+                double rz = -(offset.y - no.y);
+                double tx = DeslocamentosModais[gl + 3, modoVibracao];
+                double ty = DeslocamentosModais[gl + 4, modoVibracao];
+                double tz = DeslocamentosModais[gl + 5, modoVibracao];
+                ux += ty * rz - tz * ry;
+                uy += tz * rx - tx * rz;
+                uz += tx * ry - ty * rx;
+
+                double x = offset.x + ux * MultiplicadorAltura;
+                double y = offset.y - uz * MultiplicadorAltura;
+                double z = offset.z - uy * MultiplicadorAltura;
+                double vermelho = Rgb[0] / 255.0;
+                double verde = Rgb[1] / 255.0;
+                double azul = Rgb[2] / 255.0;
+                if (Colorido && MaximosDeslocamentosModais != null)
+                {
+                    double maximo = MaximosDeslocamentosModais[modoVibracao];
+                    double amplitude = Math.Sqrt(ux * ux + uy * uy + uz * uz);
+                    double t = maximo > 0 ? Math.Min(1.0, amplitude / maximo) : 0.0;
+                    // Escala comum ao modo: azul (zero), verde (meio), vermelho (máximo).
+                    vermelho = Math.Max(0.0, 2.0 * t - 1.0);
+                    verde = 1.0 - Math.Abs(2.0 * t - 1.0);
+                    azul = Math.Max(0.0, 1.0 - 2.0 * t);
+                }
+                if (Selecionado) { vermelho = 1.0; verde = 0.0; azul = 0.0; }
+                setLista(ref coords_arestas, x, y, z);
+                setLista(ref coords_arestas, vermelho, verde, azul);
+                no.coordx_tela = x;
+                no.coordy_tela = y;
+                no.coordz_tela = z;
+            }
+        }
         public void Preenche_Barra(
                          ref List<float> coords_arestas, bool MostrarIndeformada,
                          ref double MultiplicadorAltura,
@@ -1562,11 +1761,10 @@ namespace PG
 
             if (Geom.Iguais(pFin_offset.z, pIni_offset.z)) pFin_offset.z= pIni_offset.z;*/
         }
-        void InicializaSecaoCopia(ref double MultiplicadorAltura, int tipocarga, int caso, int comb)
+        void InicializaSecaoCopia()
         {
             secaoCopia_i = (TSecao)barraOriginal.Dados.secaoSemRotacao.Clone();
             secaoCopia_f = (TSecao)barraOriginal.Dados.secaoSemRotacao.Clone();
-
 
             cy = ((((pFin.z * -1) - (pIni.z * -1))) / comprimento);
 
@@ -1593,11 +1791,11 @@ namespace PG
 
             if (secaoCopia_i.poligonos != null)
             {
-                if (tipocarga == 0)
+               /* if (tipocarga == 0)
                     DeslocamentosLocais = casos_x_esforcos[caso].DeslocamentosLocais;
                 else
                 if (tipocarga == 1)
-                    DeslocamentosLocais = combinacoes_x_esforcos[comb].DeslocamentosLocais;
+                    DeslocamentosLocais = combinacoes_x_esforcos[comb].DeslocamentosLocais;*/
 
                 centroRotacao.x = 0;
                 centroRotacao.y = 0;
@@ -1994,6 +2192,295 @@ namespace PG
         [NonSerialized]
         public double[] tensoes_fin;
 
+        public void OrientaSecaoNoEspaco_ModoVibracao(ref double MultiplicadorAltura, int modoVibracao)
+        {
+            // if (barra_de_articulacao) return;
+
+            if (Dados.secao.poligonos == null)
+                return;
+
+            AcertaPontosNotacaoCientifica();
+
+            InicializaSecaoCopia();
+
+            coordssecao_i = new List<vec3[]>();
+            coordssecao_f = new List<vec3[]>();
+
+            xi = pIni_offset.x;//xi_;
+            yi = pIni_offset.y;//yi_;
+            zi = pIni_offset.z;//zi_;
+
+            xf = pFin_offset.x;//xf_;
+            yf = pFin_offset.y;//yf_;
+            zf = pFin_offset.z;//zf_;
+
+            double CY = ((((pFin.z * -1) - (pIni.z * -1))) / comprimento);
+
+            double length;
+            double x_i;
+            if (!Geom.Iguais(pIni.x, pFin.x))
+            {
+                length = comprimento;
+                x_i = 0;// ex_i;
+
+                if (pIni.x > pFin.x)
+                {
+                    length = -comprimento;
+                    //  length -= ex_f;
+                    //      x_i =  -ex_i;
+                }
+                //else
+                //  length += ex_f;
+            }
+            else
+            {
+                length = comprimento;// + ex_f;
+                x_i = 0;// ex_i;
+            }
+
+            for (int q = 0; q < secaoCopia_i.poligonos.Count; q++)
+            {
+                qtd_CoordsSecao = secaoCopia_i.poligonos[q].coords.Count();
+
+                coordssecao_f.Add(new vec3[qtd_CoordsSecao]);
+                coordssecao_i.Add(new vec3[qtd_CoordsSecao]);
+
+                if (!Geom.Iguais(pIni.x, pFin.x))
+                {
+                    if (pIni.x > pFin.x)
+                    {
+                        //AlfaAlterado = -alfa;
+
+                        for (i = 0; i < qtd_CoordsSecao; i++)
+                        {
+                            coordssecao_i[q][i] = (new vec3(x_i, secaoCopia_i.poligonos[q].coords[i].X, secaoCopia_i.poligonos[q].coords[i].Y));
+                            coordssecao_f[q][i] = new vec3(length, secaoCopia_i.poligonos[q].coords[i].X, secaoCopia_i.poligonos[q].coords[i].Y);
+                            //   coordssecao_f[q][i] = new vec3(-comprimento, secaoCopia_i.poligonos[q].coords[i].X, secaoCopia_i.poligonos[q].coords[i].Y);
+                        }
+                    }
+                    else
+                    {
+                        for (i = 0; i < qtd_CoordsSecao; i++)
+                        {
+                            coordssecao_i[q][i] = new vec3(x_i, secaoCopia_i.poligonos[q].coords[i].X, secaoCopia_i.poligonos[q].coords[i].Y);
+                            coordssecao_f[q][i] = new vec3(length, secaoCopia_i.poligonos[q].coords[i].X, secaoCopia_i.poligonos[q].coords[i].Y);
+                            //      coordssecao_f[q][i] = new vec3(comprimento, secaoCopia_i.poligonos[q].coords[i].X, secaoCopia_i.poligonos[q].coords[i].Y);
+                        }
+                    }
+                }
+                else
+                if (Geom.Iguais(Math.Abs(CY), 1, 0.00001))
+                {
+                    if ((pIni.z * -1) < (pFin.z * -1))
+                    {
+                        for (i = 0; i < qtd_CoordsSecao; i++)
+                        {
+                            coordssecao_i[q][i] = new vec3(x_i, secaoCopia_i.poligonos[q].coords[i].X, secaoCopia_i.poligonos[q].coords[i].Y);
+                            //  coordssecao_f[q][i] = (new vec3(comprimento, secaoCopia_i.poligonos[q].coords[i].X, secaoCopia_i.poligonos[q].coords[i].Y));
+                            coordssecao_f[q][i] = (new vec3(length, secaoCopia_i.poligonos[q].coords[i].X, secaoCopia_i.poligonos[q].coords[i].Y));
+                        }
+                    }
+                    else
+                    {
+                        for (i = 0; i < qtd_CoordsSecao; i++)
+                        {
+                            coordssecao_i[q][i] = new vec3(x_i, secaoCopia_i.poligonos[q].coords[i].X, secaoCopia_i.poligonos[q].coords[i].Y);
+                            //coordssecao_f[q][i] = (new vec3(comprimento, secaoCopia_i.poligonos[q].coords[i].X, secaoCopia_i.poligonos[q].coords[i].Y));
+                            coordssecao_f[q][i] = (new vec3(length, secaoCopia_i.poligonos[q].coords[i].X, secaoCopia_i.poligonos[q].coords[i].Y));
+                        }
+                    }
+                }
+                else
+                {
+                    for (i = 0; i < qtd_CoordsSecao; i++)
+                    {
+                        coordssecao_i[q][i] = new vec3(x_i, secaoCopia_i.poligonos[q].coords[i].X, secaoCopia_i.poligonos[q].coords[i].Y);
+                        //     coordssecao_f[q][i] = (new vec3(comprimento, secaoCopia_i.poligonos[q].coords[i].X, secaoCopia_i.poligonos[q].coords[i].Y));
+                        coordssecao_f[q][i] = (new vec3(length, secaoCopia_i.poligonos[q].coords[i].X, secaoCopia_i.poligonos[q].coords[i].Y));
+                    }
+                }
+            }
+
+            if (!Geom.Iguais(barraOriginal.pIni.x, barraOriginal.pFin.x))
+            {
+                if (barraOriginal.pIni.x > barraOriginal.pFin.x)
+                {
+                    AlfaAlterado = -alfa;
+                }
+                else
+                {
+                    AlfaAlterado = alfa;
+                }
+            }
+            else
+            if (Geom.Iguais(Math.Abs(cy), 1, 0.00001))
+            {
+                AlfaAlterado = alfa + 90;
+            }
+            else
+            {
+                AlfaAlterado = alfa;
+            }
+
+            InicializaEixosRotacoes("I");
+            
+            for (int q = 0; q < secaoCopia_i.poligonos.Count; q++)
+                for (i = 0; i < secaoCopia_i.poligonos[q].coords.Count(); i++)
+                    coordssecao_f[q][i].x = 0;
+
+            InicializaEixosRotacoes("F");
+
+            for (int q = 0; q < secaoCopia_i.poligonos.Count; q++)
+                for (i = 0; i < secaoCopia_i.poligonos[q].coords.Count(); i++)
+                    coordssecao_f[q][i].x += length;
+
+            try
+            {
+
+                {
+                    zi_maior_que_zf = false;
+                    //  if (!Geom.Iguais(Math.Abs(zf), Math.Abs(zi), 0.001))
+                    zi_maior_que_zf = ((zi * -1) > (zf * -1));
+
+                    xi_igual_xf = Geom.Iguais(pIni_offset.x, pFin_offset.x);
+
+                    tx = (xi);
+                    ty = (yi);
+                    tz = (zi);
+
+                    xi -= tx;
+                    yi -= ty;
+                    zi -= tz;
+
+                    xf -= tx;
+                    yf -= ty;
+                    zf -= tz;
+
+                    if (Geom.Iguais(xi, 0))
+                        xi = 0;
+                    if (Geom.Iguais(yi, 0))
+                        yi = 0;
+                    if (Geom.Iguais(zi, 0))
+                        zi = 0;
+
+                    if (Geom.Iguais(xf, 0))
+                        xf = 0;
+                    if (Geom.Iguais(yf, 0))
+                        yf = 0;
+                    if (Geom.Iguais(zf, 0))
+                        zf = 0;
+
+                    /*faço uma translação da barra para o ponto zero, como se eu fizesse o comando mover do programa
+                     * para o ponto zero pegando o pIni como pivo */
+
+                    cx = ((xi) - (xf)) / comprimento;
+                    cy = ((yi) - (yf)) / comprimento;
+
+                    cz = ((zi) - (zf)) / comprimento;
+
+                    u1 = new vec3(xi, yi, zi * -1);
+                    u2 = new vec3(xf, yf, zf * -1);
+
+                    //Encontrar angulo que a barra faz com os planos XY e XZ
+
+                    //PLANO XY
+                    normxy = new vec3(0, 0, 1);
+
+                    u = u1 - u2;
+
+
+                    NdotU = (normxy.DotProduct(u));
+                    ndotu_mod = normxy.Magnitude() * u.Magnitude();
+                    cos_alfa = Math.Abs(NdotU / ndotu_mod);
+                    angXY = RMath.rad2deg(Math.Acos(cos_alfa));
+                    angXY = (90 - angXY) * 1;
+
+                    //PLANO XZ
+                    normxz = new vec3(0, 1, 0);
+                    u = u1 - u2;
+
+                    NdotU = (normxz.DotProduct(u));
+                    ndotu_mod = normxz.Magnitude() * u.Magnitude();
+                    cos_alfa = Math.Abs(NdotU / ndotu_mod);
+
+                    if (!Geom.Iguais(u1.x - u2.x, 0))
+                        angXZ = RMath.rad2deg(Math.Atan(u1.y - u2.y / (u1.x - u2.x)));
+                    else
+                    {
+                        if (!Geom.Iguais(yi, yf))
+                        {
+                            if (yi < yf)
+                                angXZ = -90;
+                            else
+                                angXZ = 90;
+                        }
+                        else
+                            angXZ = 90;
+                    }
+
+                    pos = new vec3(0, 0, 0);
+                    xAnt = xi;
+
+                    if (!xi_igual_xf)
+                        if (pIni_offset.x < pFin_offset.x)
+                            angXY *= -1;
+
+                    if (!Geom.Iguais(Math.Abs(angXZ), 90))
+                        angXZ *= -1;
+
+                    if (xi_igual_xf)
+                        angXY *= -1;
+
+                    if (zi_maior_que_zf)
+                        angXY *= -1;
+
+                    for (int q = 0; q < secaoCopia_i.poligonos.Count; q++)
+                    {
+                        for (i = 0; i < secaoCopia_i.poligonos[q].coords.Count(); i++)
+                        {
+                            xi = coordssecao_i[q][i].x;
+                            yi = coordssecao_i[q][i].y;
+                            zi = coordssecao_i[q][i].z;
+
+                            xf = coordssecao_f[q][i].x;
+                            yf = coordssecao_f[q][i].y;
+                            zf = coordssecao_f[q][i].z;
+
+                            posicao[1] = xi;
+                            posicao[2] = yi;
+                            posicao[3] = zi;
+
+                            Geom.rotY(angXY, ref posicao, ref posicaoFinal);
+                            Geom.rotZ(angXZ, ref posicaoFinal, ref posicaoFinal2);
+
+                            coordssecao_i[q][i].x = posicaoFinal2[1] + tx;
+                            coordssecao_i[q][i].y = (posicaoFinal2[2] + ty) * -1;
+                            coordssecao_i[q][i].z = (posicaoFinal2[3] + tz) * -1;
+
+                            posicao[1] = xf;
+                            posicao[2] = yf;
+                            posicao[3] = zf;
+
+                            Geom.rotY(angXY, ref posicao, ref posicaoFinal);
+                            Geom.rotZ(angXZ, ref posicaoFinal, ref posicaoFinal2);
+
+                            coordssecao_f[q][i].x = posicaoFinal2[1] + tx;
+                            coordssecao_f[q][i].y = (posicaoFinal2[2] + ty) * -1;
+                            coordssecao_f[q][i].z = (posicaoFinal2[3] + tz) * -1;
+
+                            coordssecao_f[q][i].pontoEmRaio = Dados.secao.poligonos[q].coords[i].pontoEmRaio;
+                            coordssecao_i[q][i].pontoEmRaio = Dados.secao.poligonos[q].coords[i].pontoEmRaio;
+                        }
+                    }
+                }
+            }
+
+            catch (Exception e)
+            {
+                System.Windows.Forms.MessageBox.Show(e.Message);
+            }
+        }
+
         public void OrientaSecaoNoEspaco(ref double MultiplicadorAltura, int tipocarga, int caso, int comb)
         {
             // if (barra_de_articulacao) return;
@@ -2005,7 +2492,7 @@ namespace PG
 
             AcertaPontosNotacaoCientifica();
 
-            InicializaSecaoCopia(ref MultiplicadorAltura, tipocarga, caso, comb);
+            InicializaSecaoCopia();
             //RotacionaBarra_conforme_as_rotacoes(ref MultiplicadorAltura, tipocarga, caso, comb);
 
         /*    qtd_CoordsSecao = Dados.secao.poligonos[q].coords.Count();

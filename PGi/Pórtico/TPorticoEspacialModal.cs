@@ -34,7 +34,52 @@ namespace PG
         // Colunas: modos normalizados por phi^T M phi = 1.
         // Linhas: graus de liberdade livres, na numeração de K e M (id - 1).
         public double[,] ModosVibracao { get; private set; }
-        public const double ToleranciaConvergencia = 1e-3;
+        // Linhas = modos; colunas = X, Y, Z estruturais. Massa modal efetiva em %.
+        public double[,] PercentuaisMassaModal { get; private set; }
+
+        private void CalcularParticipacaoModal()
+        {
+            double[,] percentuais = new double[numModos, 3];
+            double[] massasModais = new double[numModos];
+            for (int modo = 0; modo < numModos; modo++)
+            {
+                double[] phi = new double[portico.NLinhas];
+                for (int i = 0; i < phi.Length; i++) phi[i] = ModosVibracao[i, modo];
+                massasModais[modo] = ProdutoInternoMassa(phi, phi);
+                if (massasModais[modo] <= 0.0)
+                    throw new InvalidOperationException("Massa generalizada inválida no cálculo da participação modal.");
+            }
+            for (int direcao = 0; direcao < 3; direcao++)
+            {
+                double[] influencia = new double[portico.NLinhas];
+                bool possuiGlLivre = false;
+                for (int gl = direcao + 1; gl <= portico.Ngl; gl += 6)
+                    if (!portico.glRestrito[gl])
+                    {
+                        influencia[portico.id[gl] - 1] = 1.0;
+                        possuiGlLivre = true;
+                    }
+                if (!possuiGlLivre) continue;
+                double[] massaInfluencia = MultiplicarMassa(influencia);
+                double massaDirecao = ProdutoEscalar(influencia, massaInfluencia);
+                if (massaDirecao <= 0.0 || double.IsNaN(massaDirecao) || double.IsInfinity(massaDirecao))
+                    throw new InvalidOperationException("Massa de referência inválida na participação modal.");
+                for (int modo = 0; modo < numModos; modo++)
+                {
+                    double projecao = 0.0;
+                    for (int i = 0; i < influencia.Length; i++)
+                        projecao += ModosVibracao[i, modo] * massaInfluencia[i];
+                    // 100 * (phi^T M r)^2 / [(phi^T M phi) * (r^T M r)].
+                    double razao = (projecao / Math.Sqrt(massasModais[modo])) / Math.Sqrt(massaDirecao);
+                    double percentual = 100.0 * razao * razao;
+                    if (double.IsNaN(percentual) || double.IsInfinity(percentual))
+                        throw new InvalidOperationException("Percentual de massa modal inválido.");
+                    percentuais[modo, direcao] = percentual;
+                }
+            }
+            PercentuaisMassaModal = percentuais;
+        }
+        public const double ToleranciaConvergencia = 1e-4;
         public double[] ResiduosRelativos { get; private set; }
         public bool[] ModosConvergidos { get; private set; }
         public bool Convergiu { get; private set; }
@@ -813,6 +858,7 @@ namespace PG
             FrequenciasAngulares = null;
             FrequenciasNaturais = null;
             ModosVibracao = null;
+            PercentuaisMassaModal = null;
             ResiduosRelativos = null;
             ModosConvergidos = null;
             Convergiu = false;
@@ -827,6 +873,7 @@ namespace PG
             InformarProgresso(15, "Análise modal: fatoração da rigidez");
             PrepararOperadorShiftInvert();
             ConstruirBaseLanczos();
+            CalcularParticipacaoModal();
             InformarProgresso(100, "Análise modal concluída");
 
             // K vem do pórtico, já montada e com os vínculos aplicados

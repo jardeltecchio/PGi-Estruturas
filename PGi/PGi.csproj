@@ -397,6 +397,12 @@
     <Compile Include="Forms\FEspelharElementos.Designer.cs">
       <DependentUpon>FEspelharElementos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FRelatorios.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FRelatorios.Designer.cs">
+      <DependentUpon>FRelatorios.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FRotacionarElementos.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -648,6 +654,7 @@
     <Compile Include="Pórtico\TGradienteCoresDeformacoes.cs" />
     <Compile Include="Pórtico\TGradienteCoresDiagramas.cs" />
     <Compile Include="Pórtico\TPorticoEspacialModal.cs" />
+    <Compile Include="Pórtico\TRelatoriosResultados.cs" />
     <Compile Include="Pórtico\TSuavizacaoDiagramas.cs" />
     <Compile Include="Utilitários\GeracaoLoopsGeometria.cs" />
     <Compile Include="Utilitários\TIntersecoes.cs" />
@@ -792,6 +799,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FEspelharElementos.resx">
       <DependentUpon>FEspelharElementos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FRelatorios.resx">
+      <DependentUpon>FRelatorios.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FRotacionarElementos.resx">
       <DependentUpon>FRotacionarElementos.cs</DependentUpon>

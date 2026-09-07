@@ -104,6 +104,7 @@ namespace PG
         public bool Panning, CaixaSelecao, SelParcial, SelIntegral, OrtogonalLigado = true;
         public bool MostraDeformacoes, MostraTextoDeformacoes, MostraTextoDiagramas, mostraux, mostrauy, mostrauz;
         public bool MostraTensoesNormaisGradiente, MostraTensoesNormaisIsobandas;
+        public bool MostraModosVibracao;
         public int deformacao_U = 4;
         public int TipoTensao = 0;
         public bool CapPM, CapPR, CapQua, EditandoGrelha;
@@ -5221,6 +5222,95 @@ namespace PG
         float[][] BatchTriangulos_Deformacao_aux;
         int incrementosAnimacao = 25;
         public int tipoCargaResultado, id_combinacao, id_caso;
+        public void AnimarModoVibracao(bool animar)
+        {
+            try
+            {
+                AnimarDeformacao = animar;
+                decrescer = false;
+                iEscalaAnimacao = 0;
+                incrementoAnimacao = 0;
+
+                if (animar)
+                {
+
+                    if (ModoVibracaoSolido)
+                    {
+                        incrementosAnimacao = 10;
+                        this.timer1.Interval = 50;
+                    }
+                    else
+                    {
+                        incrementosAnimacao = 35;
+                        this.timer1.Interval = 20;
+                    }
+
+                    gerenciador.ChamaAguardar(this, "Criando animação. Aguarde...");
+                    incAnimar = incrementosAnimacao;
+
+                    if (ModoVibracaoSolido)
+                        incrementoAnimacao = fatorModoVibracao / incrementosAnimacao;
+                    else
+                        incrementoAnimacao = fatorModoVibracao / incrementosAnimacao;
+
+                    if (ModoVibracaoSolido)
+                    {
+                        PreencheBatchTriangulos();
+                        BatchTriangulos_Deformacao_aux = new float[incrementosAnimacao][];
+                        for (int j = 0; j < incrementosAnimacao; j++)
+                        {
+                            Application.DoEvents();
+                            BatchTriangulos_Deformacao_aux[j] = new float[BatchTriangulos_Deformacao.Count()];
+                        }
+                    }
+
+                    PreencheBatchArestas();
+                    BatchArestas_aux = new float[incrementosAnimacao][];
+                    for (int j = 0; j < incrementosAnimacao; j++)
+                    {
+                        Application.DoEvents();
+                        BatchArestas_aux[j] = new float[BatchArestas.Count()];
+                    }
+
+                    iEscalaAnimacao -= incrementoAnimacao;
+                    for (int i = 0; i < incrementosAnimacao; i++)
+                    {
+                        Application.DoEvents();
+                        iEscalaAnimacao += incrementoAnimacao;
+                        if (ModoVibracaoSolido)
+                        {
+                            PreencheBatchTriangulos();
+                            BatchTriangulos_Deformacao_aux[i] = BatchTriangulos_Deformacao;
+                        }
+
+                        PreencheBatchArestas();
+                        BatchArestas_aux[i] = BatchArestas;
+                    }
+
+                    iEscalaAnimacao += incrementoAnimacao;
+                    timer1.Enabled = true;
+
+                    gerenciador.FechaAguardar();
+                }
+                else
+                {
+                    DirtyPortico();
+                    decrescer = false;
+                    iEscalaAnimacao = 0;
+                    incrementoAnimacao = 0;
+                    timer1.Enabled = false;
+                    PreencheBatchTriangulos();
+                    PreencheBatchArestas();
+                    AtualizaVBO();
+                    DesenhaObjetos();
+                    glControl.SwapBuffers();
+                }
+            }
+            catch (Exception ee)
+            {
+                gerenciador.FechaAguardar();
+            }
+        }
         public void AnimarDeformacoes(bool animar)
         {
             try
@@ -5313,10 +5403,22 @@ namespace PG
         int incAnimar = 12;
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (Geom.Iguais(iEscalaAnimacao, fatorDeformacao) && decrescer == false)
+            if (AnimarDeformacao && MostraDeformacoes)
             {
-                incAnimar = incrementosAnimacao;
-                decrescer = true;
+                if (Geom.Iguais(iEscalaAnimacao, fatorDeformacao) && decrescer == false)
+                {
+                    incAnimar = incrementosAnimacao;
+                    decrescer = true;
+                }
+            }
+            else
+            if (AnimarDeformacao && MostraModosVibracao)
+            {
+                if (Geom.Iguais(iEscalaAnimacao, fatorModoVibracao) && decrescer == false)
+                {
+                    incAnimar = incrementosAnimacao;
+                    decrescer = true;
+                }
             }
 
             if (decrescer)
@@ -5330,7 +5432,8 @@ namespace PG
                 iEscalaAnimacao += incrementoAnimacao;
             }
 
-            if (DeformacaoSolida || MostraTensoesNormaisGradiente)
+            if (DeformacaoSolida || MostraTensoesNormaisGradiente ||
+                (MostraModosVibracao && ModoVibracaoSolido))
                 BatchTriangulos_Deformacao = BatchTriangulos_Deformacao_aux[incAnimar];
             
             BatchArestas = BatchArestas_aux[incAnimar];
@@ -5564,9 +5667,11 @@ namespace PG
             }*/
         }
         public double EscalaDiagramas = 1;
-        public bool DeformacaoColorida, DeformacaoSolida = false;
+        public double EscalaModoVibracao = 1;
+
+        public bool DeformacaoColorida, ModoVibracaoColorido, ModoVibracaoSolido, DeformacaoSolida = false;
         double h_, v, max, fatorRotacao;
-        public double fatorDiagramas, fatorDeformacao;
+        public double fatorDiagramas, fatorDeformacao, fatorModoVibracao;
         double maxDef;
         public bool fx, fy, fz, mx, my, mz;
         TBarraGenerica bg;
@@ -5712,8 +5817,8 @@ namespace PG
                     if (b.DirtyTriangulos)                    
                        b.AtualizaTriangulos(MostraDeformacoes || MostraTensoesNormaisGradiente, Unifilar);
 
-                     coords_triangulos.AddRange(b.BatchTriangulos);
-                     triangulos_selecao.AddRange(b.TriangulosSelecao);
+                    coords_triangulos.AddRange(b.BatchTriangulos);
+                    triangulos_selecao.AddRange(b.TriangulosSelecao);
 
 
                     //  b.PreencheTriangulos(ref coords_triangulos, ref triangulos_selecao, MostraDeformacoes || MostraTensoesNormaisGradiente, Unifilar);
@@ -5727,8 +5832,32 @@ namespace PG
 
                 if (Estrutura.PorticoEspacial != null)
                 {
-                    if (Estrutura.PorticoEspacial.nBarras > 0 && (MostraDeformacoes || MostraTensoesNormaisGradiente))
+                    if (Estrutura.PorticoEspacial.nBarras > 0 && (MostraDeformacoes || MostraTensoesNormaisGradiente || MostraModosVibracao))
                     {
+                        if (MostraModosVibracao && ModoVibracaoSolido)
+                        {
+                            for (j = 1; j <= Estrutura.PorticoEspacial.nBarras; j++)
+                            {
+                               double escalaModalQuadro = AnimarDeformacao ? iEscalaAnimacao : fatorModoVibracao;
+                               if (Estrutura.PorticoEspacial.barras[j].DirtyTriangulos || AnimarDeformacao)
+                               {
+                                   Estrutura.PorticoEspacial.barras[j].OrientaSecaoNoEspaco_ModoVibracao(ref escalaModalQuadro, gerenciador.cbModosVibracao.SelectedIndex);
+                                   Estrutura.PorticoEspacial.barras[j].AtualizaTriangulos_ModoVibracao(ref coords_triangulos_deformacao, ref triangulos_selecao,
+                                                                            ref escalaModalQuadro, 
+                                                                            ref Arestas, 
+                                                                            ref LinhaContornoDeformacao, 
+                                                                            gerenciador.cbModosVibracao.SelectedIndex,
+                                                                            ModoVibracaoColorido);
+                               }
+
+                               // if (!AnimarDeformacao)
+                               // {
+                                    coords_triangulos_deformacao.AddRange(Estrutura.PorticoEspacial.barras[j].BatchTriangulos);
+                                 //   triangulos_selecao.AddRange(Estrutura.PorticoEspacial.barras[j].TriangulosSelecao);
+                               // }
+                            }
+                        }
+                        else
                         if (DeformacaoSolida || MostraTensoesNormaisGradiente)
                         {
                             maxDef = Estrutura.PorticoEspacial.MaximaRotacao(tipoCargaResultado, id_caso, id_combinacao);
@@ -5754,10 +5883,10 @@ namespace PG
                                             Estrutura.PorticoEspacial.barras[j].OrientaSecaoNoEspaco(ref fatorDeformacao, tipoCargaResultado, id_caso, id_combinacao);
                                             Estrutura.PorticoEspacial.barras[j].PreencheTriangulosTensoes(ref coords_triangulos_deformacao, ref triangulos_selecao, MostrarIndeformada,
                                                                                    ref fatorDeformacao, ref Arestas, ref LinhaContornoDeformacao, ref deformacao_U,
-                                                                                    tipoCargaResultado, 
-                                                                                    id_caso, 
+                                                                                    tipoCargaResultado,
+                                                                                    id_caso,
                                                                                     id_combinacao,
-                                                                                    MostraTensoesNormaisGradiente, 
+                                                                                    MostraTensoesNormaisGradiente,
                                                                                     MostraTensoesNormaisIsobandas);
                                         }
                                     }
@@ -6033,7 +6162,7 @@ namespace PG
 
                 if (Estrutura.PorticoEspacial != null)
                 {
-                    if (Estrutura.PorticoEspacial.nBarras > 0 && (MostraDeformacoes || MostraTensoesNormaisGradiente))
+                    if (Estrutura.PorticoEspacial.nBarras > 0 && (MostraDeformacoes || MostraTensoesNormaisGradiente || MostraModosVibracao))
                     {
                         if (Arestas)
                         {
@@ -6054,8 +6183,32 @@ namespace PG
                                         Estrutura.PorticoEspacial.barras[i].Preenche_Arestas_Solido_Tensoes(ref coords_arestas, ref LinhaContornoDeformacao, ref ArestasConfObjeto);
                                 }
                             }
+                            else
+                            if (ModoVibracaoSolido)
+                            {
+                            //    for (i = 1; i <= Estrutura.PorticoEspacial.nBarras; i++)
+                              //      Estrutura.PorticoEspacial.barras[i].Preenche_Arestas_Solido(ref coords_arestas, MostrarIndeformada, ref LinhaContornoDeformacao, ref ArestasConfObjeto);
+                            }
+
                         }
 
+                        if (MostraModosVibracao)
+                        {
+                            if (!ModoVibracaoSolido)
+                            {
+                                if (!AnimarDeformacao)
+                                {
+                                    for (i = 1; i <= Estrutura.PorticoEspacial.nBarras; i++)
+                                        Estrutura.PorticoEspacial.barras[i].Preenche_Barra_ModoVibracao(ref coords_arestas, ref fatorModoVibracao, ref ModoVibracaoColorido, ref ArestasResultado, gerenciador.cbModosVibracao.SelectedIndex);
+                                }
+                                else
+                                {
+                                    for (i = 1; i <= Estrutura.PorticoEspacial.nBarras; i++)
+                                        Estrutura.PorticoEspacial.barras[i].Preenche_Barra_ModoVibracao(ref coords_arestas, ref iEscalaAnimacao, ref ModoVibracaoColorido, ref ArestasResultado, gerenciador.cbModosVibracao.SelectedIndex);
+                                }
+                            }
+                        }
+                        else
                         if (!DeformacaoSolida)
                         {
                             if (!AnimarDeformacao)
@@ -6065,18 +6218,10 @@ namespace PG
                                     TGradienteCoresDeformacao gercorDef = new TGradienteCoresDeformacao(Estrutura.PorticoEspacial.Ngl, Estrutura.PorticoEspacial,
                                     gerenciador.panelCores, gerenciador.labelCores, tipoCargaResultado, id_caso, id_combinacao, MostrarDeslocamentosEmSelecionados);
                                 }
+
                                 if (MostraTensoesNormaisGradiente)
                                 {
-                                   /* for (j = 1; j <= Estrutura.PorticoEspacial.nBarras; j++)
-                                    {
-                                        if ((MostrarTensoesEmSelecionados && Estrutura.PorticoEspacial.barras[j].barraOriginal.Selecionado) || (!MostrarTensoesEmSelecionados))
-                                        {
-                                            Estrutura.PorticoEspacial.barras[i].Preenche_Barra(ref coords_arestas, MostrarIndeformada, ref fatorDeformacao, ref DeformacaoColorida, ref ArestasResultado, ref deformacao_U,
-                                                                                                tipoCargaResultado,
-                                                                                                id_caso,
-                                                                                                id_combinacao);
-                                        }
-                                    }*/
+
                                 }
                                 else
                                 {
@@ -6091,10 +6236,10 @@ namespace PG
                             else
                             {
                                 for (i = 1; i <= Estrutura.PorticoEspacial.nBarras; i++)
-                                  Estrutura.PorticoEspacial.barras[i].Preenche_Barra(ref coords_arestas, MostrarIndeformada, ref iEscalaAnimacao, ref DeformacaoColorida, ref ArestasResultado, ref deformacao_U,
-                                                                           tipoCargaResultado,
-                                                                           id_caso,
-                                                                           id_combinacao);
+                                    Estrutura.PorticoEspacial.barras[i].Preenche_Barra(ref coords_arestas, MostrarIndeformada, ref iEscalaAnimacao, ref DeformacaoColorida, ref ArestasResultado, ref deformacao_U,
+                                                                             tipoCargaResultado,
+                                                                             id_caso,
+                                                                             id_combinacao);
                             }
                         }
                     }
