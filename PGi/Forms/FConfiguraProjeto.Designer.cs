@@ -30,15 +30,17 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FConfiguraProjeto));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Visualização");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Pórtico");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Dinâmica");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Solver");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Análise", new System.Windows.Forms.TreeNode[] {
-            treeNode2,
-            treeNode3,
-            treeNode4});
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Unidades");
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Visualização");
+            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Pórtico");
+            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Dinâmica");
+            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Estabilidade Linear");
+            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Solver");
+            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Análise", new System.Windows.Forms.TreeNode[] {
+            treeNode23,
+            treeNode24,
+            treeNode25,
+            treeNode26});
+            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("Unidades");
             this.panel1 = new System.Windows.Forms.Panel();
             this.button3 = new System.Windows.Forms.Button();
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
@@ -150,11 +152,17 @@
             this.chUsarPlanoFundoGradiente = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
             this.btCorCima = new System.Windows.Forms.Button();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.tabPage10 = new System.Windows.Forms.TabPage();
+            this.Estabilidalde = new System.Windows.Forms.TabPage();
+            this.chCalcularModosFlambagem = new System.Windows.Forms.CheckBox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.numModosFlambagem = new System.Windows.Forms.NumericUpDown();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabPage11 = new System.Windows.Forms.TabPage();
+            this.chCalcularModosVibracao = new System.Windows.Forms.CheckBox();
             this.label25 = new System.Windows.Forms.Label();
-            this.numModos = new System.Windows.Forms.NumericUpDown();
-            this.chCalcularModos = new System.Windows.Forms.CheckBox();
+            this.numModosVibracao = new System.Windows.Forms.NumericUpDown();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -194,7 +202,11 @@
             this.tabPage8.SuspendLayout();
             this.tabPage9.SuspendLayout();
             this.tabPage10.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numModos)).BeginInit();
+            this.Estabilidalde.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numModosFlambagem)).BeginInit();
+            this.tabControl2.SuspendLayout();
+            this.tabPage11.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numModosVibracao)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -247,7 +259,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(171, 405);
+            this.panel2.Size = new System.Drawing.Size(187, 405);
             this.panel2.TabIndex = 20;
             // 
             // tv
@@ -257,23 +269,25 @@
             this.tv.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tv.Location = new System.Drawing.Point(0, 0);
             this.tv.Name = "tv";
-            treeNode1.Name = "Nó0";
-            treeNode1.Text = "Visualização";
-            treeNode2.Name = "Node0";
-            treeNode2.Text = "Pórtico";
-            treeNode3.Name = "Dinâmica";
-            treeNode3.Text = "Dinâmica";
-            treeNode4.Name = "Node0";
-            treeNode4.Text = "Solver";
-            treeNode5.Name = "Node0";
-            treeNode5.Text = "Análise";
-            treeNode6.Name = "Node4";
-            treeNode6.Text = "Unidades";
+            treeNode22.Name = "Nó0";
+            treeNode22.Text = "Visualização";
+            treeNode23.Name = "Node0";
+            treeNode23.Text = "Pórtico";
+            treeNode24.Name = "Dinâmica";
+            treeNode24.Text = "Dinâmica";
+            treeNode25.Name = "Estabilidade";
+            treeNode25.Text = "Estabilidade Linear";
+            treeNode26.Name = "Node0";
+            treeNode26.Text = "Solver";
+            treeNode27.Name = "Node0";
+            treeNode27.Text = "Análise";
+            treeNode28.Name = "Node4";
+            treeNode28.Text = "Unidades";
             this.tv.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode5,
-            treeNode6});
-            this.tv.Size = new System.Drawing.Size(171, 405);
+            treeNode22,
+            treeNode27,
+            treeNode28});
+            this.tv.Size = new System.Drawing.Size(186, 405);
             this.tv.TabIndex = 19;
             this.tv.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
@@ -281,9 +295,9 @@
             // 
             this.panel3.Controls.Add(this.tbForm);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(171, 0);
+            this.panel3.Location = new System.Drawing.Point(187, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(551, 405);
+            this.panel3.Size = new System.Drawing.Size(535, 405);
             this.panel3.TabIndex = 21;
             // 
             // tbForm
@@ -294,11 +308,12 @@
             this.tbForm.Controls.Add(this.tabPage5);
             this.tbForm.Controls.Add(this.tabPage2);
             this.tbForm.Controls.Add(this.tabPage10);
+            this.tbForm.Controls.Add(this.Estabilidalde);
             this.tbForm.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbForm.Location = new System.Drawing.Point(0, 0);
             this.tbForm.Name = "tbForm";
             this.tbForm.SelectedIndex = 0;
-            this.tbForm.Size = new System.Drawing.Size(551, 405);
+            this.tbForm.Size = new System.Drawing.Size(535, 405);
             this.tbForm.TabIndex = 21;
             // 
             // tabPage1
@@ -308,7 +323,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(543, 379);
+            this.tabPage1.Size = new System.Drawing.Size(527, 379);
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Unidades";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -519,7 +534,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(543, 379);
+            this.tabPage3.Size = new System.Drawing.Size(527, 379);
             this.tabPage3.TabIndex = 3;
             this.tabPage3.Text = "Grelha";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -741,7 +756,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(543, 379);
+            this.tabPage4.Size = new System.Drawing.Size(527, 379);
             this.tabPage4.TabIndex = 4;
             this.tabPage4.Text = "Solver";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -936,7 +951,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(543, 379);
+            this.tabPage5.Size = new System.Drawing.Size(527, 379);
             this.tabPage5.TabIndex = 5;
             this.tabPage5.Text = "Pórtico";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -1022,7 +1037,7 @@
             this.tabPage2.Controls.Add(this.tabControl1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(543, 379);
+            this.tabPage2.Size = new System.Drawing.Size(527, 379);
             this.tabPage2.TabIndex = 6;
             this.tabPage2.Text = "Visualização";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1037,7 +1052,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(543, 379);
+            this.tabControl1.Size = new System.Drawing.Size(527, 379);
             this.tabControl1.TabIndex = 73;
             // 
             // tabPage6
@@ -1046,7 +1061,7 @@
             this.tabPage6.Controls.Add(this.groupBox5);
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(535, 353);
+            this.tabPage6.Size = new System.Drawing.Size(519, 353);
             this.tabPage6.TabIndex = 2;
             this.tabPage6.Text = "Modelo";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -1545,57 +1560,132 @@
             // 
             // tabPage10
             // 
-            this.tabPage10.Controls.Add(this.chCalcularModos);
-            this.tabPage10.Controls.Add(this.label25);
-            this.tabPage10.Controls.Add(this.numModos);
+            this.tabPage10.Controls.Add(this.tabControl2);
             this.tabPage10.Location = new System.Drawing.Point(4, 22);
             this.tabPage10.Name = "tabPage10";
             this.tabPage10.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage10.Size = new System.Drawing.Size(543, 379);
+            this.tabPage10.Size = new System.Drawing.Size(527, 379);
             this.tabPage10.TabIndex = 7;
             this.tabPage10.Text = "Dinâmica";
             this.tabPage10.UseVisualStyleBackColor = true;
             // 
-            // label25
+            // Estabilidalde
             // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(6, 45);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(93, 13);
-            this.label25.TabIndex = 62;
-            this.label25.Text = "Número de modos";
+            this.Estabilidalde.Controls.Add(this.chCalcularModosFlambagem);
+            this.Estabilidalde.Controls.Add(this.label26);
+            this.Estabilidalde.Controls.Add(this.numModosFlambagem);
+            this.Estabilidalde.Location = new System.Drawing.Point(4, 22);
+            this.Estabilidalde.Name = "Estabilidalde";
+            this.Estabilidalde.Padding = new System.Windows.Forms.Padding(3);
+            this.Estabilidalde.Size = new System.Drawing.Size(527, 379);
+            this.Estabilidalde.TabIndex = 8;
+            this.Estabilidalde.Text = "Estabilidade Linear";
+            this.Estabilidalde.UseVisualStyleBackColor = true;
             // 
-            // numModos
+            // chCalcularModosFlambagem
             // 
-            this.numModos.Location = new System.Drawing.Point(103, 38);
-            this.numModos.Maximum = new decimal(new int[] {
+            this.chCalcularModosFlambagem.AutoSize = true;
+            this.chCalcularModosFlambagem.Location = new System.Drawing.Point(6, 15);
+            this.chCalcularModosFlambagem.Name = "chCalcularModosFlambagem";
+            this.chCalcularModosFlambagem.Size = new System.Drawing.Size(381, 17);
+            this.chCalcularModosFlambagem.TabIndex = 103;
+            this.chCalcularModosFlambagem.Text = "Calcular multiplicadores críticos e modos de estabilidade / flambagem linear";
+            this.chCalcularModosFlambagem.UseVisualStyleBackColor = true;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(3, 45);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(174, 13);
+            this.label26.TabIndex = 102;
+            this.label26.Text = "Número de modos e multiplicadores";
+            // 
+            // numModosFlambagem
+            // 
+            this.numModosFlambagem.Location = new System.Drawing.Point(181, 38);
+            this.numModosFlambagem.Maximum = new decimal(new int[] {
             500,
             0,
             0,
             0});
-            this.numModos.Minimum = new decimal(new int[] {
+            this.numModosFlambagem.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numModos.Name = "numModos";
-            this.numModos.Size = new System.Drawing.Size(44, 20);
-            this.numModos.TabIndex = 61;
-            this.numModos.Value = new decimal(new int[] {
+            this.numModosFlambagem.Name = "numModosFlambagem";
+            this.numModosFlambagem.Size = new System.Drawing.Size(44, 20);
+            this.numModosFlambagem.TabIndex = 101;
+            this.numModosFlambagem.Value = new decimal(new int[] {
             8,
             0,
             0,
             0});
             // 
-            // chCalcularModos
+            // tabControl2
             // 
-            this.chCalcularModos.AutoSize = true;
-            this.chCalcularModos.Location = new System.Drawing.Point(9, 15);
-            this.chCalcularModos.Name = "chCalcularModos";
-            this.chCalcularModos.Size = new System.Drawing.Size(157, 17);
-            this.chCalcularModos.TabIndex = 100;
-            this.chCalcularModos.Text = "Calcular modos de vibração";
-            this.chCalcularModos.UseVisualStyleBackColor = true;
+            this.tabControl2.Controls.Add(this.tabPage11);
+            this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl2.Location = new System.Drawing.Point(3, 3);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(521, 373);
+            this.tabControl2.TabIndex = 101;
+            // 
+            // tabPage11
+            // 
+            this.tabPage11.Controls.Add(this.chCalcularModosVibracao);
+            this.tabPage11.Controls.Add(this.label25);
+            this.tabPage11.Controls.Add(this.numModosVibracao);
+            this.tabPage11.Location = new System.Drawing.Point(4, 22);
+            this.tabPage11.Name = "tabPage11";
+            this.tabPage11.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage11.Size = new System.Drawing.Size(513, 347);
+            this.tabPage11.TabIndex = 0;
+            this.tabPage11.Text = "Análise modal / vibração livre";
+            this.tabPage11.UseVisualStyleBackColor = true;
+            // 
+            // chCalcularModosVibracao
+            // 
+            this.chCalcularModosVibracao.AutoSize = true;
+            this.chCalcularModosVibracao.Location = new System.Drawing.Point(6, 15);
+            this.chCalcularModosVibracao.Name = "chCalcularModosVibracao";
+            this.chCalcularModosVibracao.Size = new System.Drawing.Size(264, 17);
+            this.chCalcularModosVibracao.TabIndex = 103;
+            this.chCalcularModosVibracao.Text = "Calcular frequências naturais e modos de vibração";
+            this.chCalcularModosVibracao.UseVisualStyleBackColor = true;
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(3, 45);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(93, 13);
+            this.label25.TabIndex = 102;
+            this.label25.Text = "Número de modos";
+            // 
+            // numModosVibracao
+            // 
+            this.numModosVibracao.Location = new System.Drawing.Point(100, 38);
+            this.numModosVibracao.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.numModosVibracao.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numModosVibracao.Name = "numModosVibracao";
+            this.numModosVibracao.Size = new System.Drawing.Size(44, 20);
+            this.numModosVibracao.TabIndex = 101;
+            this.numModosVibracao.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
             // 
             // FConfiguraProjeto
             // 
@@ -1668,8 +1758,13 @@
             this.tabPage9.ResumeLayout(false);
             this.tabPage9.PerformLayout();
             this.tabPage10.ResumeLayout(false);
-            this.tabPage10.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numModos)).EndInit();
+            this.Estabilidalde.ResumeLayout(false);
+            this.Estabilidalde.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numModosFlambagem)).EndInit();
+            this.tabControl2.ResumeLayout(false);
+            this.tabPage11.ResumeLayout(false);
+            this.tabPage11.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numModosVibracao)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1789,8 +1884,14 @@
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Button btCorEstruturaGeral;
         private System.Windows.Forms.TabPage tabPage10;
+        private System.Windows.Forms.TabPage Estabilidalde;
+        private System.Windows.Forms.CheckBox chCalcularModosFlambagem;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.NumericUpDown numModosFlambagem;
+        private System.Windows.Forms.TabControl tabControl2;
+        private System.Windows.Forms.TabPage tabPage11;
+        private System.Windows.Forms.CheckBox chCalcularModosVibracao;
         private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.NumericUpDown numModos;
-        private System.Windows.Forms.CheckBox chCalcularModos;
+        private System.Windows.Forms.NumericUpDown numModosVibracao;
     }
 }

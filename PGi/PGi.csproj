@@ -654,6 +654,7 @@
     <Compile Include="Pórtico\TGradienteCoresDeformacoes.cs" />
     <Compile Include="Pórtico\TGradienteCoresDiagramas.cs" />
     <Compile Include="Pórtico\TPorticoEspacialModal.cs" />
+    <Compile Include="Pórtico\TPorticoEspacial_FlambagemLinear.cs" />
     <Compile Include="Pórtico\TRelatoriosResultados.cs" />
     <Compile Include="Pórtico\TSuavizacaoDiagramas.cs" />
     <Compile Include="Utilitários\GeracaoLoopsGeometria.cs" />

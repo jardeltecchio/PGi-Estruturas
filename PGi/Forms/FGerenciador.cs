@@ -29,6 +29,7 @@ using PGi.Properties;
 using System.Windows.Media.Animation;
 using System.Web.UI.Design;
 using System.Windows.Media;
+using System.Security.Permissions;
 
 
 namespace PG
@@ -243,6 +244,7 @@ namespace PG
         {
             panelDeformacoes.Visible = false;
             panelDinamica1.Visible = false;
+            panelModosFlambagem.Visible = false;
             panelDiagramas.Visible = false;
             panelTensoes.Visible = false;
 
@@ -1828,6 +1830,9 @@ namespace PG
                     if ((string)btDinamica1.Tag == "1")
                         btDinamica1_Click(btDinamica1, null);
 
+                    cbModosVibracao.Items.Clear();
+                    cbModosFlambagem.Items.Clear();
+
                     /*  if ((string)btVisualizarCargas.Tag == "1")
                       {
                           formDesenho.MostrarCargas = false;
@@ -2195,7 +2200,7 @@ namespace PG
 
         }
         double escalaDeformacao;
-        double escalaDiagrama, escalaModoVibracao;
+        double escalaDiagrama, escalaModoVibracao,escalaFlambagem;
         public FProcessoCalculo processo;
 
         public void CalcularEscalaDeformacoes()
@@ -2229,6 +2234,43 @@ namespace PG
                     escalaDiagrama_anterior = 1;
                 }
             }
+        }
+        public void CalcularEscalaModosFlambagem(int id_combinacao)
+        {
+            var portico = formDesenho.Estrutura.PorticoEspacial;
+            if (!ConfiguracoesPGi.CfgProjeto.sistema.CalculaModosFlambagem || portico == null)
+                return;
+
+            var resultado = portico.ResultadosFlambagem.Find(r => r.EhCombinacao && r.IdReferencia == id_combinacao);
+            if (resultado?.Modos == null || resultado.Modos.GetLength(1) == 0)
+                return;
+
+            int modo = cbModosFlambagem.SelectedIndex;
+            if (modo < 0 || modo >= resultado.Modos.GetLength(1))
+            {
+                modo = 0;
+                if (cbModosFlambagem.Items.Count > 0)
+                    cbModosFlambagem.SelectedIndex = modo;
+            }
+
+            double maximo = 0.0;
+            for (int i = 1; i <= portico.nBarras; i++)
+            {
+                double[] maximos;
+                var maximosPorCombinacao = portico.barras[i].MaximosDeslocamentosFlambagem;
+                if (maximosPorCombinacao != null && maximosPorCombinacao.TryGetValue(id_combinacao, out maximos) && maximos != null && modo < maximos.Length)
+                    maximo = Math.Max(maximo, maximos[modo]);
+            }
+
+            // Mesmo deslocamento visual alvo do desenho modal: 0,5 unidade.
+            escalaFlambagem = maximo > 0.0 ? 0.5 / maximo : 1.0;
+            if (double.IsNaN(escalaFlambagem) || double.IsInfinity(escalaFlambagem))
+                escalaFlambagem = 1.0;
+            vEscalaFlambagem = escalaFlambagem;
+            formDesenho.fatorFlambagem = escalaFlambagem;
+            formDesenho.EscalaFlambagem = escalaFlambagem;
+            edEscalaFlambagem.Text = escalaFlambagem.ToString("n3");
+            formDesenho.DirtyPortico();
         }
 
         public void CalcularEscalaModosVibracao()
@@ -2425,7 +2467,9 @@ namespace PG
             bool calculoOk = formDesenho.Estrutura.PorticoEspacial.Calcular(ConfiguracoesPGi.CfgProjeto.portico.calcularEsforcos, 
                                                                             ConfiguracoesPGi.CfgProjeto.sistema.UsarDll, 
                                                                             ConfiguracoesPGi.CfgProjeto.sistema.CalculaModosVibracao, 
-                                                                            ConfiguracoesPGi.CfgProjeto.sistema.numeroModos);
+                                                                            ConfiguracoesPGi.CfgProjeto.sistema.numeroModosVibracao,
+                                                                            ConfiguracoesPGi.CfgProjeto.sistema.CalculaModosFlambagem,
+                                                                            ConfiguracoesPGi.CfgProjeto.sistema.numeroModosFlambagem);
 
             HistoricoCalculo("");
             if (calculoOk)
@@ -2438,10 +2482,8 @@ namespace PG
                 if (ConfiguracoesPGi.CfgProjeto.sistema.CalculaModosVibracao)
                 {
                     cbModosVibracao.Items.Clear();
-                    for (int i = 1; i <= ConfiguracoesPGi.CfgProjeto.sistema.numeroModos; i++)
-                    {
-                        cbModosVibracao.Items.Add(i + " - freq: "+ formDesenho.Estrutura.PorticoEspacial.FrequenciasNaturais[i-1].ToString("n2") +" hz");
-                    }
+                    for (int i = 1; i <= ConfiguracoesPGi.CfgProjeto.sistema.numeroModosVibracao; i++)
+                        cbModosVibracao.Items.Add(i + " - freq: "+ formDesenho.Estrutura.PorticoEspacial.FrequenciasNaturais[i-1].ToString("n3") +" hz");
 
                     CalcularEscalaModosVibracao();
                 }
@@ -3410,7 +3452,7 @@ namespace PG
             btPisoBaixo.Visible = false;
             btPisoCima.Visible = false;
             cbPiso.Visible = false;
-            btModo.Text = "3D";
+            btModo.Text = "Modelo 3D";
             formDesenho.Text = btModo.Text;
 
             edIncPlano.Visible = false;
@@ -3432,10 +3474,16 @@ namespace PG
 
             foreach (TCasosCarga c in formDesenho.CasosCarga)
               cbResultadoCasos.Items.Add(c.Nome);
-         
+
             foreach (TCombinacoes c in formDesenho.Estrutura.combinacoes)
-              cbResultadoCombinacoes.Items.Add(c.EstadoLimite + "/" + c.Nome + " - " + c.Descricao);
- 
+            {
+                if (c.categoriaCombinacao == CategoriaCombinacao.Linear)
+                    cbResultadoCombinacoes.Items.Add(c.EstadoLimite + "/" + c.Nome + " - " + c.Descricao);
+                else
+                if (c.categoriaCombinacao == CategoriaCombinacao.Estabilidade)
+                    cbResultadoCombinacoes.Items.Add("Estabilidade/" + c.Nome + " - " + c.Descricao);
+            }
+
             if (cbResultadoCombinacoes.Items.Count>0)
               cbResultadoCombinacoes.SelectedIndex = 0;
             
@@ -3904,6 +3952,9 @@ namespace PG
 
             if ((string)btDinamica1.Tag == "1")
                 btDinamica1_Click(btDinamica1, null);
+            
+            if ((string)btFlambagem.Tag == "1")
+                btFlambagem_Click(btFlambagem, null);
 
             if ((string)btDiagrama.Tag == "1")
                 btDiagrama_Click(btDiagrama, null);
@@ -4340,7 +4391,7 @@ namespace PG
             //formDesenho.AtualizaShaders();
             // AtualizaDesenho();  
         }
-        void ConfirmaEscalaModo()
+        void ConfirmaEscalaModoVibracao()
         {
             if (edEscalaModo.Text.ToString() == string.Empty)
                 return;
@@ -4351,6 +4402,19 @@ namespace PG
             formDesenho.DirtyPortico();
 
             ChamarAtualizacaoResultados(btConfirmaModos, true);
+        }
+
+        void ConfirmaEscalaFlambagem()
+        {
+            if (edEscalaFlambagem.Text.ToString() == string.Empty)
+                return;
+
+            vEscalaFlambagem = double.Parse(edEscalaFlambagem.Text.ToString());
+            // O campo já contém o fator absoluto, como na escala das deformações.
+            formDesenho.fatorFlambagem = vEscalaFlambagem;
+            formDesenho.DirtyPortico();
+
+            ChamarAtualizacaoResultados(btConfirmaFlambagem, true);
         }
 
         void ConfirmaEscalaDiagrama()
@@ -4822,22 +4886,20 @@ namespace PG
         private void btDeformacao_Click(object sender, EventArgs e)
         {
             formDesenho.AtualizaShaders();
-            if ((string)btDeformacao.Tag == "1")
+            /*if ((string)btDeformacao.Tag == "1")
             {
                 btDeformacao.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
                 btDeformacao.Tag = "0";
             }
             else
             {
-                if (necessitaCalculo)
-                {
-                    MessageBox.Show("Modificações foram feitas. É necessário calcular a estrutura.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return;
-                }
+
 
                 btDeformacao.BackColor = System.Drawing.Color.White;
                 btDeformacao.Tag = "1";
             }
+            */
+            UpdateCorBotao(btDeformacao);
 
             //  if ((string)btTensoes.Tag == "1")
             //      btTensoes_Click(btTensoes, null);
@@ -4849,7 +4911,6 @@ namespace PG
 
             panelDeformacoes.Visible = deformar;
            
-
             btDefTotal_Click(btDefTotal, null);
             
             if (!deformar)
@@ -4890,6 +4951,14 @@ namespace PG
             }
             else
             {
+                //cancela os outros resultados
+                if ((string)btTensoes.Tag == "1")
+                    btTensoes_Click(btTensoes, null);
+                if ((string)btDinamica1.Tag == "1")
+                  btDinamica1_Click(btDinamica1, null);
+                if ((string)btFlambagem.Tag == "1")
+                    btFlambagem_Click(btFlambagem, null);
+
                 formDesenho.Text = "Resultados: " + btDeformacao.AccessibleName;
 
                 if ((string)btAnimarDeformacao.Tag == "1")
@@ -6413,7 +6482,8 @@ namespace PG
 
                 // cbCargas_SelectedIndexChanged(cbCasoCarga, null);
 
-                if ((string)btAnimarDeformacao.Tag == "1") btAnimarDeformacao_Click_1(btAnimarDeformacao, null);
+                if ((string)btAnimarDeformacao.Tag == "1")
+                    btAnimarDeformacao_Click_1(btAnimarDeformacao, null);
 
                 if ((string)btDeformacaoTextos.Tag == "1")
                 {
@@ -6438,9 +6508,37 @@ namespace PG
            //         AtualizaDesenho();
                 }
                 cbResultadoCasos.Focus();
+                index_combinacao_flambagem = -1;
+                if (ConfiguracoesPGi.CfgProjeto.sistema.CalculaModosFlambagem && (string)btFlambagem.Tag == "1")
+                {
+                    cbModosFlambagem.Items.Clear();
+                    for (int j = 0; j < formDesenho.Estrutura.PorticoEspacial.ResultadosFlambagem.Count; j++)
+                    {
+                        if (cbResultadoCombinacoes.SelectedIndex >= 0 &&
+                            cbResultadoCombinacoes.SelectedIndex < formDesenho.Estrutura.combinacoes.Count &&
+                            formDesenho.Estrutura.PorticoEspacial.ResultadosFlambagem[j].EhCombinacao &&
+                            formDesenho.Estrutura.PorticoEspacial.ResultadosFlambagem[j].IdReferencia ==
+                                formDesenho.Estrutura.combinacoes[cbResultadoCombinacoes.SelectedIndex].Id)
+                        {
+                            index_combinacao_flambagem = j;
+                            for (int i = 1; i <= ConfiguracoesPGi.CfgProjeto.sistema.numeroModosFlambagem; i++)
+                            {
+                                cbModosFlambagem.Items.Add(i + " - Fator: " + formDesenho.Estrutura.PorticoEspacial.ResultadosFlambagem[j].Multiplicadores[i - 1].ToString("n3"));
+                            }
+                        }
+                    }
+
+                    if (cbModosFlambagem.Items.Count > 0)
+                    {
+                        id_combinacao_flambagem = formDesenho.Estrutura.PorticoEspacial.ResultadosFlambagem[index_combinacao_flambagem].IdReferencia;
+                        cbModosFlambagem.SelectedIndex = 0;
+                        CalcularEscalaModosFlambagem(id_combinacao_flambagem);
+                    }
+                }
             }
 
         }
+        public int index_combinacao_flambagem = -1, id_combinacao_flambagem = -1;
         private void cbResultadoCombinacoes_SelectedIndexChanged(object sender, EventArgs e)
         {
             AlternaResultadosCombinacao(false);
@@ -6521,15 +6619,7 @@ namespace PG
 
         private void button27_Click(object sender, EventArgs e)
         {
-            formDesenho.RemeverDosObjetosSelecionados_Nao_Copiaveis();
 
-            if (formDesenho.ObjetosSelecionados.Count > 0)
-            {
-                formDesenho.ComandoEdicao(Const.ID_DIVIDIR_NAS_INTERSECOES, eTipoComando.edit);
-                formDesenho.MouseEdit(0, 0, 0, 0, "", 0);
-            }
-            else
-                formDesenho.ComandoEdicao(Const.ID_DIVIDIR_NAS_INTERSECOES);
         }
 
         private void label11_Click(object sender, EventArgs e)
@@ -6669,9 +6759,6 @@ namespace PG
             
             ChamarAtualizacaoResultados(btOkTensoes, false);
 
-            if ((string)btDeformacao.Tag == "1")
-                btDeformacao_Click(btDeformacao, null);
-
             if ((string)btIsobandaTensao.Tag == "1")
                 btIsobandaTensao_Click(btIsobandaTensao, null);
 
@@ -6703,6 +6790,14 @@ namespace PG
             }
             else
             {
+                //cancela os outros resultados
+                if ((string)btDeformacao.Tag == "1")
+                    btDeformacao_Click(btDeformacao, null);
+                if ((string)btDinamica1.Tag == "1")
+                    btDinamica1_Click(btDinamica1, null);
+                if ((string)btFlambagem.Tag == "1")
+                    btFlambagem_Click(btFlambagem, null);
+
                 formDesenho.Text = "Resultados: " + btTensoes.AccessibleName;
 
                 if ((string)btAnimarDeformacao.Tag == "1")
@@ -7017,9 +7112,10 @@ namespace PG
 
         private void btDinamica1_Click(object sender, EventArgs e)
         {
-           // if (ConfiguracoesPGi.CfgProjeto.sistema.CalculaModosVibracao && formDesenho.Estrutura.PorticoEspacial != null)
+            if (ConfiguracoesPGi.CfgProjeto.sistema.CalculaModosVibracao && cbModosVibracao.Items.Count > 0/* && formDesenho.Estrutura.PorticoEspacial != null*/)
             {
                 formDesenho.AtualizaShaders();
+                
                 if ((string)btDinamica1.Tag == "1")
                 {
                     btDinamica1.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
@@ -7037,10 +7133,11 @@ namespace PG
                     btDinamica1.Tag = "1";
                 }
 
-                //  if ((string)btTensoes.Tag == "1")
-                //      btTensoes_Click(btTensoes, null);
-                cbModosVibracao.SelectedIndex = 0;
+         //       btDeformacao.Tag = "0";
+             //   btDeformacao.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
 
+                cbModosVibracao.SelectedIndex = 0;
+                
                 bool modos = (string)btDinamica1.Tag == "1";
 
                 formDesenho.MostraModosVibracao = modos;
@@ -7073,10 +7170,20 @@ namespace PG
                     btAnimarModo.Tag = "0";
                     btAnimarModo.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
 
-                    formDesenho.AnimarModoVibracao(false);
+                    formDesenho.AnimarModo(false, formDesenho.ModoVibracaoSolido, formDesenho.fatorModoVibracao);
                 }
                 else
                 {
+                    //cancela os outros resultados
+                    if ((string)btDiagrama.Tag == "1")
+                        btDiagrama_Click(btDiagrama, null);
+                    if ((string)btDeformacao.Tag == "1")
+                        btDeformacao_Click(btDeformacao, null);
+                    if ((string)btTensoes.Tag == "1")
+                        btTensoes_Click(btTensoes, null);
+                    if ((string)btFlambagem.Tag == "1")
+                        btFlambagem_Click(btFlambagem, null);
+
                     formDesenho.Text = "Resultados: " + btDinamica1.AccessibleName;
 
                     this.tabResultados.Controls.Remove(this.panelTipoResultado);
@@ -7112,9 +7219,6 @@ namespace PG
 
         private void btModoColorido_Click(object sender, EventArgs e)
         {
-            if (formDesenho.Estrutura.PorticoEspacial == null)
-                return;
-
             if ((string)btModoColorido.Tag == "1")
             {
                 btModoColorido.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
@@ -7130,6 +7234,9 @@ namespace PG
 
             formDesenho.ModoVibracaoColorido = defCol;
 
+    //      if (formDesenho.Estrutura.PorticoEspacial == null)
+        //        return;
+
             //  formDesenho.AtualizaShaders();
             // AtualizaDesenho();
 
@@ -7139,9 +7246,6 @@ namespace PG
 
         private void btModoRenderizado_Click(object sender, EventArgs e)
         {
-            if (formDesenho.Estrutura.PorticoEspacial == null)
-                return;
-
             if ((string)btModoRenderizado.Tag == "1")
             {
                 btModoRenderizado.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
@@ -7159,6 +7263,9 @@ namespace PG
 
             if ((string)btAnimarModo.Tag == "1")
               btAnimarModo_Click(btAnimarModo, null);
+
+         //   if (formDesenho.Estrutura.PorticoEspacial == null)
+            //    return;
 
             if (defSolida)
             {
@@ -7189,7 +7296,10 @@ namespace PG
 
             formDesenho.ArestasResultado = !formDesenho.ArestasResultado;
 
-            ConfirmaEscalaModo();
+            if (formDesenho.Estrutura.PorticoEspacial == null)
+                return;
+
+            ConfirmaEscalaModoVibracao();
         }
 
         private void EscalaModo_UpDown_ValueChanged(object sender, EventArgs e)
@@ -7249,7 +7359,7 @@ namespace PG
         {
             if (e.KeyData == Keys.Enter)
             {
-                ConfirmaEscalaModo();
+                ConfirmaEscalaModoVibracao();
             }
         }
 
@@ -7276,7 +7386,7 @@ namespace PG
         {
             ChamaAguardar(this, "Processando. Aguarde...");
 
-            ConfirmaEscalaModo();
+            ConfirmaEscalaModoVibracao();
 
             formDesenho.AtualizaShaders();
             AtualizaDesenho();
@@ -7311,6 +7421,302 @@ namespace PG
             }
         }
 
+        private void button51_Click(object sender, EventArgs e)
+        {
+            formDesenho.RemeverDosObjetosSelecionados_Nao_Copiaveis();
+
+            if (formDesenho.ObjetosSelecionados.Count > 0)
+            {
+                formDesenho.ComandoEdicao(Const.ID_DIVIDIR_NAS_INTERSECOES, eTipoComando.edit);
+                formDesenho.MouseEdit(0, 0, 0, 0, "", 0);
+            }
+            else
+                formDesenho.ComandoEdicao(Const.ID_DIVIDIR_NAS_INTERSECOES);
+        }
+
+        private void btFlambagem_Click(object sender, EventArgs e)
+        {
+            if (ConfiguracoesPGi.CfgProjeto.sistema.CalculaModosFlambagem /*&& cbModosFlambagem.Items.Count > 0&& formDesenho.Estrutura.PorticoEspacial != null*/)
+            {
+                formDesenho.AtualizaShaders();
+               /* if ((string)btFlambagem.Tag == "1")
+                {
+                    btFlambagem.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
+                    btFlambagem.Tag = "0";
+                }
+                else
+                {
+                    if (necessitaCalculo)
+                    {
+                        MessageBox.Show("Modificações foram feitas. É necessário calcular a estrutura.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
+                    btFlambagem.BackColor = System.Drawing.Color.White;
+                    btFlambagem.Tag = "1";
+                }*/
+                UpdateCorBotao(btFlambagem);
+                
+              //  cbModosFlambagem.SelectedIndex = 0;
+                bool modos = (string)btFlambagem.Tag == "1";
+                formDesenho.MostraModosFlambagem = modos;
+                panelModosFlambagem.Visible = modos;
+
+                if (!modos)
+                {
+                    formDesenho.Text = "Modelo 3D";
+
+                    this.tabResultados.Controls.Remove(this.panelModosFlambagem);
+
+                    if ((string)btFlambagemRenderizado.Tag == "1")
+                        btFlambagemRenderizado_Click(btFlambagemRenderizado, null);
+
+                    if ((string)btFlambagemColorido.Tag == "1")
+                        btFlambagemColorido_Click(btFlambagemColorido, null);
+
+                    if ((string)btMostraIndeformada.Tag == "1")
+                        btMostraIndeformada_Click_1(btMostraIndeformada, null);
+
+                    foreach (TBarraGenerica b in formDesenho.Estrutura.barras)
+                    {
+                        b.Visivel = true;
+                        b.DirtyTriangulos = true;
+                        b.DirtyArestas = true;
+                        b.DirtySelecao = true;
+                    }
+
+                    btAnimarModo.Tag = "0";
+                    btAnimarModo.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
+
+                    formDesenho.AnimarModo(false, formDesenho.FlambagemSolido, formDesenho.fatorFlambagem);
+                }
+                else
+                {
+                    cbTipoCargaResultado.SelectedIndex = 1;
+                    for (int i = 0; i < cbTipoCargaResultado.Items.Count; i++)
+                    {
+                        if (formDesenho.Estrutura.combinacoes[i].categoriaCombinacao == CategoriaCombinacao.Estabilidade)
+                        {
+                            cbResultadoCombinacoes.SelectedIndex = i;
+                            AlternaResultadosCombinacao(false);
+                            break;
+                        }
+                    }
+                    //cancela os outros resultados
+                    if ((string)btDiagrama.Tag == "1")
+                        btDiagrama_Click(btDiagrama, null);
+                    if ((string)btDeformacao.Tag == "1")
+                        btDeformacao_Click(btDeformacao, null);
+                    if ((string)btTensoes.Tag == "1")
+                        btTensoes_Click(btTensoes, null);
+                    if ((string)btDinamica1.Tag == "1")
+                        btDinamica1_Click(btDinamica1, null);
+
+                    formDesenho.Text = "Resultados: " + btFlambagem.AccessibleName;
+
+                    this.tabResultados.Controls.Remove(this.panelTipoResultado);
+                    this.tabResultados.Controls.Add(this.panelModosFlambagem);
+                    this.tabResultados.Controls.Add(this.panelTipoResultado);
+
+                    panelTipoResultado.Dock = DockStyle.Left;
+                    panelModosFlambagem.Dock = DockStyle.Left;
+
+                    this.panelModosFlambagem.Location = new System.Drawing.Point(175, 3);
+
+                    if ((string)btAnimarModo.Tag == "1")
+                    {
+                        btAnimarModo_Click(btAnimarModo, null);
+                    }
+
+                    foreach (TBarraGenerica b in formDesenho.Estrutura.barras)
+                    {
+                        b.Visivel = false;
+                        b.DirtyTriangulos = true;
+                        b.DirtyArestas = true;
+                        b.DirtySelecao = true;
+                    }
+
+                    formDesenho.DirtyPortico();
+                }
+
+                formDesenho.AtualizaShaders();
+                AtualizaDesenho();
+            }
+        }
+
+        void UpdateCorBotao(Button bt)
+        {
+            if ((string)bt.Tag == "1")
+            {
+                bt.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
+                bt.Tag = "0";
+            }
+            else
+            {
+                if (necessitaCalculo)
+                {
+                    MessageBox.Show("Modificações foram feitas. É necessário calcular a estrutura.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+
+                bt.BackColor = System.Drawing.Color.White;
+                bt.Tag = "1";
+            }
+        }
+
+        private void btFlambagemRenderizado_Click(object sender, EventArgs e)
+        {
+            UpdateCorBotao(btFlambagemRenderizado);
+
+            bool defSolida = (string)btFlambagemRenderizado.Tag == "1";
+
+            formDesenho.FlambagemSolido = defSolida;
+
+            if ((string)btAnimarModo.Tag == "1")
+                btAnimarModo_Click(btAnimarModo, null);
+
+            //   if (formDesenho.Estrutura.PorticoEspacial == null)
+            //    return;
+
+            if (defSolida)
+            {
+                TBarraPortico[] barrasP = formDesenho.Estrutura.PorticoEspacial.barras.ToArray();
+                formDesenho.CriaDeformacaoSolida(barrasP);
+
+                if (escalaFlambagem == 0)
+                {
+                    rbEscalaDeformacao.TextBoxText = "0.5";
+                    formDesenho.EscalaFlambagem = 0.5;
+                }
+                else
+                {
+                    rbEscalaDeformacao.TextBoxText = escalaDeformacao.ToString("n2");
+
+                    formDesenho.EscalaFlambagem = vEscalaFlambagem;
+                }
+
+                //forçar visualização de estrutura original unifilar
+                if ((string)btMostraIndeformada.Tag == "0")
+                {
+                    if (!formDesenho.Unifilar)
+                        AlternaVisualizacaoUnifilar(false);
+
+                    btMostraIndeformada_Click_1(btMostraIndeformada, null);
+                }
+            }
+
+            formDesenho.ArestasResultado = !formDesenho.ArestasResultado;
+
+            if (formDesenho.Estrutura.PorticoEspacial == null)
+                return;
+
+            ConfirmaEscalaFlambagem();
+        }
+
+        private void btConfirmaFlambagem_Click(object sender, EventArgs e)
+        {
+            ChamaAguardar(this, "Processando. Aguarde...");
+            ConfirmaEscalaFlambagem();
+            formDesenho.AtualizaShaders();
+            AtualizaDesenho();
+            ChamarAtualizacaoResultados(btConfirmaFlambagem, false);
+            FechaAguardar();
+        }
+
+        private void edEscalaFlambagem_UpDown_ValueChanged(object sender, EventArgs e)
+        {
+            if ((int)edEscalaFlambagem_UpDown.Value < escalaDef_anterior)
+            {
+                if (edEscalaFlambagem.Text.ToString() == string.Empty)
+                    return;
+
+                if (escalaFlambagem == 0)
+                    vEscalaFlambagem = double.Parse(edEscalaFlambagem.Text.ToString()) - 1;
+                else
+                    vEscalaFlambagem = double.Parse(edEscalaFlambagem.Text.ToString()) - escalaFlambagem;
+
+                if (vEscalaFlambagem - 1 < 0)
+                    vEscalaFlambagem = 0;
+                else
+                    vEscalaFlambagem -= 1;
+
+                if ((string)btAnimarModo.Tag == "1") btAnimarModo_Click(btAnimarModo, null);
+
+                edEscalaFlambagem.Text = System.Convert.ToString(vEscalaFlambagem);
+                formDesenho.fatorFlambagem = vEscalaFlambagem;
+                //   formDesenho.AtualizaShaders();
+                //     AtualizaDesenho();
+            }
+            else
+            {
+                if (edEscalaFlambagem.Text.ToString() == string.Empty)
+                    return;
+
+                if (escalaFlambagem == 0)
+                    vEscalaFlambagem = double.Parse(edEscalaFlambagem.Text.ToString()) + 1;
+                else
+                    vEscalaFlambagem = double.Parse(edEscalaFlambagem.Text.ToString()) + escalaFlambagem;
+
+                edEscalaFlambagem.Text = System.Convert.ToString(vEscalaFlambagem);
+
+                formDesenho.fatorFlambagem = vEscalaFlambagem;
+
+                if ((string)btAnimarDeformacao.Tag == "1") btAnimarDeformacao_Click_1(btAnimarDeformacao, null);
+
+                //   formDesenho.AtualizaShaders();
+
+                //   if (btDeformacaoSolida.Checked)
+                //       formDesenho.CriaDeformacaoSolida(formDesenho.Estrutura.PorticoEspacial.barras);
+
+                //  AtualizaDesenho();
+            }
+            formDesenho.DirtyPortico();
+            ChamarAtualizacaoResultados(btConfirmaFlambagem, true);
+
+            escalaDef_anterior = (int)edEscalaFlambagem_UpDown.Value;
+        }
+
+        private void btAnimarFlambagem_Click(object sender, EventArgs e)
+        {
+            if ((formDesenho.MostraModosFlambagem))
+            {
+                if ((string)btAnimarModo.Tag == "1")
+                {
+                    btAnimarModo.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
+                    btAnimarModo.Tag = "0";
+                }
+                else
+                {
+                    btAnimarModo.BackColor = System.Drawing.Color.White;
+                    btAnimarModo.Tag = "1";
+                }
+
+                bool animar = (string)btAnimarModo.Tag == "1";
+
+                formDesenho.AnimarModo(animar, formDesenho.FlambagemSolido, formDesenho.fatorFlambagem);
+            }
+        }
+
+        private void btFlambagemColorido_Click(object sender, EventArgs e)
+        {
+            if ((string)btFlambagemColorido.Tag == "1")
+            {
+                btFlambagemColorido.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
+                btFlambagemColorido.Tag = "0";
+            }
+            else
+            {
+                btFlambagemColorido.BackColor = System.Drawing.Color.White;
+                btFlambagemColorido.Tag = "1";
+            }
+
+            bool defCol = (string)btFlambagemColorido.Tag == "1";
+
+            formDesenho.FlambagemColorido = defCol;
+
+            formDesenho.DirtyPortico();
+            ChamarAtualizacaoResultados(btConfirmaFlambagem, true);
+        }
+
         private void btAnimarModo_Click(object sender, EventArgs e)
         {
             if ((formDesenho.MostraModosVibracao))
@@ -7328,7 +7734,7 @@ namespace PG
 
                 bool animar = (string)btAnimarModo.Tag == "1";
 
-                formDesenho.AnimarModoVibracao(animar);
+                formDesenho.AnimarModo(animar,formDesenho.ModoVibracaoSolido,formDesenho.fatorModoVibracao);
             }
         }
 
@@ -7807,7 +8213,7 @@ namespace PG
             AtivaModoPlano("xy", true);
         }
 
-        double vEscalaDeformacao, vEscalaDiagrama, vEscalaModoVibracao;
+        double vEscalaDeformacao, vEscalaDiagrama, vEscalaModoVibracao, vEscalaFlambagem;
         private void ribbonUpDown1_UpButtonClicked_1(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (rbEscalaDeformacao.TextBoxText.ToString() == string.Empty)

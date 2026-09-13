@@ -316,7 +316,7 @@
             this.pnDesenhoSecao.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnDesenhoSecao.Location = new System.Drawing.Point(6, 32);
             this.pnDesenhoSecao.Name = "pnDesenhoSecao";
-            this.pnDesenhoSecao.Size = new System.Drawing.Size(236, 191);
+            this.pnDesenhoSecao.Size = new System.Drawing.Size(236, 214);
             this.pnDesenhoSecao.TabIndex = 78;
             this.pnDesenhoSecao.Paint += new System.Windows.Forms.PaintEventHandler(this.pnDesenhoSecao_Paint);
             this.pnDesenhoSecao.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnDesenhoSecao_MouseMove);

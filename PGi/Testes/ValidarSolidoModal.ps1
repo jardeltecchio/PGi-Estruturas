@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'ValidarDesenhoModal.ps1')
 $si = New-Object 'System.Collections.Generic.List[PG.vec3[]]'
 $sf = New-Object 'System.Collections.Generic.List[PG.vec3[]]'
@@ -9,7 +9,7 @@ $si.Add($pi); $sf.Add($pf)
 [PG.TBarraPortico].GetField('coordssecao_f').SetValue($barra,$sf.PSObject.BaseObject)
 function Solido($modo,$escala,$colorido) {
     $coords = New-Object 'System.Collections.Generic.List[float]'
-    $selecao = New-Object 'System.Collections.Generic.List[PG.Triangulo]'
+    $selecao = [Activator]::CreateInstance([System.Collections.Generic.List`1].MakeGenericType([PG.TBarraPortico].Assembly.GetType('PG.Triangulo')))
     $argsModal = New-Object object[] 7
     $argsModal[0]=$coords.PSObject.BaseObject
     $argsModal[1]=$selecao.PSObject.BaseObject

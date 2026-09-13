@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FCombinacoes));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.button3 = new System.Windows.Forms.Button();
             this.imageList3 = new System.Windows.Forms.ImageList(this.components);
@@ -49,6 +49,9 @@
             this.Caso = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.pg = new System.Windows.Forms.PropertyGrid();
             this.button4 = new System.Windows.Forms.Button();
+            this.tbTipoCombinacao = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.panel2.SuspendLayout();
@@ -56,6 +59,7 @@
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GridPrincipal)).BeginInit();
+            this.tbTipoCombinacao.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -63,7 +67,7 @@
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.button3);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 342);
+            this.panel1.Location = new System.Drawing.Point(0, 366);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(872, 34);
             this.panel1.TabIndex = 15;
@@ -102,7 +106,7 @@
             this.button6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button6.ImageIndex = 2;
             this.button6.ImageList = this.imageList3;
-            this.button6.Location = new System.Drawing.Point(4, 315);
+            this.button6.Location = new System.Drawing.Point(4, 339);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(70, 24);
             this.button6.TabIndex = 139;
@@ -120,7 +124,7 @@
             this.button7.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button7.ImageIndex = 3;
             this.button7.ImageList = this.imageList3;
-            this.button7.Location = new System.Drawing.Point(76, 315);
+            this.button7.Location = new System.Drawing.Point(76, 339);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(70, 24);
             this.button7.TabIndex = 140;
@@ -133,9 +137,9 @@
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.lbComb);
-            this.panel2.Location = new System.Drawing.Point(4, 5);
+            this.panel2.Location = new System.Drawing.Point(4, 29);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(287, 305);
+            this.panel2.Size = new System.Drawing.Size(364, 305);
             this.panel2.TabIndex = 148;
             // 
             // lbComb
@@ -148,7 +152,7 @@
             this.lbComb.HorizontalScrollbar = true;
             this.lbComb.Location = new System.Drawing.Point(0, 0);
             this.lbComb.Name = "lbComb";
-            this.lbComb.Size = new System.Drawing.Size(285, 303);
+            this.lbComb.Size = new System.Drawing.Size(362, 303);
             this.lbComb.TabIndex = 142;
             this.lbComb.Click += new System.EventHandler(this.lbComb_Click);
             this.lbComb.SelectedIndexChanged += new System.EventHandler(this.lbComb_SelectedIndexChanged);
@@ -157,9 +161,9 @@
             // 
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.groupBox1);
-            this.panel3.Location = new System.Drawing.Point(297, 5);
+            this.panel3.Location = new System.Drawing.Point(371, 5);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(571, 305);
+            this.panel3.Size = new System.Drawing.Size(498, 328);
             this.panel3.TabIndex = 149;
             // 
             // groupBox1
@@ -169,7 +173,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(569, 303);
+            this.groupBox1.Size = new System.Drawing.Size(496, 326);
             this.groupBox1.TabIndex = 144;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Dados da combinação";
@@ -232,14 +236,14 @@
             this.GridPrincipal.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Coeficiente,
             this.Caso});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.Desktop;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.GridPrincipal.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.Desktop;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.GridPrincipal.DefaultCellStyle = dataGridViewCellStyle6;
             this.GridPrincipal.EnableHeadersVisualStyles = false;
             this.GridPrincipal.GridColor = System.Drawing.SystemColors.ActiveCaption;
             this.GridPrincipal.Location = new System.Drawing.Point(6, 19);
@@ -279,7 +283,7 @@
             this.pg.Location = new System.Drawing.Point(6, 19);
             this.pg.Name = "pg";
             this.pg.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-            this.pg.Size = new System.Drawing.Size(559, 86);
+            this.pg.Size = new System.Drawing.Size(485, 86);
             this.pg.TabIndex = 143;
             this.pg.ToolbarVisible = false;
             this.pg.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.pg_PropertyValueChanged);
@@ -293,7 +297,7 @@
             this.button4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button4.ImageIndex = 4;
             this.button4.ImageList = this.imageList3;
-            this.button4.Location = new System.Drawing.Point(149, 315);
+            this.button4.Location = new System.Drawing.Point(149, 339);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(70, 24);
             this.button4.TabIndex = 150;
@@ -302,12 +306,44 @@
             this.button4.UseVisualStyleBackColor = false;
             this.button4.Click += new System.EventHandler(this.button4_Click_1);
             // 
+            // tbTipoCombinacao
+            // 
+            this.tbTipoCombinacao.Controls.Add(this.tabPage1);
+            this.tbTipoCombinacao.Controls.Add(this.tabPage2);
+            this.tbTipoCombinacao.Location = new System.Drawing.Point(4, 5);
+            this.tbTipoCombinacao.Name = "tbTipoCombinacao";
+            this.tbTipoCombinacao.SelectedIndex = 0;
+            this.tbTipoCombinacao.Size = new System.Drawing.Size(361, 23);
+            this.tbTipoCombinacao.TabIndex = 151;
+            this.tbTipoCombinacao.SelectedIndexChanged += new System.EventHandler(this.tbTipoCombinacao_SelectedIndexChanged);
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(353, 0);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Combinações lineares";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(353, 0);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Combinações de estabilidade";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
             // FCombinacoes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button3;
-            this.ClientSize = new System.Drawing.Size(872, 376);
+            this.ClientSize = new System.Drawing.Size(872, 400);
+            this.Controls.Add(this.tbTipoCombinacao);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
@@ -331,6 +367,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.GridPrincipal)).EndInit();
+            this.tbTipoCombinacao.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -354,5 +391,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Coeficiente;
         private System.Windows.Forms.DataGridViewComboBoxColumn Caso;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.TabControl tbTipoCombinacao;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
     }
 }

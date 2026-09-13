@@ -1303,8 +1303,8 @@ namespace PG
                 b1 = bars[i];
                 if (b1 == null) continue;
 
-                if (b1.Dados.Tipo == 1) // tirante
-                    continue;
+           //   if (b1.Dados.Tipo == 1) // tirante
+              //      continue;
 
                 p_1 = new vec3(b1.pIni.x, b1.pIni.y, b1.pIni.z);
                 p_2 = new vec3(b1.pFin.x, b1.pFin.y, b1.pFin.z);
@@ -1317,8 +1317,8 @@ namespace PG
 
                     if ((Object)b1 != (Object)b2)
                     {
-                  //      if (b1.IDBarra == 261 && (b2.IDBarra == 257))
-                    //        b1.IDBarra = 261;
+                        if (b1.IDBarra == 51 && (b2.IDBarra == 204))
+                            b1.IDBarra = 51;
 
                         p_3 = new vec3(b2.pIni.x, b2.pIni.y, b2.pIni.z);
                         p_4 = new vec3(b2.pFin.x, b2.pFin.y, b2.pFin.z);

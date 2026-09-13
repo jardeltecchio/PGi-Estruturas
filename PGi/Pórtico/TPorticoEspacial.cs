@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
+using Microsoft.TeamFoundation.Framework.Client;
 
 namespace PG
 {
@@ -853,6 +854,25 @@ namespace PG
             }
         }
 
+        internal double[] ObterFatoresTirantesReferencia(int idReferencia, bool ehCombinacao)
+        {
+            var resultados = ehCombinacao ? combinacoes_x_deslocamentos : casos_x_deslocamentos;
+            double[] fatores = null;
+            bool encontrado = false;
+            if (resultados != null)
+                foreach (var resultado in resultados)
+                    if (resultado.id == idReferencia)
+                    {
+                        if (encontrado)
+                            throw new InvalidOperationException("Referencia de tirantes duplicada.");
+                        encontrado = true;
+                        fatores = resultado.fatoresRigidezTensionOnly;
+                    }
+            if (!encontrado || fatores == null || fatores.Length != nBarras + 1)
+                throw new InvalidOperationException("Recalcule a referencia estatica para obter o estado dos tirantes.");
+            return (double[])fatores.Clone();
+        }
+
         private double[] ObterFatoresRigidezTensionOnly()
         {
             double[] fatores = new double[nBarras + 1];
@@ -933,7 +953,10 @@ namespace PG
                     }
 
                     for (i = 1; i <= nBarras; i++)
+                    {
                         barras[i].CalcularEsforcos(Const.ID_TIPO_CASO, caso);
+                        barras[i].casos_x_esforcos[caso].id = casos_x_deslocamentos[caso].id;
+                    }
                 }
 
                 TSuavizacaoDiagramas suavizar1;
@@ -980,7 +1003,10 @@ namespace PG
                     }
 
                     for (i = 1; i <= nBarras; i++)
+                    {
                         barras[i].CalcularEsforcos(Const.ID_TIPO_COMBINACAO, comb);
+                        barras[i].combinacoes_x_esforcos[comb].id = combinacoes_x_deslocamentos[comb].id;
+                    }
                 }
 
              //   for (int comb = 0; comb < combinacoes_x_deslocamentos.Count; comb++)
@@ -1336,8 +1362,10 @@ namespace PG
             return calculoOk;
         }
 
-        public bool Calcular(bool calculaEsforco, bool UsarDll, bool modal, int numModos)
+        public bool Calcular(bool calculaEsforco, bool UsarDll, bool modal, int numModos,
+            bool flambagemLinear = false, int numeroModosFlambagem = 5)
         {
+            ResultadosFlambagem.Clear();
             try
             {
                 Inicializar();
@@ -1403,6 +1431,9 @@ namespace PG
                     CalculaModal(UsarDll, numModos);
                 }
 
+                if (flambagemLinear)
+                    CalcularFlambagemLinear(numeroModosFlambagem);
+
                 Progresso.Value = 0;
 
             }
@@ -1437,6 +1468,163 @@ namespace PG
             forcas = null;
             df = null;
             return calculoOk;
+        }
+
+        public sealed class ResultadoFlambagemReferencia
+        {
+            public int IdReferencia { get; internal set; }
+            public bool EhCombinacao { get; internal set; }
+            public bool Convergiu { get; internal set; }
+            public string Erro { get; internal set; }
+            public double[] Multiplicadores { get; internal set; }
+            public double[,] Modos { get; internal set; }
+            public double[] Residuos { get; internal set; }
+            public int[,] GrausInternosBarras { get; internal set; }
+            // GL global -> equacao nodal expandida, base zero; -1 nos apoios.
+            public int[] EquacoesNodais { get; internal set; }
+        }
+
+        public List<ResultadoFlambagemReferencia> ResultadosFlambagem { get; } = new List<ResultadoFlambagemReferencia>();
+
+        /// <summary>Executar apos Resultados(), antes da liberacao de id/glRestrito.</summary>
+        public void CalcularFlambagemLinear(int numeroModos, int limiteVetores = 0, double limiteSegundos = 60)
+        {
+            HistoricoCalculo("");
+            HistoricoCalculo("      ---- Início da análise de estabilidade linear ----");
+            HistoricoCalculo("");
+            TCombinacoes combinacaoAtual;
+            ResultadosFlambagem.Clear();
+            for (int barra = 1; barra <= nBarras; barra++)
+            {
+                barras[barra].DeslocamentosFlambagem?.Clear();
+                barras[barra].MaximosDeslocamentosFlambagem?.Clear();
+                barras[barra].DirtyTriangulos = barras[barra].DirtySelecao = true;
+            }
+            if (numeroModos <= 0 || limiteVetores < 0 || !(limiteSegundos > 0) || double.IsInfinity(limiteSegundos))
+                throw new ArgumentOutOfRangeException("Parâmetros da análise de flambagem inválidos.");
+
+            if (id == null || glRestrito == null || casos_x_deslocamentos == null || combinacoes_x_deslocamentos == null)
+                throw new InvalidOperationException("Calcule os resultados estáticos e preserve a numeracao dos graus livres antes da flambagem.");
+          
+            var equacoes = new int[id.Length];
+           
+            for (int gl = 0; gl < id.Length; gl++)
+                equacoes[gl] = gl == 0 || glRestrito[gl] ? -1 : id[gl] - 1;
+          
+            for (int tipo = 0; tipo < 1; tipo++)
+            {
+                var referencias = combinacoes_x_deslocamentos;
+
+                foreach (var referencia in referencias)
+                {
+//                    if (referencia.id == 1) continue;
+                    
+                    combinacaoAtual = gerenciador.formDesenho.Estrutura.combinacoes.Find(o => o.Id == referencia.id);
+                    if (combinacaoAtual.categoriaCombinacao != CategoriaCombinacao.Estabilidade)
+                       continue;
+
+                    if (Progresso != null)
+                    {
+                        Progresso.Minimum = 0;
+                        Progresso.Maximum = 100;
+                        Progresso.Value = 0;
+                        Progresso.Refresh();
+                    }
+                    Action<string, bool> historico = (texto, editar) =>
+                    {
+                        if (gerenciador != null && gerenciador.processo != null)
+                            HistoricoCalculo(texto, editar);
+                    };
+                    historico($"      > Flambagem linear: combinação de estabilidade: {combinacaoAtual.Descricao} ----", false);
+                    string etapaAtual = null, mensagemAtual = null;
+                    Action<string> informar = mensagem =>
+                    {
+                        string etapa = mensagem.StartsWith("Lanczos:") ? "Lanczos" : mensagem;
+                        if (etapa == etapaAtual)
+                            historico("      > " + mensagem, true);
+                        else
+                        {
+                            if (mensagemAtual != null) historico("      > " + mensagemAtual + " - [Ok]", true);
+                            historico("      > " + mensagem, false);
+                            etapaAtual = etapa;
+                        }
+                        mensagemAtual = mensagem;
+                        Progresso?.Refresh();
+                    };
+
+                    var resultado = new ResultadoFlambagemReferencia
+                    {
+                        IdReferencia = referencia.id,
+                        EhCombinacao = true,
+                        EquacoesNodais = (int[])equacoes.Clone()
+                    };
+
+                    ResultadosFlambagem.Add(resultado);
+                    var analise = new TPorticoEspacial_FlambagemLinear(this, numeroModos)
+                    {
+                        LimiteVetoresLanczos = limiteVetores,
+                        LimiteTempoLanczos = TimeSpan.FromSeconds(limiteSegundos)
+                    };
+                    try
+                    {
+                        analise.ProgressoAlterado += informar;
+                        informar("Preparação");
+                        analise.PrepararReferencia(referencia.id, true);
+                        informar("Montagem da rigidez e da matriz geométrica");
+                        analise.MontarMatrizes();
+                        informar("Fatoração da rigidez");
+                        analise.PrepararRigidez();
+                        analise.CalcularModos();
+                        resultado.Convergiu = analise.Convergiu;
+                        if (!resultado.Convergiu) 
+                            resultado.Erro = "Modos solicitados nao convergiram.";
+                    }
+                    catch (InvalidOperationException ex) { resultado.Erro = ex.Message; }
+                    catch (ArgumentException ex) { resultado.Erro = ex.Message; }
+                    catch (NotSupportedException ex) { resultado.Erro = ex.Message; }
+                    finally { analise.ProgressoAlterado -= informar; }
+
+                    if (resultado.Convergiu)
+                    {
+                        if (mensagemAtual != null) historico("      > " + mensagemAtual + " - [Ok]", true);
+                        historico("      > Análise de estabilidade concluída - [Ok]", false);
+                        historico("", false);
+                        if (Progresso != null) Progresso.Value = Progresso.Maximum;
+                    }
+                    else
+                    {
+                        if (mensagemAtual != null) historico("      > " + mensagemAtual + " - [Falha]", true);
+                        historico("      > Flambagem não concluída: " + resultado.Erro, false);
+                    }
+                    Progresso?.Refresh();
+                    
+                    // Guarda apenas os resultados, sem reter matrizes/fatores de todas as referencias.
+                    resultado.Multiplicadores = analise.MultiplicadoresCriticos;
+                    resultado.Modos = analise.ModosFlambagem;
+                    resultado.Residuos = analise.ResiduosRelativos;
+                    resultado.GrausInternosBarras = analise.GrausInternosBarras;
+                   
+                    if (resultado.Convergiu && resultado.Modos != null)
+                    {
+                        var maximos = new double[resultado.Modos.GetLength(1)];
+                        for (int gl = 1; gl <= Ngl; gl += 6)
+                            for (int modo = 0; modo < maximos.Length; modo++)
+                            {
+                                double soma = 0;
+                                for (int direcao = 0; direcao < 3; direcao++)
+                                    if (!glRestrito[gl + direcao])
+                                    {
+                                        double u = resultado.Modos[id[gl + direcao] - 1, modo];
+                                        soma += u * u;
+                                    }
+                                maximos[modo] = Math.Max(maximos[modo], Math.Sqrt(soma));
+                            }
+                        for (int barra = 1; barra <= nBarras; barra++)
+                            barras[barra].PrepararDesenhoFlambagem(resultado.Modos, id, glRestrito,
+                                maximos, resultado.IdReferencia);
+                    }
+                }
+            }
         }
 
         void CalculaModal(bool UsarDll, int numModos)

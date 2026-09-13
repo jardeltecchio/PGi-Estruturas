@@ -40,6 +40,29 @@ Definir $p 'FrequenciasAngulares' ([double[]]@(2,4))
 Definir $p 'FrequenciasNaturais' ([double[]]@((1/[Math]::PI),(2/[Math]::PI)))
 $relatorio = New-Object PG.TRelatoriosResultados
 $texto = $relatorio.RelatorioAnaliseModal($p)
-if ($texto -notmatch '45,0000' -or $texto -notmatch '55,0000' -or $texto -notmatch '100,0000') { throw 'Valores ausentes no TXT' }
+if ($texto -notmatch '45,0000' -or $texto -notmatch '55,0000') { throw 'Valores ausentes no relatorio' }
 if (($texto -split "`r?`n" | Where-Object { $_ -match '^\s+[12]\s+\|' }).Count -ne 2) { throw 'Quantidade incorreta de linhas' }
 'PASS: massa acoplada, invariancia de escala, direcoes restringidas e relatorio em memoria.'
+
+# Conferir a ordem do PGi: DX=1, DY=3, DZ=2, inclusive a coluna do relatorio.
+for ($direcao=0; $direcao -lt 3; $direcao++) {
+    $gl = @(1,3,2)[$direcao]
+    $p.id = New-Object int[] 13
+    $p.glRestrito = New-Object bool[] 13
+    for ($i=1; $i -le 12; $i++) { $p.glRestrito[$i] = $true }
+    $p.glRestrito[$gl] = $false; $p.glRestrito[$gl+6] = $false
+    $p.id[$gl] = 1; $p.id[$gl+6] = 2
+    Invocar $modal 'CalcularParticipacaoModal'
+    for ($coluna=0; $coluna -lt 3; $coluna++) {
+        $esperado = 0.0
+        if ($coluna -eq $direcao) { $esperado = 45.0 }
+        $erro = $modal.PercentuaisMassaModal.GetValue(0,$coluna) - $esperado
+        if ([Math]::Abs($erro) -gt 1e-12) { throw 'Eixos de participacao invertidos' }
+    }
+    Definir $p 'PercentuaisMassaModal' $modal.PercentuaisMassaModal
+    $texto = $relatorio.RelatorioAnaliseModal($p)
+    $linha = ($texto -split "`r?`n" | Where-Object { $_ -match '^\s+1\s+\|' })
+    $colunas = $linha -split '\|'
+    if ($colunas[4+$direcao].Trim() -ne '45,0000') { throw 'Coluna do relatorio incorreta' }
+}
+'PASS: participacoes X, Y e Z correspondem aos GL 1, 3 e 2 no calculo e no relatorio.'

@@ -22,7 +22,7 @@ namespace PG
         public FProcessoCalculo(Gerenciador ow, bool visivel)
         {
             InitializeComponent();
-            vis = true;
+          //  vis = true;
             this.owner = ow;
             LabelProcesso.Visible = false;
             Application.DoEvents();

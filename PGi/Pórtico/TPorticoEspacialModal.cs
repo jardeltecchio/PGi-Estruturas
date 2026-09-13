@@ -49,21 +49,27 @@ namespace PG
                 if (massasModais[modo] <= 0.0)
                     throw new InvalidOperationException("Massa generalizada inválida no cálculo da participação modal.");
             }
+            // Convenção de TNoPortico: GL 1 = DX, GL 2 = DZ, GL 3 = DY.
+            // As colunas do relatório permanecem na ordem X, Y, Z.
+            int[] glPorDirecao = { 1, 3, 2 };
             for (int direcao = 0; direcao < 3; direcao++)
             {
                 double[] influencia = new double[portico.NLinhas];
                 bool possuiGlLivre = false;
-                for (int gl = direcao + 1; gl <= portico.Ngl; gl += 6)
+                for (int gl = glPorDirecao[direcao]; gl <= portico.Ngl; gl += 6)
                     if (!portico.glRestrito[gl])
                     {
                         influencia[portico.id[gl] - 1] = 1.0;
                         possuiGlLivre = true;
                     }
-                if (!possuiGlLivre) continue;
+                if (!possuiGlLivre) 
+                    continue;
                 double[] massaInfluencia = MultiplicarMassa(influencia);
                 double massaDirecao = ProdutoEscalar(influencia, massaInfluencia);
+                
                 if (massaDirecao <= 0.0 || double.IsNaN(massaDirecao) || double.IsInfinity(massaDirecao))
                     throw new InvalidOperationException("Massa de referência inválida na participação modal.");
+                
                 for (int modo = 0; modo < numModos; modo++)
                 {
                     double projecao = 0.0;
@@ -620,16 +626,23 @@ namespace PG
                     BaseLanczos = baseLanczos;
                     DiagonalLanczos = diagonal.ToArray();
                     SubdiagonalLanczos = subdiagonal.ToArray();
+                    
                     InformarProgresso(percentualProgresso, "Análise modal: solução do problema reduzido");
                     ResolverProblemaReduzido();
+                    
                     InformarProgresso(percentualProgresso, "Análise modal: recuperação dos modos e frequências");
                     RecuperarModosEFrequencias();
+                    
                     InformarProgresso(percentualProgresso, "Análise modal: verificação da convergência");
                     VerificarConvergencia(false);
+                   
                     ResiduosPorTentativa.Add((double[])ResiduosRelativos.Clone());
+                    
                     VetoresPorTentativa.Add(baseLanczos.Count);
+                    
                     if (Convergiu)
                         return;
+                    
                     if (baseLanczos.Count >= numeroMaximoVetores && numeroMaximoVetores < portico.NLinhas)
                     {
                         double maiorResiduo = 0.0;

@@ -43,12 +43,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.edRelatorio.Font = new System.Drawing.Font("Consolas", 10F);
-            this.edRelatorio.Location = new System.Drawing.Point(0, 22);
+            this.edRelatorio.Location = new System.Drawing.Point(2, 21);
             this.edRelatorio.Multiline = true;
             this.edRelatorio.Name = "edRelatorio";
             this.edRelatorio.ReadOnly = true;
             this.edRelatorio.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.edRelatorio.Size = new System.Drawing.Size(796, 414);
+            this.edRelatorio.Size = new System.Drawing.Size(895, 414);
             this.edRelatorio.TabIndex = 0;
             this.edRelatorio.WordWrap = false;
             // 
@@ -68,7 +68,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 442);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(800, 34);
+            this.panel1.Size = new System.Drawing.Size(899, 34);
             this.panel1.TabIndex = 14;
             // 
             // button3
@@ -79,7 +79,7 @@
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.ImageKey = "fechar.bmp";
             this.button3.ImageList = this.imageList3;
-            this.button3.Location = new System.Drawing.Point(684, 0);
+            this.button3.Location = new System.Drawing.Point(783, 0);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(114, 32);
             this.button3.TabIndex = 17;
@@ -91,7 +91,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 476);
+            this.ClientSize = new System.Drawing.Size(899, 476);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.edRelatorio);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;

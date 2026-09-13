@@ -320,6 +320,7 @@ namespace PG
 
             int div = divBarrasPortico;
             List<TBarraGenerica> barrasDivididas = new List<TBarraGenerica>();
+            List<int> nosExtremosTrechos = new List<int>();
 
             foreach (TBarraGenerica b in barrasgenericas)
             {
@@ -465,11 +466,31 @@ namespace PG
                 u = -1;
                 for (int j = 0; j < Divisoes.Count; j++)
                 {
-                    ni = LocalizaNo(Divisoes[j].x, Divisoes[j].y, Divisoes[j].z);
+                    // Somente extremos dos trechos podem compartilhar nos por coordenadas.
+                    // Nos internos da discretizacao nao criam ligacoes em cruzamentos.
+                    bool extremoTrecho = j == 0 || j == Divisoes.Count - 1;
+                    ni = -1;
+                    if (extremoTrecho)
+                    {
+                        foreach (int indiceNo in nosExtremosTrechos)
+                        {
+                            if (Geom.Iguais(Divisoes[j].x, nos[indiceNo].x, 0.001) &&
+                                Geom.Iguais(Divisoes[j].y, nos[indiceNo].y, 0.001) &&
+                                Geom.Iguais(Divisoes[j].z, nos[indiceNo].z, 0.001))
+                            {
+                                ni = indiceNo;
+                                break;
+                            }
+                        }
+                    }
+
+                 //   ni = LocalizaNo(Divisoes[j].x, Divisoes[j].y, Divisoes[j].z);
 
                     if (ni == -1)
                     {
                         nos[++nNos] = new TNoPortico(Divisoes[j].x, Divisoes[j].y, Divisoes[j].z, CoordsOffsets[j].x, CoordsOffsets[j].y, CoordsOffsets[j].z, 0, nNos + 1);
+                        if (extremoTrecho)
+                            nosExtremosTrechos.Add(nNos);
 
                         foreach (TApoio a in apoios)
                         {

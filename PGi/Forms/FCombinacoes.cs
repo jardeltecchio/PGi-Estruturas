@@ -35,12 +35,12 @@ namespace PG
         private void FCombinacoes_Load(object sender, EventArgs e)
         {
             GridPrincipal.AutoGenerateColumns = false;
-            
+
             var combobox = (DataGridViewComboBoxColumn)GridPrincipal.Columns["Caso"];
             combobox.DisplayMember = "NOME";
             combobox.ValueMember = "ID_";
             combobox.DataSource = gerenciador.formDesenho.CasosCarga;
-            AtualizaListBox(0);
+            AtualizaListBox(-1, CategoriaAtual);
             SetWidthPG(pg, 20);
             /*    DataGridViewComboBoxColumn colCaso = new DataGridViewComboBoxColumn();
                 colCaso.HeaderText = "Caso";
@@ -65,27 +65,32 @@ namespace PG
             //      GridPrincipal.DataSource = gerenciador.formDesenho.Estrutura.combinacoes;
             // Grid_DataBindingComplete(Grid, null);
         }
-        void AtualizaListBox(int itemSelecionado)
+        CategoriaCombinacao CategoriaAtual => tbTipoCombinacao.SelectedIndex == 1
+            ? CategoriaCombinacao.Estabilidade : CategoriaCombinacao.Linear;
+
+        List<TCombinacoes> combinacoesFiltradas = new List<TCombinacoes>();
+
+        TCombinacoes CombinacaoSelecionada => lbComb.SelectedIndex >= 0 ? combinacoesFiltradas[lbComb.SelectedIndex] : null;
+
+        void AtualizaListBox(int itemSelecionado, CategoriaCombinacao categoria = CategoriaCombinacao.Linear)
         {
             lbComb.Items.Clear();
-            if (gerenciador.formDesenho.Estrutura.combinacoes.Count > 0)
-                foreach (TCombinacoes c in gerenciador.formDesenho.Estrutura.combinacoes)
-                    lbComb.Items.Add(c.Nome +" - "+c.Descricao);
-           
-            if (itemSelecionado > -1)
-            {
-                pg.SelectedObject = null;
-                if (lbComb.Items.Count > 0)
-                {
-                    ultSelecao = itemSelecionado;
-                    lbComb.SelectedIndex = itemSelecionado;
-                    pg.SelectedObject = gerenciador.formDesenho.Estrutura.combinacoes[lbComb.SelectedIndex];
-                    bindingSource1.DataSource = gerenciador.formDesenho.Estrutura.combinacoes[lbComb.SelectedIndex].Coeficientes;
-                    GridPrincipal.DataSource = bindingSource1;// gerenciador.formDesenho.Estrutura.combinacoes[lbComb.SelectedIndex].Coeficientes;
-                }
-                else
-                    GridPrincipal.DataSource = null;
-            }
+            combinacoesFiltradas = gerenciador.formDesenho.Estrutura.combinacoes.Where(c => c.categoriaCombinacao == categoria).ToList();
+            foreach (TCombinacoes c in combinacoesFiltradas)
+                lbComb.Items.Add(c.Nome +" - "+c.Descricao);
+
+            int indice = combinacoesFiltradas.FindIndex(c => c.Id == itemSelecionado);
+            lbComb.SelectedIndex = indice >= 0 ? indice : (lbComb.Items.Count > 0 ? 0 : -1);
+            AtualizaSelecao();
+        }
+
+        void AtualizaSelecao()
+        {
+            var combinacao = CombinacaoSelecionada;
+            ultSelecao = combinacao == null ? -1 : combinacao.Id;
+            pg.SelectedObject = combinacao;
+            bindingSource1.DataSource = combinacao?.Coeficientes;
+            GridPrincipal.DataSource = combinacao == null ? null : bindingSource1;
         }
 
         private void FCombinacoes_Move(object sender, EventArgs e)
@@ -132,25 +137,10 @@ namespace PG
         int ultSelecao = -1;
         private void lbComb_Click(object sender, EventArgs e)
         {
-            if (lbComb.Items.Count > 0)
-            if (lbComb.SelectedIndex > -1)
-            {
-                    int ite = lbComb.SelectedIndex;
-                    GridPrincipal.DataSource = gerenciador.formDesenho.Estrutura.combinacoes[ite].Coeficientes;
-                    pg.SelectedObject = gerenciador.formDesenho.Estrutura.combinacoes[lbComb.SelectedIndex];
-
-                    bindingSource1.DataSource = gerenciador.formDesenho.Estrutura.combinacoes[lbComb.SelectedIndex].Coeficientes;
-                    GridPrincipal.DataSource = bindingSource1;
-
-                    ultSelecao = ite;
-
-                    if (gerenciador.formDesenho.Estrutura.combinacoes[lbComb.SelectedIndex].Coeficientes.Count == 0)
-                    {
-                        MessageBox.Show("Essa combinação deve conter ao menos um coeficiente para combinar!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                }
+            var combinacao = CombinacaoSelecionada;
+            if (combinacao != null && combinacao.Coeficientes.Count == 0)
+                MessageBox.Show("Essa combinação deve conter ao menos um coeficiente para combinar!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
-
         private void GridPrincipal_KeyPress(object sender, KeyPressEventArgs e)
         {
 
@@ -163,7 +153,7 @@ namespace PG
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (lbComb.SelectedIndex > -1) 
+            if (lbComb.SelectedIndex > -1)
                bindingSource1.Add(new CoeficientesCombinacao(1,1));
         }
 
@@ -180,44 +170,41 @@ namespace PG
                 contagem = 1;
             else
                 contagem = gerenciador.formDesenho.Estrutura.combinacoes.Max(o => o.Id) + 1;
-            
-            gerenciador.formDesenho.Estrutura.combinacoes.Add(new TCombinacoes(contagem, "Combinação " + contagem.ToString(), "C" + contagem.ToString(), TipoCombinacao.ELU));
-            AtualizaListBox(gerenciador.formDesenho.Estrutura.combinacoes.Count - 1);
-            ultSelecao = gerenciador.formDesenho.Estrutura.combinacoes.Count - 1;
-            lbComb.SelectedIndex = lbComb.Items.Count - 1;
 
-            int ite = lbComb.SelectedIndex;
-            GridPrincipal.DataSource = gerenciador.formDesenho.Estrutura.combinacoes[ite].Coeficientes;
-            pg.SelectedObject = gerenciador.formDesenho.Estrutura.combinacoes[lbComb.SelectedIndex];
+            CategoriaCombinacao categoria = CategoriaCombinacao.Linear;
+            if (tbTipoCombinacao.SelectedIndex == 0)
+                categoria = CategoriaCombinacao.Linear;
+            else
+            if (tbTipoCombinacao.SelectedIndex == 1)
+                categoria = CategoriaCombinacao.Estabilidade;
 
-            bindingSource1.DataSource = gerenciador.formDesenho.Estrutura.combinacoes[lbComb.SelectedIndex].Coeficientes;
-            GridPrincipal.DataSource = bindingSource1;
-
-            ultSelecao = ite;
+            gerenciador.formDesenho.Estrutura.combinacoes.Add(new TCombinacoes(contagem, "Combinação " + contagem.ToString(), "C" + contagem.ToString(), TipoEstadoLimite.ELU, categoria));
+            AtualizaListBox(contagem, categoria);
         }
 
         private void pg_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-            AtualizaListBox(ultSelecao);
+            AtualizaListBox(ultSelecao, CategoriaAtual);
         }
         void AtuDescricao()
         {
-            if (ultSelecao > -1)
+            var combinacao = gerenciador.formDesenho.Estrutura.combinacoes.Find(o => o.Id == ultSelecao);
+            if (combinacao != null)
             {
                 string desc = "";
-                for (int cc = 0; cc < gerenciador.formDesenho.Estrutura.combinacoes[ultSelecao].Coeficientes.Count; cc++)
+                for (int cc = 0; cc < combinacao.Coeficientes.Count; cc++)
                 {
-                    if (cc == gerenciador.formDesenho.Estrutura.combinacoes[ultSelecao].Coeficientes.Count - 1)
-                        desc += gerenciador.formDesenho.Estrutura.combinacoes[ultSelecao].Coeficientes[cc].coef.ToString()
-                             + "*" + gerenciador.formDesenho.CasosCarga.Find(o => o.ID == gerenciador.formDesenho.Estrutura.combinacoes[ultSelecao].Coeficientes[cc].caso).Nome.ToString();
+                    if (cc == combinacao.Coeficientes.Count - 1)
+                        desc += combinacao.Coeficientes[cc].coef.ToString()
+                             + "*" + gerenciador.formDesenho.CasosCarga.Find(o => o.ID == combinacao.Coeficientes[cc].caso).Nome.ToString();
                     else
-                        desc += gerenciador.formDesenho.Estrutura.combinacoes[ultSelecao].Coeficientes[cc].coef.ToString()
-                             + "*" + gerenciador.formDesenho.CasosCarga.Find(o => o.ID == gerenciador.formDesenho.Estrutura.combinacoes[ultSelecao].Coeficientes[cc].caso).Nome.ToString() + " + ";
+                        desc += combinacao.Coeficientes[cc].coef.ToString()
+                             + "*" + gerenciador.formDesenho.CasosCarga.Find(o => o.ID == combinacao.Coeficientes[cc].caso).Nome.ToString() + " + ";
 
                 }
-                gerenciador.formDesenho.Estrutura.combinacoes[ultSelecao].Descricao = desc;
-                AtualizaListBox(ultSelecao);
-                pg.SelectedObject = gerenciador.formDesenho.Estrutura.combinacoes[ultSelecao];
+                combinacao.Descricao = desc;
+                AtualizaListBox(ultSelecao, CategoriaAtual);
+                pg.SelectedObject = combinacao;
 
 
             }
@@ -234,14 +221,14 @@ namespace PG
                     if (dlgresult == DialogResult.Yes)
                     {
                         List<int> tmp = new List<int>();
-                        gerenciador.formDesenho.Estrutura.combinacoes.RemoveAt(lbComb.SelectedIndex);
+                        gerenciador.formDesenho.Estrutura.combinacoes.Remove(CombinacaoSelecionada);
 
                         if (gerenciador.formDesenho.Estrutura.combinacoes.Count > 0)
                         {
-                            AtualizaListBox(0);
+                            AtualizaListBox(-1, CategoriaAtual);
                         }
                         else
-                            AtualizaListBox(0);
+                            AtualizaListBox(-1, CategoriaAtual);
                     }
                 }
         }
@@ -258,7 +245,7 @@ namespace PG
 
         private void lbComb_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            AtualizaSelecao();
         }
 
         private void button4_Click_1(object sender, EventArgs e)
@@ -267,33 +254,47 @@ namespace PG
             if (gerenciador.formDesenho.Estrutura.combinacoes.Count == 0)
               return;
 
-            int combSelecionada = lbComb.SelectedIndex;
+            var combSelecionada = CombinacaoSelecionada;
+            if (combSelecionada == null)
+                return;
+
+            CategoriaCombinacao categoria = CategoriaCombinacao.Linear;
+            if (tbTipoCombinacao.SelectedIndex == 0)
+                categoria = CategoriaCombinacao.Linear;
+            else
+            if (tbTipoCombinacao.SelectedIndex == 1)
+                categoria = CategoriaCombinacao.Estabilidade;
 
             contagem = gerenciador.formDesenho.Estrutura.combinacoes.Max(o => o.Id) + 1;
 
-            gerenciador.formDesenho.Estrutura.combinacoes.Add(new TCombinacoes(contagem, "Combinação " + contagem.ToString(), "C" + contagem.ToString(), TipoCombinacao.ELU));
-          
-            for (int i = 0; i < gerenciador.formDesenho.Estrutura.combinacoes[combSelecionada].Coeficientes.Count; i++)
+            gerenciador.formDesenho.Estrutura.combinacoes.Add(new TCombinacoes(contagem, "Combinação " + contagem.ToString(), "C" + contagem.ToString(), TipoEstadoLimite.ELU, categoria));
+
+            for (int i = 0; i < combSelecionada.Coeficientes.Count; i++)
             {
-                int caso = gerenciador.formDesenho.Estrutura.combinacoes[combSelecionada].Coeficientes[i].caso;
-                double coef = gerenciador.formDesenho.Estrutura.combinacoes[combSelecionada].Coeficientes[i].coef;
+                int caso = combSelecionada.Coeficientes[i].caso;
+                double coef = combSelecionada.Coeficientes[i].coef;
                 gerenciador.formDesenho.Estrutura.combinacoes[gerenciador.formDesenho.Estrutura.combinacoes.Count - 1].Coeficientes.Add(new CoeficientesCombinacao(caso, coef));
             }
-            
-            AtualizaListBox(gerenciador.formDesenho.Estrutura.combinacoes.Count - 1);
-            ultSelecao = gerenciador.formDesenho.Estrutura.combinacoes.Count - 1;
-            lbComb.SelectedIndex = lbComb.Items.Count - 1;
 
-            int ite = lbComb.SelectedIndex;
-            GridPrincipal.DataSource = gerenciador.formDesenho.Estrutura.combinacoes[ite].Coeficientes;
-            pg.SelectedObject = gerenciador.formDesenho.Estrutura.combinacoes[lbComb.SelectedIndex];
-
-            bindingSource1.DataSource = gerenciador.formDesenho.Estrutura.combinacoes[lbComb.SelectedIndex].Coeficientes;
-            GridPrincipal.DataSource = bindingSource1;
-
-            ultSelecao = ite;
+            AtualizaListBox(contagem, categoria);
 
             AtuDescricao();
+        }
+        void FiltrarCategoria(CategoriaCombinacao categoria)
+        {
+            AtualizaListBox(ultSelecao, categoria);
+        }
+
+        private void tbTipoCombinacao_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CategoriaCombinacao categoria = CategoriaCombinacao.Linear;
+            if (tbTipoCombinacao.SelectedIndex == 0)
+                categoria = CategoriaCombinacao.Linear;
+            else
+            if (tbTipoCombinacao.SelectedIndex == 1)
+                categoria = CategoriaCombinacao.Estabilidade;
+
+            FiltrarCategoria(categoria);
         }
     }
 }

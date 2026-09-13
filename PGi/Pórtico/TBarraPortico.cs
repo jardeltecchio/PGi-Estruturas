@@ -133,6 +133,33 @@ namespace PG
         public double[,] DeslocamentosModais { get; private set; }
         public double[] MaximosDeslocamentosModais { get; private set; }
 
+        public Dictionary<int, double[,]> DeslocamentosFlambagem { get; private set; }
+            = new Dictionary<int, double[,]>();
+        public Dictionary<int, double[]> MaximosDeslocamentosFlambagem { get; private set; }
+            = new Dictionary<int, double[]>();
+
+        public void PrepararDesenhoFlambagem(double[,] modos, int[] equacoes, bool[] restritos,
+            double[] maximos, int id_combinacao)
+        {
+            var deslocamentos = new double[13, modos.GetLength(1)];
+            for (int gl = 1; gl <= 12; gl++)
+            {
+                int global = GlGlobal[gl];
+                if (restritos[global]) continue;
+                for (int modo = 0; modo < modos.GetLength(1); modo++)
+                    deslocamentos[gl, modo] = modos[equacoes[global] - 1, modo];
+            }
+            if (DeslocamentosFlambagem == null)
+                DeslocamentosFlambagem = new Dictionary<int, double[,]>();
+
+            if (MaximosDeslocamentosFlambagem == null)
+                MaximosDeslocamentosFlambagem = new Dictionary<int, double[]>();
+
+            DeslocamentosFlambagem[id_combinacao] = deslocamentos;
+            MaximosDeslocamentosFlambagem[id_combinacao] = maximos == null ? null : (double[])maximos.Clone();
+            DirtyTriangulos = DirtySelecao = true;
+        }
+
         public void PrepararDesenhoModal(double[,] modos, int[] equacoes, bool[] restritos,
             double[] maximos)
         {
@@ -146,6 +173,7 @@ namespace PG
                     DeslocamentosModais[gl, modo] = modos[equacoes[global] - 1, modo];
             }
         }
+
         public bool PreSelecionada;
         private double cos_alpha, cos_teta, sen_alpha, sen_teta;
         public double alfa;
@@ -903,6 +931,42 @@ namespace PG
             DirtyTriangulos = false;
             DirtySelecao = false;
         }
+        public void AtualizaTriangulos_Flambagem(ref List<float> coords_triangulos,
+                        ref List<Triangulo> triangulos_selecao,
+                        ref double MultiplicadorAltura,
+                        ref bool arestas,
+                        ref bool LinhaContorno,
+                        int modo,
+                        bool moodo_colorido,
+                        int id_combinacao)
+        {
+            List<float> coords = new List<float>();
+            List<Triangulo> selecao = new List<Triangulo>();
+
+            PreencheTriangulos_Flambagem(ref coords, ref selecao, ref MultiplicadorAltura, ref arestas, ref LinhaContorno, modo, moodo_colorido, id_combinacao);
+
+            BatchTriangulos = coords.ToArray();
+            TriangulosSelecao = selecao.ToArray();
+
+            DirtyTriangulos = false;
+            DirtySelecao = false;
+        }
+        public void PreencheTriangulos_Flambagem(ref List<float> coords_triangulos,
+                        ref List<Triangulo> triangulos_selecao,
+                        ref double MultiplicadorAltura,
+                        ref bool arestas,
+                        ref bool LinhaContorno,
+                        int modo,
+                        bool modo_colorido,
+                        int id_combinacao)
+        {
+            double[,] deslocamentos;
+            if (DeslocamentosFlambagem == null || !DeslocamentosFlambagem.TryGetValue(id_combinacao, out deslocamentos)) return;
+            double[] maximos = null;
+            MaximosDeslocamentosFlambagem?.TryGetValue(id_combinacao, out maximos);
+            PreencheTriangulos_Modo(ref coords_triangulos, ref triangulos_selecao,
+                ref MultiplicadorAltura, modo, modo_colorido, deslocamentos, maximos);
+        }
         public void PreencheTriangulos_ModoVibracao(ref List<float> coords_triangulos,
                                 ref List<Triangulo> triangulos_selecao,
                                 ref double MultiplicadorAltura,
@@ -911,8 +975,17 @@ namespace PG
                                 int modoVibracao,
                                 bool modo_colorido)
         {
-            if (barra_de_articulacao || barraRigida || !Visivel || DeslocamentosModais == null ||
-                modoVibracao < 0 || modoVibracao >= DeslocamentosModais.GetLength(1) ||
+            PreencheTriangulos_Modo(ref coords_triangulos, ref triangulos_selecao,
+                ref MultiplicadorAltura, modoVibracao, modo_colorido,
+                DeslocamentosModais, MaximosDeslocamentosModais);
+        }
+
+        private void PreencheTriangulos_Modo(ref List<float> coords_triangulos,
+            ref List<Triangulo> triangulos_selecao, ref double MultiplicadorAltura,
+            int modoVibracao, bool modo_colorido, double[,] deslocamentos, double[] maximos)
+        {
+            if (barra_de_articulacao || barraRigida || !Visivel || deslocamentos == null ||
+                modoVibracao < 0 || modoVibracao >= deslocamentos.GetLength(1) ||
                 coordssecao_i == null || coordssecao_f == null ||
                 double.IsNaN(MultiplicadorAltura) || double.IsInfinity(MultiplicadorAltura))
                 return;
@@ -920,8 +993,8 @@ namespace PG
             // Manter as seções originais: cada quadro parte da geometria indeformada.
             coordssecao_i_temp = new List<vec3[]>();
             coordssecao_f_temp = new List<vec3[]>();
-            vec3 corI = CorSolidoModal(0, modoVibracao, modo_colorido);
-            vec3 corF = CorSolidoModal(1, modoVibracao, modo_colorido);
+            vec3 corI = CorSolidoModal(0, modoVibracao, modo_colorido, deslocamentos, maximos);
+            vec3 corF = CorSolidoModal(1, modoVibracao, modo_colorido, deslocamentos, maximos);
             for (int q = 0; q < coordssecao_i.Count; q++)
             {
                 int quantidade = coordssecao_i[q].Length;
@@ -936,8 +1009,8 @@ namespace PG
                     // coordssecao usa (x,-y,-z) em relação ao espaço gráfico.
                     vec3 pi = coordssecao_i[q][k];
                     vec3 pf = coordssecao_f[q][k];
-                    inicio[k] = PontoSolidoModal(new vec3(pi.x, -pi.y, -pi.z), 0, modoVibracao, MultiplicadorAltura);
-                    fim[k] = PontoSolidoModal(new vec3(pf.x, -pf.y, -pf.z), 1, modoVibracao, MultiplicadorAltura);
+                    inicio[k] = PontoSolidoModal(new vec3(pi.x, -pi.y, -pi.z), 0, modoVibracao, MultiplicadorAltura, deslocamentos);
+                    fim[k] = PontoSolidoModal(new vec3(pf.x, -pf.y, -pf.z), 1, modoVibracao, MultiplicadorAltura, deslocamentos);
                     tempI[k] = new vec3(inicio[k].x, -inicio[k].y, -inicio[k].z);
                     tempF[k] = new vec3(fim[k].x, -fim[k].y, -fim[k].z);
                     tempI[k].pontoEmRaio = pi.pontoEmRaio;
@@ -961,38 +1034,49 @@ namespace PG
             {
                 TNoPortico no = ponta == 0 ? pIni : pFin;
                 TNoPortico offset = (ponta == 0 ? pIni_offset : pFin_offset) ?? no;
-                vec3 posicao = PontoSolidoModal(new vec3(offset.x, offset.y, offset.z), ponta, modoVibracao, MultiplicadorAltura);
+                vec3 posicao = PontoSolidoModal(new vec3(offset.x, offset.y, offset.z), ponta, modoVibracao, MultiplicadorAltura, deslocamentos);
                 no.coordx_tela = posicao.x;
                 no.coordy_tela = posicao.y;
                 no.coordz_tela = posicao.z;
             }
         }
 
-        private vec3 PontoSolidoModal(vec3 ponto, int ponta, int modo, double escala)
+        private vec3 PontoSolidoModal(vec3 ponto, int ponta, int modo, double escala,
+            double[,] deslocamentos = null)
         {
+            deslocamentos = deslocamentos ?? DeslocamentosModais;
             TNoPortico no = ponta == 0 ? pIni : pFin;
             int gl = 1 + 6 * ponta;
 
             // Braço em coordenadas estruturais; inclui excentricidade e seção.
             double rx = ponto.x - no.x, ry = -(ponto.z - no.z), rz = -(ponto.y - no.y);
-            double tx = DeslocamentosModais[gl + 3, modo];
-            double ty = DeslocamentosModais[gl + 4, modo];
-            double tz = DeslocamentosModais[gl + 5, modo];
-            double ux = DeslocamentosModais[gl, modo] + ty * rz - tz * ry;
-            double uy = DeslocamentosModais[gl + 1, modo] + tz * rx - tx * rz;
-            double uz = DeslocamentosModais[gl + 2, modo] + tx * ry - ty * rx;
+            double tx = deslocamentos[gl + 3, modo];
+            double ty = deslocamentos[gl + 4, modo];
+            double tz = deslocamentos[gl + 5, modo];
+            double ux = deslocamentos[gl, modo] + ty * rz - tz * ry;
+            double uy = deslocamentos[gl + 1, modo] + tz * rx - tx * rz;
+            double uz = deslocamentos[gl + 2, modo] + tx * ry - ty * rx;
             return new vec3(ponto.x + escala * ux, ponto.y - escala * uz, ponto.z - escala * uy);
         }
 
-        private vec3 CorSolidoModal(int ponta, int modo, bool colorido)
+        private vec3 CorSolidoModal(int ponta, int modo, bool colorido,
+            double[,] deslocamentos = null, double[] maximos = null)
         {
-            if (Selecionado) return new vec3(1, 0, 0);
-            if (!colorido) return new vec3(Rgb[0] / 255.0, Rgb[1] / 255.0, Rgb[2] / 255.0);
+            if (Selecionado) 
+                return new vec3(1, 0, 0);
+
+            if (!colorido)
+                return new vec3(Rgb[0] / 255.0, Rgb[1] / 255.0, Rgb[2] / 255.0);
+
             TNoPortico no = ponta == 0 ? pIni : pFin;
             TNoPortico offset = (ponta == 0 ? pIni_offset : pFin_offset) ?? no;
             vec3 origem = new vec3(offset.x, offset.y, offset.z);
-            double amplitude = (PontoSolidoModal(origem, ponta, modo, 1.0) - origem).Magnitude();
-            double maximo = MaximosDeslocamentosModais == null ? 0.0 : MaximosDeslocamentosModais[modo];
+           
+            if (deslocamentos == null) 
+                maximos = MaximosDeslocamentosModais;
+           
+            double amplitude = (PontoSolidoModal(origem, ponta, modo, 1.0, deslocamentos) - origem).Magnitude();
+            double maximo = maximos == null || modo >= maximos.Length ? 0.0 : maximos[modo];
             double t = maximo > 0.0 ? Math.Min(1.0, amplitude / maximo) : 0.0;
             return new vec3(Math.Max(0.0, 2 * t - 1), 1 - Math.Abs(2 * t - 1), Math.Max(0.0, 1 - 2 * t));
         }
@@ -1498,6 +1582,22 @@ namespace PG
 
             return true;
         }
+        public void Preenche_Barra_Flambagem(
+            ref List<float> coords_arestas,
+            ref double MultiplicadorAltura,
+            ref bool Colorido,
+            ref bool arestas,
+            int modo,
+            int id_combinacao)
+        {
+            double[,] deslocamentos;
+            if (DeslocamentosFlambagem == null || !DeslocamentosFlambagem.TryGetValue(id_combinacao, out deslocamentos)) return;
+            double[] maximos = null;
+
+            MaximosDeslocamentosFlambagem?.TryGetValue(id_combinacao, out maximos);
+            Preenche_Barra_Modo(ref coords_arestas, ref MultiplicadorAltura, ref Colorido, modo, deslocamentos, maximos);
+        }
+
         public void Preenche_Barra_ModoVibracao(
             ref List<float> coords_arestas,
             ref double MultiplicadorAltura,
@@ -1505,8 +1605,16 @@ namespace PG
             ref bool arestas,
             int modoVibracao)
         {
-            if (barra_de_articulacao || !Visivel || DeslocamentosModais == null ||
-                modoVibracao < 0 || modoVibracao >= DeslocamentosModais.GetLength(1))
+            Preenche_Barra_Modo(ref coords_arestas, ref MultiplicadorAltura,
+                ref Colorido, modoVibracao, DeslocamentosModais, MaximosDeslocamentosModais);
+        }
+
+        private void Preenche_Barra_Modo(ref List<float> coords_arestas,
+            ref double MultiplicadorAltura, ref bool Colorido, int modoVibracao,
+            double[,] deslocamentos, double[] maximos)
+        {
+            if (barra_de_articulacao || !Visivel || deslocamentos == null ||
+                modoVibracao < 0 || modoVibracao >= deslocamentos.GetLength(1))
                 return;
             if (double.IsNaN(MultiplicadorAltura) || double.IsInfinity(MultiplicadorAltura))
                 return;
@@ -1517,17 +1625,17 @@ namespace PG
                 int gl = ponta * 6 + 1;
                 TNoPortico no = ponta == 0 ? pIni : pFin;
                 TNoPortico offset = (ponta == 0 ? pIni_offset : pFin_offset) ?? no;
-                double ux = DeslocamentosModais[gl, modoVibracao];
-                double uy = DeslocamentosModais[gl + 1, modoVibracao];
-                double uz = DeslocamentosModais[gl + 2, modoVibracao];
+                double ux = deslocamentos[gl, modoVibracao];
+                double uy = deslocamentos[gl + 1, modoVibracao];
+                double uz = deslocamentos[gl + 2, modoVibracao];
                 // Deslocamento do braço rígido: u_offset = u_no + theta x r.
                 // Converter primeiro o braço gráfico (X,-Z,-Y) para os eixos estruturais.
                 double rx = offset.x - no.x;
                 double ry = -(offset.z - no.z);
                 double rz = -(offset.y - no.y);
-                double tx = DeslocamentosModais[gl + 3, modoVibracao];
-                double ty = DeslocamentosModais[gl + 4, modoVibracao];
-                double tz = DeslocamentosModais[gl + 5, modoVibracao];
+                double tx = deslocamentos[gl + 3, modoVibracao];
+                double ty = deslocamentos[gl + 4, modoVibracao];
+                double tz = deslocamentos[gl + 5, modoVibracao];
                 ux += ty * rz - tz * ry;
                 uy += tz * rx - tx * rz;
                 uz += tx * ry - ty * rx;
@@ -1538,9 +1646,9 @@ namespace PG
                 double vermelho = Rgb[0] / 255.0;
                 double verde = Rgb[1] / 255.0;
                 double azul = Rgb[2] / 255.0;
-                if (Colorido && MaximosDeslocamentosModais != null)
+                if (Colorido && maximos != null)
                 {
-                    double maximo = MaximosDeslocamentosModais[modoVibracao];
+                    double maximo = maximos[modoVibracao];
                     double amplitude = Math.Sqrt(ux * ux + uy * uy + uz * uz);
                     double t = maximo > 0 ? Math.Min(1.0, amplitude / maximo) : 0.0;
                     // Escala comum ao modo: azul (zero), verde (meio), vermelho (máximo).
@@ -3254,6 +3362,16 @@ namespace PG
         double[,] Kei;
         public double KMy_Inicio, KMz_Inicio, KMy_Final, KMz_Final, ex_i, ex_f;
         public bool tem_ex_f, tem_ex_i;
+        // Reconstroi a rigidez antes da condensacao e dos offsets sem alterar
+        // as matrizes e propriedades usadas pelos resultados estaticos.
+        internal double[,] CriarMatrizElasticaFlambagem(double fatorTirante = 1.0)
+        {
+            var copia = (TBarraPortico)MemberwiseClone();
+            copia.FatorRigidezTensionOnly = fatorTirante;
+            copia.SetMatrizLocal();
+            return copia.MatrizLocal;
+        }
+
         public void SetMatrizLocalSemiRigida()
         {
            /* if (articulacao_my_ini)
@@ -3343,11 +3461,12 @@ namespace PG
 
             // Aplica fator de rigidez para elementos tension-only (comprimidos)
             // Feito aqui na matriz LOCAL antes de qualquer transformação (offset/rotação)
-          /*  if (SomenteTracao && FatorRigidezTensionOnly != 1.0)
+            
+            if (SomenteTracao && FatorRigidezTensionOnly != 1.0)
             {
                // A1 *= .1;
-                ea *= 0.01;
-            }*/
+                ea *= FatorRigidezTensionOnly;
+            }
 
             if (barraRigida)
             {
@@ -3438,12 +3557,12 @@ namespace PG
 
             // Aplica fator de rigidez para elementos tension-only (comprimidos)
             // Feito aqui na matriz LOCAL antes de qualquer transformação (offset/rotação)
-            if (SomenteTracao && FatorRigidezTensionOnly != 1.0)
+         /*   if (SomenteTracao && FatorRigidezTensionOnly != 1.0)
             {
                 for (int i = 1; i <= 12; i++)
                     for (int j = 1; j <= 12; j++)
                         MatrizLocal[i, j] *= FatorRigidezTensionOnly;
-            }
+            }*/
         }
 
         /// <summary>
@@ -3650,16 +3769,16 @@ namespace PG
 
             MatrizGeometrica[1, 1] = P / L;
 
-            MatrizGeometrica[2, 2] = 6/5 * (P/L);
+            MatrizGeometrica[2, 2] = 6.0 / 5.0 * (P/L);
 
-            MatrizGeometrica[3, 3] = 6 / 5 * (P / L);
+            MatrizGeometrica[3, 3] = 6.0 / 5.0 * (P / L);
 
             MatrizGeometrica[4, 2] = M1_y/L;
             MatrizGeometrica[4, 3] = M1_z/L;
-            MatrizGeometrica[4, 4] = (P * G1) / (A1*L);
+            MatrizGeometrica[4, 4] = (P * J1) / (A1*L);
             
             MatrizGeometrica[5, 2] = T/L;
-            MatrizGeometrica[5, 3] = -P/10;
+            MatrizGeometrica[5, 3] = -P/ 10.0;
             MatrizGeometrica[5, 4] = -(2*M1_z - M2_z)/6;
             MatrizGeometrica[5, 5] = (2*P*L) / 15;
             
@@ -3671,55 +3790,110 @@ namespace PG
             MatrizGeometrica[7, 1] = -P / L;
             MatrizGeometrica[7, 7] =  P / L;
             
-            MatrizGeometrica[8, 2] = -6 / 5 * (P / L);
+            MatrizGeometrica[8, 2] = -6.0 / 5.0 * (P / L);
             MatrizGeometrica[8, 4] = -M1_y / L;
             MatrizGeometrica[8, 5] = -T / L;
             MatrizGeometrica[8, 6] = -P / 10;
-            MatrizGeometrica[8, 8] = 6 / 5 * (P / L);
+            MatrizGeometrica[8, 8] = 6.0 / 5.0 * (P / L);
 
 
-            MatrizGeometrica[9, 3] = -6 / 5 * (P / L);
+            MatrizGeometrica[9, 3] = -6.0 / 5.0 * (P / L);
             MatrizGeometrica[9, 4] = -M1_z / L;
             MatrizGeometrica[9, 5] = P / 10;
             MatrizGeometrica[9, 6] = -T / L;
-            MatrizGeometrica[9, 9] = 6 / 5 * (P / L);
+            MatrizGeometrica[9, 9] = 6.0 / 5.0 * (P / L);
 
 
             MatrizGeometrica[10, 2] = M2_y / L;
             MatrizGeometrica[10, 3] = M2_z / L;
-            MatrizGeometrica[10, 4] = -(P * G1) / (A1 * L);
-            MatrizGeometrica[10, 5] = -(M1_z + M2_z) / 6;
-            MatrizGeometrica[10, 6] = (M1_y + M2_y) / 6;
+            MatrizGeometrica[10, 4] = -(P * J1) / (A1 * L);
+            MatrizGeometrica[10, 5] = -(M1_z + M2_z) / 6.0;
+            MatrizGeometrica[10, 6] = (M1_y + M2_y) / 6.0;
             MatrizGeometrica[10, 8] = -(M2_y) / L;
             MatrizGeometrica[10, 9] = -(M2_z) / L;
-            MatrizGeometrica[10, 10] = (P * G1) / (A1 * L);
+            MatrizGeometrica[10, 10] = (P * J1) / (A1 * L);
 
             MatrizGeometrica[11, 2] = -T / L;
-            MatrizGeometrica[11, 3] = -P / 10;
-            MatrizGeometrica[11, 4] = -(M1_z + M2_z) / 6;
+            MatrizGeometrica[11, 3] = -P / 10.0;
+            MatrizGeometrica[11, 4] = -(M1_z + M2_z) / 6.0;
             MatrizGeometrica[11, 5] = -(P*L) / 30;
             MatrizGeometrica[11, 6] = -(T) / 2;
             MatrizGeometrica[11, 8] = (T) / L;
-            MatrizGeometrica[11, 9] = (P) / 10;
+            MatrizGeometrica[11, 9] = (P) / 10.0;
             MatrizGeometrica[11, 10] = (M1_z - M2_z) / 6;
             MatrizGeometrica[11, 11] = (2*P*L) / 15;
 
 
             MatrizGeometrica[12, 2] = P / 10;
             MatrizGeometrica[12, 3] = -T / L;
-            MatrizGeometrica[12, 4] = (M1_y + M2_y) / 6;
+            MatrizGeometrica[12, 4] = (M1_y + M2_y) / 6.0;
             MatrizGeometrica[12, 5] = T / 2;
             MatrizGeometrica[12, 6] = -P*L/30;
             MatrizGeometrica[12, 8] = -P / 10;
             MatrizGeometrica[12, 9] = T / L;
-            MatrizGeometrica[12, 10] = -(M1_y + 2*M2_y) / 6;
-            MatrizGeometrica[12, 12] = (2 * P * L) / 15;
+            MatrizGeometrica[12, 10] = -(M1_y + 2*M2_y) / 6.0;
+            MatrizGeometrica[12, 12] = (2.0 * P * L) / 15.0;
 
 
             //preenche lado simétrico
-            for (i = 1; i <= 12; i++)
-                for (j = i; j <= 12; j++)
-                    MatrizGeometrica[j, i] = MatrizGeometrica[i, j];
+            for (int i = 1; i <= 12; i++)
+                for (int j = i + 1; j <= 12; j++)
+                    MatrizGeometrica[i, j] = MatrizGeometrica[j, i];
+        }
+
+        /// <summary>
+        /// Matriz geometrica local de Bernoulli-Euler (formulacao ADAPT/RISA).
+        /// P positivo em tracao e negativo em compressao, para KT = Ke + Kg.
+        /// GL por no: u, v, w, rx, ry, rz. Usa o momento polar Iy1 + Iz1.
+        /// </summary>
+        public void SetMatrizGeometrica_2(double P)
+        {
+            double Ip = Iy1 + Iz1; // Momento polar de inercia.
+
+            MatrizGeometrica = new double[13, 13];
+            MatrizGeometrica[1, 1] = 1.0;
+            MatrizGeometrica[2, 2] = 6.0 / 5.0;
+            MatrizGeometrica[3, 3] = 6.0 / 5.0;
+            MatrizGeometrica[4, 4] = Ip / A1;
+
+            MatrizGeometrica[5, 3] = -L / 10.0;
+            MatrizGeometrica[5, 5] = 2.0 * L * L / 15.0;
+
+            MatrizGeometrica[6, 2] = L / 10.0;
+            MatrizGeometrica[6, 6] = 2.0 * L * L / 15.0;
+
+            MatrizGeometrica[7, 1] = -1.0;
+            MatrizGeometrica[7, 7] = 1.0;
+
+            MatrizGeometrica[8, 2] = -6.0 / 5.0;
+            MatrizGeometrica[8, 6] = -L / 10.0;
+            MatrizGeometrica[8, 8] = 6.0 / 5.0;
+
+            MatrizGeometrica[9, 3] = -6.0 / 5.0;
+            MatrizGeometrica[9, 5] = L / 10.0;
+            MatrizGeometrica[9, 9] = 6.0 / 5.0;
+
+            MatrizGeometrica[10, 4] = -Ip / A1;
+            MatrizGeometrica[10, 10] = Ip / A1;
+
+            MatrizGeometrica[11, 3] = -L / 10.0;
+            MatrizGeometrica[11, 5] = -L * L / 30.0;
+            MatrizGeometrica[11, 9] = L / 10.0;
+            MatrizGeometrica[11, 11] = 2.0 * L * L / 15.0;
+
+            MatrizGeometrica[12, 2] = L / 10.0;
+            MatrizGeometrica[12, 6] = -L * L / 30.0;
+            MatrizGeometrica[12, 8] = -L / 10.0;
+            MatrizGeometrica[12, 12] = 2.0 * L * L / 15.0;
+
+            for (int linha = 1; linha <= 12; linha++)
+                for (int coluna = linha + 1; coluna <= 12; coluna++)
+                    MatrizGeometrica[linha, coluna] = MatrizGeometrica[coluna, linha];
+            // Fator externo da matriz apresentada na tabela da RISA.
+            double fator = P / L;
+            for (int linha = 1; linha <= 12; linha++)
+                for (int coluna = 1; coluna <= 12; coluna++)
+                    MatrizGeometrica[linha, coluna] *= fator;
         }
 
         int lin, col, gl;

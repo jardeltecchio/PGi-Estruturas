@@ -67,41 +67,49 @@ namespace PG
             caso = idcaso;
             coef = _coef;
         }
-
     }
     [Serializable]
-    public enum TipoCombinacao
+    public enum TipoEstadoLimite
     {
         [Description("ELU")]
         ELU = 1,
         [Description("ELS")]
         ELS = 2,
     }
-
+    
+    [Serializable]
+    public enum CategoriaCombinacao
+    {
+        [Description("Linear")]
+        Linear = 0,
+        [Description("Estabilidade")]
+        Estabilidade = 1,
+    }
     [Serializable]
     public class TCombinacoes
     {
         public int Id;
         public string Descricao, Nome;
-
+        public CategoriaCombinacao categoriaCombinacao; // 0 linear  1 estabildiade
         public List<CoeficientesCombinacao> Coeficientes;
 
-        public TipoCombinacao EstadoLimite;
+        public TipoEstadoLimite EstadoLimite;
 
-        public TCombinacoes(int id,string descricao, string nome, TipoCombinacao tipo)
+
+        public TCombinacoes(int id,string descricao, string nome, TipoEstadoLimite tipoEL, CategoriaCombinacao categoria)
         {
             this.Id = id;
-
+            this.categoriaCombinacao = categoria;
             this.Descricao = descricao;
 
             this.Nome = nome;
-            this.EstadoLimite = tipo;
+            this.EstadoLimite = tipoEL;
             Coeficientes = new List<CoeficientesCombinacao>();
         }
 
         [Category("Combinação"), DisplayName("Nome")] public string NOME { get { return Nome; } set { Nome = value; } }
         [Category("Combinação"), DisplayName("Descrição")] public string DESC { get { return Descricao; } set { Descricao = value; } }
-        [Category("Combinação"), DisplayName("Estado Limite")] public TipoCombinacao ESTADOLIMITE { get { return EstadoLimite; } set { EstadoLimite = value; } }
+        [Category("Combinação"), DisplayName("Estado Limite")] public TipoEstadoLimite ESTADOLIMITE { get { return EstadoLimite; } set { EstadoLimite = value; } }
 
     }
 

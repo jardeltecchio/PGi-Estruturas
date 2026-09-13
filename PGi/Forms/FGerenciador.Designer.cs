@@ -33,21 +33,21 @@ namespace PG
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Gerenciador));
-            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
-            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin1 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient1 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient2 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient3 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient4 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient5 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient6 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient7 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
+            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin2 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient4 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient8 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient9 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient5 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient10 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient11 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient12 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient6 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient13 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient14 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             this.imgPrincipal = new System.Windows.Forms.ImageList(this.components);
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -302,13 +302,14 @@ namespace PG
             this.label12 = new System.Windows.Forms.Label();
             this.panel31 = new System.Windows.Forms.Panel();
             this.panel24 = new System.Windows.Forms.Panel();
+            this.button51 = new System.Windows.Forms.Button();
+            this.label10 = new System.Windows.Forms.Label();
             this.button31 = new System.Windows.Forms.Button();
             this.button36 = new System.Windows.Forms.Button();
             this.panel26 = new System.Windows.Forms.Panel();
             this.button32 = new System.Windows.Forms.Button();
             this.button33 = new System.Windows.Forms.Button();
             this.button35 = new System.Windows.Forms.Button();
-            this.label10 = new System.Windows.Forms.Label();
             this.panel25 = new System.Windows.Forms.Panel();
             this.panel22 = new System.Windows.Forms.Panel();
             this.panel23 = new System.Windows.Forms.Panel();
@@ -327,7 +328,6 @@ namespace PG
             this.panel15 = new System.Windows.Forms.Panel();
             this.panel16 = new System.Windows.Forms.Panel();
             this.button26 = new System.Windows.Forms.Button();
-            this.button27 = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.panel14 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -367,6 +367,7 @@ namespace PG
             this.label19 = new System.Windows.Forms.Label();
             this.panel29 = new System.Windows.Forms.Panel();
             this.panelTensoes = new System.Windows.Forms.Panel();
+            this.label30 = new System.Windows.Forms.Label();
             this.panel28 = new System.Windows.Forms.Panel();
             this.btOkTensoes = new System.Windows.Forms.Button();
             this.cbFiltroTensao = new System.Windows.Forms.ComboBox();
@@ -431,6 +432,7 @@ namespace PG
             this.panel35 = new System.Windows.Forms.Panel();
             this.panelTipoResultado = new System.Windows.Forms.Panel();
             this.panel34 = new System.Windows.Forms.Panel();
+            this.btFlambagem = new System.Windows.Forms.Button();
             this.btDinamica1 = new System.Windows.Forms.Button();
             this.btReacao = new System.Windows.Forms.Button();
             this.btTensoes = new System.Windows.Forms.Button();
@@ -497,8 +499,9 @@ namespace PG
             this.grad3 = new System.Windows.Forms.Panel();
             this.grad2 = new System.Windows.Forms.Panel();
             this.panelDinamica1 = new System.Windows.Forms.Panel();
-            this.panel41 = new System.Windows.Forms.Panel();
+            this.label27 = new System.Windows.Forms.Label();
             this.panel33 = new System.Windows.Forms.Panel();
+            this.panel41 = new System.Windows.Forms.Panel();
             this.cbModosVibracao = new System.Windows.Forms.ComboBox();
             this.label24 = new System.Windows.Forms.Label();
             this.btConfirmaModos = new System.Windows.Forms.Button();
@@ -510,7 +513,20 @@ namespace PG
             this.btRelatorioAnaliseModal = new System.Windows.Forms.Button();
             this.btModoRenderizado = new System.Windows.Forms.Button();
             this.btModoColorido = new System.Windows.Forms.Button();
-            this.label27 = new System.Windows.Forms.Label();
+            this.panelModosFlambagem = new System.Windows.Forms.Panel();
+            this.label29 = new System.Windows.Forms.Label();
+            this.panel53 = new System.Windows.Forms.Panel();
+            this.panel51 = new System.Windows.Forms.Panel();
+            this.cbModosFlambagem = new System.Windows.Forms.ComboBox();
+            this.label25 = new System.Windows.Forms.Label();
+            this.btConfirmaFlambagem = new System.Windows.Forms.Button();
+            this.edEscalaFlambagem = new System.Windows.Forms.TextBox();
+            this.btAnimarFlambagem = new System.Windows.Forms.Button();
+            this.panel54 = new System.Windows.Forms.Panel();
+            this.label28 = new System.Windows.Forms.Label();
+            this.edEscalaFlambagem_UpDown = new System.Windows.Forms.NumericUpDown();
+            this.btFlambagemRenderizado = new System.Windows.Forms.Button();
+            this.btFlambagemColorido = new System.Windows.Forms.Button();
             this.menuPanelCalculo.SuspendLayout();
             this.stripPrincipal.SuspendLayout();
             this.PanelAguarde.SuspendLayout();
@@ -573,6 +589,9 @@ namespace PG
             this.panelDinamica1.SuspendLayout();
             this.panel41.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.EscalaModo_UpDown)).BeginInit();
+            this.panelModosFlambagem.SuspendLayout();
+            this.panel51.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.edEscalaFlambagem_UpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // imgPrincipal
@@ -2290,7 +2309,7 @@ namespace PG
             this.PanelAguarde.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PanelAguarde.Controls.Add(this.pbAguardar);
             this.PanelAguarde.Controls.Add(this.LabelAguarde);
-            this.PanelAguarde.Location = new System.Drawing.Point(155, 348);
+            this.PanelAguarde.Location = new System.Drawing.Point(165, 363);
             this.PanelAguarde.Name = "PanelAguarde";
             this.PanelAguarde.Size = new System.Drawing.Size(352, 70);
             this.PanelAguarde.TabIndex = 95;
@@ -2416,7 +2435,7 @@ namespace PG
             this.panelGeral.Controls.Add(this.cbPiso);
             this.panelGeral.Controls.Add(this.btSelecaoPiso);
             this.panelGeral.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelGeral.Location = new System.Drawing.Point(2, 100);
+            this.panelGeral.Location = new System.Drawing.Point(2, 114);
             this.panelGeral.Name = "panelGeral";
             this.panelGeral.Size = new System.Drawing.Size(1368, 0);
             this.panelGeral.TabIndex = 117;
@@ -2533,6 +2552,7 @@ namespace PG
             this.imgTemaEscuro_18x18.Images.SetKeyName(13, "mostrar eixos locais.bmp");
             this.imgTemaEscuro_18x18.Images.SetKeyName(14, "projecao - 18x18.bmp");
             this.imgTemaEscuro_18x18.Images.SetKeyName(15, "unifiliar 18x18.bmp");
+            this.imgTemaEscuro_18x18.Images.SetKeyName(16, "dividir intersecoes.png");
             // 
             // menuSnap
             // 
@@ -2722,7 +2742,7 @@ namespace PG
             this.errorProvider1.SetIconAlignment(this.btVisualizarCargas, System.Windows.Forms.ErrorIconAlignment.TopLeft);
             this.btVisualizarCargas.ImageIndex = 0;
             this.btVisualizarCargas.ImageList = this.imgLigaDesliga19x19;
-            this.btVisualizarCargas.Location = new System.Drawing.Point(422, 1);
+            this.btVisualizarCargas.Location = new System.Drawing.Point(472, 1);
             this.btVisualizarCargas.Name = "btVisualizarCargas";
             this.btVisualizarCargas.Size = new System.Drawing.Size(25, 25);
             this.btVisualizarCargas.TabIndex = 164;
@@ -2741,7 +2761,7 @@ namespace PG
             this.errorProvider1.SetIconAlignment(this.button2, System.Windows.Forms.ErrorIconAlignment.TopLeft);
             this.button2.ImageIndex = 7;
             this.button2.ImageList = this.imgTemaEscuro_18x18;
-            this.button2.Location = new System.Drawing.Point(452, 0);
+            this.button2.Location = new System.Drawing.Point(502, 0);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(25, 25);
             this.button2.TabIndex = 163;
@@ -2881,54 +2901,54 @@ namespace PG
             this.dockPanel.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.dockPanel.Location = new System.Drawing.Point(907, 172);
             this.dockPanel.Name = "dockPanel";
-            this.dockPanel.Size = new System.Drawing.Size(30749, 30790);
-            dockPanelGradient1.EndColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
-            autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
-            tabGradient1.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient1.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient1.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            autoHideStripSkin1.TabGradient = tabGradient1;
-            autoHideStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            dockPanelSkin1.AutoHideStripSkin = autoHideStripSkin1;
-            tabGradient2.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            tabGradient2.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient2.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            tabGradient2.TextColor = System.Drawing.SystemColors.ControlLightLight;
-            dockPaneStripGradient1.ActiveTabGradient = tabGradient2;
-            dockPanelGradient2.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            dockPanelGradient2.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            dockPaneStripGradient1.DockStripGradient = dockPanelGradient2;
-            tabGradient3.EndColor = System.Drawing.SystemColors.ActiveCaptionText;
-            tabGradient3.StartColor = System.Drawing.SystemColors.ActiveCaptionText;
-            tabGradient3.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient1.InactiveTabGradient = tabGradient3;
-            dockPaneStripSkin1.DocumentGradient = dockPaneStripGradient1;
-            dockPaneStripSkin1.TextFont = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            tabGradient4.EndColor = System.Drawing.SystemColors.ActiveCaption;
-            tabGradient4.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient4.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
-            tabGradient4.TextColor = System.Drawing.SystemColors.ButtonHighlight;
-            dockPaneStripToolWindowGradient1.ActiveCaptionGradient = tabGradient4;
-            tabGradient5.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient5.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient5.TextColor = System.Drawing.SystemColors.Control;
-            dockPaneStripToolWindowGradient1.ActiveTabGradient = tabGradient5;
-            dockPanelGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
-            dockPaneStripToolWindowGradient1.DockStripGradient = dockPanelGradient3;
-            tabGradient6.EndColor = System.Drawing.SystemColors.InactiveCaption;
-            tabGradient6.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient6.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            tabGradient6.TextColor = System.Drawing.SystemColors.ControlLightLight;
-            dockPaneStripToolWindowGradient1.InactiveCaptionGradient = tabGradient6;
-            tabGradient7.EndColor = System.Drawing.Color.Transparent;
-            tabGradient7.StartColor = System.Drawing.Color.Transparent;
-            tabGradient7.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            dockPaneStripToolWindowGradient1.InactiveTabGradient = tabGradient7;
-            dockPaneStripSkin1.ToolWindowGradient = dockPaneStripToolWindowGradient1;
-            dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
-            this.dockPanel.Skin = dockPanelSkin1;
+            this.dockPanel.Size = new System.Drawing.Size(33350, 33391);
+            dockPanelGradient4.EndColor = System.Drawing.SystemColors.ActiveCaptionText;
+            dockPanelGradient4.StartColor = System.Drawing.SystemColors.ControlLight;
+            autoHideStripSkin2.DockStripGradient = dockPanelGradient4;
+            tabGradient8.EndColor = System.Drawing.SystemColors.Control;
+            tabGradient8.StartColor = System.Drawing.SystemColors.Control;
+            tabGradient8.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            autoHideStripSkin2.TabGradient = tabGradient8;
+            autoHideStripSkin2.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            dockPanelSkin2.AutoHideStripSkin = autoHideStripSkin2;
+            tabGradient9.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            tabGradient9.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient9.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            tabGradient9.TextColor = System.Drawing.SystemColors.ControlLightLight;
+            dockPaneStripGradient2.ActiveTabGradient = tabGradient9;
+            dockPanelGradient5.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            dockPanelGradient5.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            dockPaneStripGradient2.DockStripGradient = dockPanelGradient5;
+            tabGradient10.EndColor = System.Drawing.SystemColors.ActiveCaptionText;
+            tabGradient10.StartColor = System.Drawing.SystemColors.ActiveCaptionText;
+            tabGradient10.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient2.InactiveTabGradient = tabGradient10;
+            dockPaneStripSkin2.DocumentGradient = dockPaneStripGradient2;
+            dockPaneStripSkin2.TextFont = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            tabGradient11.EndColor = System.Drawing.SystemColors.ActiveCaption;
+            tabGradient11.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient11.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
+            tabGradient11.TextColor = System.Drawing.SystemColors.ButtonHighlight;
+            dockPaneStripToolWindowGradient2.ActiveCaptionGradient = tabGradient11;
+            tabGradient12.EndColor = System.Drawing.SystemColors.Control;
+            tabGradient12.StartColor = System.Drawing.SystemColors.Control;
+            tabGradient12.TextColor = System.Drawing.SystemColors.Control;
+            dockPaneStripToolWindowGradient2.ActiveTabGradient = tabGradient12;
+            dockPanelGradient6.EndColor = System.Drawing.SystemColors.ControlLight;
+            dockPanelGradient6.StartColor = System.Drawing.SystemColors.ControlLight;
+            dockPaneStripToolWindowGradient2.DockStripGradient = dockPanelGradient6;
+            tabGradient13.EndColor = System.Drawing.SystemColors.InactiveCaption;
+            tabGradient13.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient13.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            tabGradient13.TextColor = System.Drawing.SystemColors.ControlLightLight;
+            dockPaneStripToolWindowGradient2.InactiveCaptionGradient = tabGradient13;
+            tabGradient14.EndColor = System.Drawing.Color.Transparent;
+            tabGradient14.StartColor = System.Drawing.Color.Transparent;
+            tabGradient14.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            dockPaneStripToolWindowGradient2.InactiveTabGradient = tabGradient14;
+            dockPaneStripSkin2.ToolWindowGradient = dockPaneStripToolWindowGradient2;
+            dockPanelSkin2.DockPaneStripSkin = dockPaneStripSkin2;
+            this.dockPanel.Skin = dockPanelSkin2;
             this.dockPanel.TabIndex = 149;
             // 
             // ribbonButton27
@@ -3201,10 +3221,11 @@ namespace PG
             this.Ribbon.Dock = System.Windows.Forms.DockStyle.Top;
             this.Ribbon.HotTrack = true;
             this.Ribbon.Location = new System.Drawing.Point(2, 0);
+            this.Ribbon.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.Ribbon.myBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.Ribbon.Name = "Ribbon";
             this.Ribbon.SelectedIndex = 0;
-            this.Ribbon.Size = new System.Drawing.Size(1368, 100);
+            this.Ribbon.Size = new System.Drawing.Size(1368, 114);
             this.Ribbon.TabIndex = 159;
             this.Ribbon.SelectedIndexChanged += new System.EventHandler(this.flatTabControl1_SelectedIndexChanged);
             this.Ribbon.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.Ribbon_Selecting);
@@ -3217,7 +3238,7 @@ namespace PG
             this.tabPage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.tabPage3.Location = new System.Drawing.Point(4, 28);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1360, 68);
+            this.tabPage3.Size = new System.Drawing.Size(1360, 82);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Arquivo";
             // 
@@ -3246,7 +3267,7 @@ namespace PG
             this.tabPrincipal.Location = new System.Drawing.Point(4, 28);
             this.tabPrincipal.Name = "tabPrincipal";
             this.tabPrincipal.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPrincipal.Size = new System.Drawing.Size(1360, 68);
+            this.tabPrincipal.Size = new System.Drawing.Size(1360, 82);
             this.tabPrincipal.TabIndex = 0;
             this.tabPrincipal.Text = "Principal";
             this.tabPrincipal.Click += new System.EventHandler(this.tabPage1_Click);
@@ -3259,7 +3280,7 @@ namespace PG
             this.panel30.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel30.Location = new System.Drawing.Point(1314, 3);
             this.panel30.Name = "panel30";
-            this.panel30.Size = new System.Drawing.Size(43, 62);
+            this.panel30.Size = new System.Drawing.Size(43, 76);
             this.panel30.TabIndex = 44;
             // 
             // panel32
@@ -3320,7 +3341,7 @@ namespace PG
             // 
             this.label12.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.label12.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.label12.Location = new System.Drawing.Point(0, 49);
+            this.label12.Location = new System.Drawing.Point(0, 63);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(43, 13);
             this.label12.TabIndex = 17;
@@ -3332,22 +3353,54 @@ namespace PG
             this.panel31.BackColor = System.Drawing.Color.Black;
             this.panel31.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel31.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel31.Location = new System.Drawing.Point(761, 3);
+            this.panel31.Location = new System.Drawing.Point(752, 3);
             this.panel31.Name = "panel31";
-            this.panel31.Size = new System.Drawing.Size(3, 62);
+            this.panel31.Size = new System.Drawing.Size(3, 76);
             this.panel31.TabIndex = 43;
             // 
             // panel24
             // 
+            this.panel24.Controls.Add(this.button51);
+            this.panel24.Controls.Add(this.label10);
             this.panel24.Controls.Add(this.button31);
             this.panel24.Controls.Add(this.button36);
             this.panel24.Controls.Add(this.panel26);
-            this.panel24.Controls.Add(this.label10);
             this.panel24.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel24.Location = new System.Drawing.Point(685, 3);
+            this.panel24.Location = new System.Drawing.Point(676, 3);
             this.panel24.Name = "panel24";
-            this.panel24.Size = new System.Drawing.Size(76, 62);
+            this.panel24.Size = new System.Drawing.Size(76, 76);
             this.panel24.TabIndex = 40;
+            // 
+            // button51
+            // 
+            this.button51.AccessibleName = "Dividir elementos nas interseções";
+            this.button51.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.button51.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.button51.FlatAppearance.BorderSize = 0;
+            this.button51.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
+            this.button51.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.button51.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button51.ForeColor = System.Drawing.Color.White;
+            this.button51.ImageIndex = 16;
+            this.button51.ImageList = this.imgTemaEscuro_18x18;
+            this.button51.Location = new System.Drawing.Point(49, 25);
+            this.button51.Name = "button51";
+            this.button51.Size = new System.Drawing.Size(25, 24);
+            this.button51.TabIndex = 27;
+            this.button51.UseVisualStyleBackColor = false;
+            this.button51.Click += new System.EventHandler(this.button51_Click);
+            this.button51.MouseEnter += new System.EventHandler(this.btBarra_MouseEnter);
+            // 
+            // label10
+            // 
+            this.label10.BackColor = System.Drawing.Color.DimGray;
+            this.label10.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label10.Location = new System.Drawing.Point(2, 62);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(72, 13);
+            this.label10.TabIndex = 26;
+            this.label10.Text = "Modificar";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // button31
             // 
@@ -3468,26 +3521,14 @@ namespace PG
             this.button35.Click += new System.EventHandler(this.button35_Click);
             this.button35.MouseEnter += new System.EventHandler(this.btBarra_MouseEnter);
             // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.label10.Location = new System.Drawing.Point(56, 37);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(50, 13);
-            this.label10.TabIndex = 17;
-            this.label10.Text = "Modificar";
-            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.label10.Visible = false;
-            // 
             // panel25
             // 
             this.panel25.BackColor = System.Drawing.Color.Black;
             this.panel25.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel25.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel25.Location = new System.Drawing.Point(682, 3);
+            this.panel25.Location = new System.Drawing.Point(673, 3);
             this.panel25.Name = "panel25";
-            this.panel25.Size = new System.Drawing.Size(3, 62);
+            this.panel25.Size = new System.Drawing.Size(3, 76);
             this.panel25.TabIndex = 39;
             // 
             // panel22
@@ -3495,9 +3536,9 @@ namespace PG
             this.panel22.Controls.Add(this.panel23);
             this.panel22.Controls.Add(this.label9);
             this.panel22.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel22.Location = new System.Drawing.Point(637, 3);
+            this.panel22.Location = new System.Drawing.Point(628, 3);
             this.panel22.Name = "panel22";
-            this.panel22.Size = new System.Drawing.Size(45, 62);
+            this.panel22.Size = new System.Drawing.Size(45, 76);
             this.panel22.TabIndex = 38;
             // 
             // panel23
@@ -3506,7 +3547,7 @@ namespace PG
             this.panel23.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel23.Location = new System.Drawing.Point(0, 0);
             this.panel23.Name = "panel23";
-            this.panel23.Size = new System.Drawing.Size(45, 38);
+            this.panel23.Size = new System.Drawing.Size(45, 61);
             this.panel23.TabIndex = 21;
             // 
             // button34
@@ -3524,7 +3565,7 @@ namespace PG
             this.button34.ImageList = this.imgTemaEscuro_29x29;
             this.button34.Location = new System.Drawing.Point(0, 0);
             this.button34.Name = "button34";
-            this.button34.Size = new System.Drawing.Size(38, 38);
+            this.button34.Size = new System.Drawing.Size(38, 61);
             this.button34.TabIndex = 21;
             this.button34.Text = "  ";
             this.button34.UseVisualStyleBackColor = false;
@@ -3533,9 +3574,10 @@ namespace PG
             // 
             // label9
             // 
+            this.label9.BackColor = System.Drawing.Color.DimGray;
             this.label9.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label9.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.label9.Location = new System.Drawing.Point(0, 49);
+            this.label9.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label9.Location = new System.Drawing.Point(0, 63);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(45, 13);
             this.label9.TabIndex = 17;
@@ -3547,9 +3589,9 @@ namespace PG
             this.panel20.BackColor = System.Drawing.Color.Black;
             this.panel20.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel20.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel20.Location = new System.Drawing.Point(634, 3);
+            this.panel20.Location = new System.Drawing.Point(625, 3);
             this.panel20.Name = "panel20";
-            this.panel20.Size = new System.Drawing.Size(3, 62);
+            this.panel20.Size = new System.Drawing.Size(3, 76);
             this.panel20.TabIndex = 37;
             // 
             // panel18
@@ -3557,9 +3599,9 @@ namespace PG
             this.panel18.Controls.Add(this.panel19);
             this.panel18.Controls.Add(this.label7);
             this.panel18.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel18.Location = new System.Drawing.Point(479, 3);
+            this.panel18.Location = new System.Drawing.Point(470, 3);
             this.panel18.Name = "panel18";
-            this.panel18.Size = new System.Drawing.Size(155, 62);
+            this.panel18.Size = new System.Drawing.Size(155, 76);
             this.panel18.TabIndex = 36;
             // 
             // panel19
@@ -3572,7 +3614,7 @@ namespace PG
             this.panel19.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel19.Location = new System.Drawing.Point(0, 0);
             this.panel19.Name = "panel19";
-            this.panel19.Size = new System.Drawing.Size(155, 38);
+            this.panel19.Size = new System.Drawing.Size(155, 60);
             this.panel19.TabIndex = 21;
             // 
             // button30
@@ -3590,7 +3632,7 @@ namespace PG
             this.button30.ImageList = this.imgTemaEscuro_29x29;
             this.button30.Location = new System.Drawing.Point(117, 0);
             this.button30.Name = "button30";
-            this.button30.Size = new System.Drawing.Size(38, 38);
+            this.button30.Size = new System.Drawing.Size(38, 60);
             this.button30.TabIndex = 40;
             this.button30.Text = "  ";
             this.button30.UseVisualStyleBackColor = false;
@@ -3612,7 +3654,7 @@ namespace PG
             this.button29.ImageList = this.imgTemaEscuro_29x29;
             this.button29.Location = new System.Drawing.Point(79, 0);
             this.button29.Name = "button29";
-            this.button29.Size = new System.Drawing.Size(38, 38);
+            this.button29.Size = new System.Drawing.Size(38, 60);
             this.button29.TabIndex = 39;
             this.button29.Text = "  ";
             this.button29.UseVisualStyleBackColor = false;
@@ -3626,7 +3668,7 @@ namespace PG
             this.panel21.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel21.Location = new System.Drawing.Point(76, 0);
             this.panel21.Name = "panel21";
-            this.panel21.Size = new System.Drawing.Size(3, 38);
+            this.panel21.Size = new System.Drawing.Size(3, 60);
             this.panel21.TabIndex = 38;
             // 
             // button3
@@ -3644,7 +3686,7 @@ namespace PG
             this.button3.ImageList = this.imgTemaEscuro_29x29;
             this.button3.Location = new System.Drawing.Point(38, 0);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(38, 38);
+            this.button3.Size = new System.Drawing.Size(38, 60);
             this.button3.TabIndex = 22;
             this.button3.Text = "  ";
             this.button3.UseVisualStyleBackColor = false;
@@ -3666,7 +3708,7 @@ namespace PG
             this.button28.ImageList = this.imgTemaEscuro_29x29;
             this.button28.Location = new System.Drawing.Point(0, 0);
             this.button28.Name = "button28";
-            this.button28.Size = new System.Drawing.Size(38, 38);
+            this.button28.Size = new System.Drawing.Size(38, 60);
             this.button28.TabIndex = 21;
             this.button28.Text = "  ";
             this.button28.UseVisualStyleBackColor = false;
@@ -3675,9 +3717,10 @@ namespace PG
             // 
             // label7
             // 
+            this.label7.BackColor = System.Drawing.Color.DimGray;
             this.label7.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label7.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.label7.Location = new System.Drawing.Point(0, 49);
+            this.label7.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label7.Location = new System.Drawing.Point(0, 63);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(155, 13);
             this.label7.TabIndex = 17;
@@ -3689,9 +3732,9 @@ namespace PG
             this.panel17.BackColor = System.Drawing.Color.Black;
             this.panel17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel17.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel17.Location = new System.Drawing.Point(476, 3);
+            this.panel17.Location = new System.Drawing.Point(467, 3);
             this.panel17.Name = "panel17";
-            this.panel17.Size = new System.Drawing.Size(3, 62);
+            this.panel17.Size = new System.Drawing.Size(3, 76);
             this.panel17.TabIndex = 35;
             // 
             // panel15
@@ -3701,17 +3744,16 @@ namespace PG
             this.panel15.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel15.Location = new System.Drawing.Point(396, 3);
             this.panel15.Name = "panel15";
-            this.panel15.Size = new System.Drawing.Size(80, 62);
+            this.panel15.Size = new System.Drawing.Size(71, 76);
             this.panel15.TabIndex = 34;
             // 
             // panel16
             // 
             this.panel16.Controls.Add(this.button26);
-            this.panel16.Controls.Add(this.button27);
             this.panel16.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel16.Location = new System.Drawing.Point(0, 0);
             this.panel16.Name = "panel16";
-            this.panel16.Size = new System.Drawing.Size(80, 38);
+            this.panel16.Size = new System.Drawing.Size(71, 61);
             this.panel16.TabIndex = 21;
             // 
             // button26
@@ -3727,44 +3769,23 @@ namespace PG
             this.button26.ForeColor = System.Drawing.Color.White;
             this.button26.ImageIndex = 9;
             this.button26.ImageList = this.imgTemaEscuro_29x29;
-            this.button26.Location = new System.Drawing.Point(38, 0);
+            this.button26.Location = new System.Drawing.Point(0, 0);
             this.button26.Name = "button26";
-            this.button26.Size = new System.Drawing.Size(38, 38);
+            this.button26.Size = new System.Drawing.Size(38, 61);
             this.button26.TabIndex = 22;
             this.button26.Text = "  ";
             this.button26.UseVisualStyleBackColor = false;
             this.button26.Click += new System.EventHandler(this.button26_Click);
             this.button26.MouseEnter += new System.EventHandler(this.btBarra_MouseEnter);
             // 
-            // button27
-            // 
-            this.button27.AccessibleName = "Dividir elementos nas interseções";
-            this.button27.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.button27.Dock = System.Windows.Forms.DockStyle.Left;
-            this.button27.FlatAppearance.BorderColor = System.Drawing.Color.Black;
-            this.button27.FlatAppearance.BorderSize = 0;
-            this.button27.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
-            this.button27.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
-            this.button27.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button27.ForeColor = System.Drawing.Color.White;
-            this.button27.ImageIndex = 10;
-            this.button27.ImageList = this.imgTemaEscuro_29x29;
-            this.button27.Location = new System.Drawing.Point(0, 0);
-            this.button27.Name = "button27";
-            this.button27.Size = new System.Drawing.Size(38, 38);
-            this.button27.TabIndex = 21;
-            this.button27.Text = "  ";
-            this.button27.UseVisualStyleBackColor = false;
-            this.button27.Click += new System.EventHandler(this.button27_Click);
-            this.button27.MouseEnter += new System.EventHandler(this.btBarra_MouseEnter);
-            // 
             // label6
             // 
+            this.label6.BackColor = System.Drawing.Color.DimGray;
             this.label6.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label6.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.label6.Location = new System.Drawing.Point(0, 49);
+            this.label6.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label6.Location = new System.Drawing.Point(0, 63);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(80, 13);
+            this.label6.Size = new System.Drawing.Size(71, 13);
             this.label6.TabIndex = 17;
             this.label6.Text = "Ferramentas";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -3776,7 +3797,7 @@ namespace PG
             this.panel14.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel14.Location = new System.Drawing.Point(393, 3);
             this.panel14.Name = "panel14";
-            this.panel14.Size = new System.Drawing.Size(3, 62);
+            this.panel14.Size = new System.Drawing.Size(3, 76);
             this.panel14.TabIndex = 33;
             // 
             // panel1
@@ -3786,7 +3807,7 @@ namespace PG
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(317, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(76, 62);
+            this.panel1.Size = new System.Drawing.Size(76, 76);
             this.panel1.TabIndex = 32;
             // 
             // panel4
@@ -3796,7 +3817,7 @@ namespace PG
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(76, 38);
+            this.panel4.Size = new System.Drawing.Size(76, 61);
             this.panel4.TabIndex = 21;
             // 
             // button24
@@ -3814,7 +3835,7 @@ namespace PG
             this.button24.ImageList = this.imgTemaEscuro_29x29;
             this.button24.Location = new System.Drawing.Point(38, 0);
             this.button24.Name = "button24";
-            this.button24.Size = new System.Drawing.Size(38, 38);
+            this.button24.Size = new System.Drawing.Size(38, 61);
             this.button24.TabIndex = 22;
             this.button24.Text = "  ";
             this.button24.UseVisualStyleBackColor = false;
@@ -3836,7 +3857,7 @@ namespace PG
             this.button25.ImageList = this.imgTemaEscuro_29x29;
             this.button25.Location = new System.Drawing.Point(0, 0);
             this.button25.Name = "button25";
-            this.button25.Size = new System.Drawing.Size(38, 38);
+            this.button25.Size = new System.Drawing.Size(38, 61);
             this.button25.TabIndex = 21;
             this.button25.Text = "  ";
             this.button25.UseVisualStyleBackColor = false;
@@ -3845,9 +3866,10 @@ namespace PG
             // 
             // label5
             // 
+            this.label5.BackColor = System.Drawing.Color.DimGray;
             this.label5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label5.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.label5.Location = new System.Drawing.Point(0, 49);
+            this.label5.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label5.Location = new System.Drawing.Point(0, 63);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(76, 13);
             this.label5.TabIndex = 17;
@@ -3861,7 +3883,7 @@ namespace PG
             this.se3.Dock = System.Windows.Forms.DockStyle.Left;
             this.se3.Location = new System.Drawing.Point(314, 3);
             this.se3.Name = "se3";
-            this.se3.Size = new System.Drawing.Size(3, 62);
+            this.se3.Size = new System.Drawing.Size(3, 76);
             this.se3.TabIndex = 31;
             // 
             // panel10
@@ -3871,7 +3893,7 @@ namespace PG
             this.panel10.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel10.Location = new System.Drawing.Point(200, 3);
             this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(114, 62);
+            this.panel10.Size = new System.Drawing.Size(114, 76);
             this.panel10.TabIndex = 30;
             // 
             // panel13
@@ -3882,7 +3904,7 @@ namespace PG
             this.panel13.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel13.Location = new System.Drawing.Point(0, 0);
             this.panel13.Name = "panel13";
-            this.panel13.Size = new System.Drawing.Size(114, 38);
+            this.panel13.Size = new System.Drawing.Size(114, 59);
             this.panel13.TabIndex = 21;
             // 
             // button20
@@ -3900,7 +3922,7 @@ namespace PG
             this.button20.ImageList = this.imgTemaEscuro_29x29;
             this.button20.Location = new System.Drawing.Point(76, 0);
             this.button20.Name = "button20";
-            this.button20.Size = new System.Drawing.Size(38, 38);
+            this.button20.Size = new System.Drawing.Size(38, 59);
             this.button20.TabIndex = 23;
             this.button20.Text = "  ";
             this.button20.UseVisualStyleBackColor = false;
@@ -3922,7 +3944,7 @@ namespace PG
             this.button21.ImageList = this.imgTemaEscuro_29x29;
             this.button21.Location = new System.Drawing.Point(38, 0);
             this.button21.Name = "button21";
-            this.button21.Size = new System.Drawing.Size(38, 38);
+            this.button21.Size = new System.Drawing.Size(38, 59);
             this.button21.TabIndex = 22;
             this.button21.Text = "  ";
             this.button21.UseVisualStyleBackColor = false;
@@ -3944,7 +3966,7 @@ namespace PG
             this.button22.ImageList = this.imgTemaEscuro_29x29;
             this.button22.Location = new System.Drawing.Point(0, 0);
             this.button22.Name = "button22";
-            this.button22.Size = new System.Drawing.Size(38, 38);
+            this.button22.Size = new System.Drawing.Size(38, 59);
             this.button22.TabIndex = 21;
             this.button22.Text = "  ";
             this.button22.UseVisualStyleBackColor = false;
@@ -3953,10 +3975,10 @@ namespace PG
             // 
             // label3
             // 
-            this.label3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label3.BackColor = System.Drawing.Color.DimGray;
             this.label3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label3.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.label3.Location = new System.Drawing.Point(0, 49);
+            this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label3.Location = new System.Drawing.Point(0, 63);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(114, 13);
             this.label3.TabIndex = 17;
@@ -3970,7 +3992,7 @@ namespace PG
             this.se2.Dock = System.Windows.Forms.DockStyle.Left;
             this.se2.Location = new System.Drawing.Point(197, 3);
             this.se2.Name = "se2";
-            this.se2.Size = new System.Drawing.Size(3, 62);
+            this.se2.Size = new System.Drawing.Size(3, 76);
             this.se2.TabIndex = 29;
             // 
             // panel8
@@ -3978,7 +4000,7 @@ namespace PG
             this.panel8.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel8.Location = new System.Drawing.Point(197, 3);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(0, 62);
+            this.panel8.Size = new System.Drawing.Size(0, 76);
             this.panel8.TabIndex = 27;
             // 
             // panel2
@@ -3989,7 +4011,7 @@ namespace PG
             this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel2.Location = new System.Drawing.Point(127, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(70, 62);
+            this.panel2.Size = new System.Drawing.Size(70, 76);
             this.panel2.TabIndex = 23;
             // 
             // button19
@@ -4061,7 +4083,7 @@ namespace PG
             this.se1.Dock = System.Windows.Forms.DockStyle.Left;
             this.se1.Location = new System.Drawing.Point(124, 3);
             this.se1.Name = "se1";
-            this.se1.Size = new System.Drawing.Size(3, 62);
+            this.se1.Size = new System.Drawing.Size(3, 76);
             this.se1.TabIndex = 22;
             // 
             // panel7
@@ -4071,7 +4093,7 @@ namespace PG
             this.panel7.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel7.Location = new System.Drawing.Point(3, 3);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(121, 62);
+            this.panel7.Size = new System.Drawing.Size(121, 76);
             this.panel7.TabIndex = 21;
             // 
             // panel9
@@ -4082,7 +4104,7 @@ namespace PG
             this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel9.Location = new System.Drawing.Point(0, 0);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(121, 38);
+            this.panel9.Size = new System.Drawing.Size(121, 51);
             this.panel9.TabIndex = 21;
             // 
             // button16
@@ -4100,7 +4122,7 @@ namespace PG
             this.button16.ImageList = this.imgTemaEscuro_29x29;
             this.button16.Location = new System.Drawing.Point(76, 0);
             this.button16.Name = "button16";
-            this.button16.Size = new System.Drawing.Size(38, 38);
+            this.button16.Size = new System.Drawing.Size(38, 51);
             this.button16.TabIndex = 23;
             this.button16.Text = "  ";
             this.button16.UseVisualStyleBackColor = false;
@@ -4122,7 +4144,7 @@ namespace PG
             this.button15.ImageList = this.imgTemaEscuro_29x29;
             this.button15.Location = new System.Drawing.Point(38, 0);
             this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(38, 38);
+            this.button15.Size = new System.Drawing.Size(38, 51);
             this.button15.TabIndex = 22;
             this.button15.Text = "  ";
             this.button15.UseVisualStyleBackColor = false;
@@ -4144,7 +4166,7 @@ namespace PG
             this.button14.ImageList = this.imgTemaEscuro_29x29;
             this.button14.Location = new System.Drawing.Point(0, 0);
             this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(38, 38);
+            this.button14.Size = new System.Drawing.Size(38, 51);
             this.button14.TabIndex = 21;
             this.button14.Text = "  ";
             this.button14.UseVisualStyleBackColor = false;
@@ -4153,9 +4175,10 @@ namespace PG
             // 
             // label2
             // 
+            this.label2.BackColor = System.Drawing.Color.DimGray;
             this.label2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label2.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.label2.Location = new System.Drawing.Point(0, 49);
+            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label2.Location = new System.Drawing.Point(0, 63);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(121, 13);
             this.label2.TabIndex = 17;
@@ -4180,7 +4203,7 @@ namespace PG
             this.tabResultados.Location = new System.Drawing.Point(4, 28);
             this.tabResultados.Name = "tabResultados";
             this.tabResultados.Padding = new System.Windows.Forms.Padding(3);
-            this.tabResultados.Size = new System.Drawing.Size(1360, 68);
+            this.tabResultados.Size = new System.Drawing.Size(1360, 82);
             this.tabResultados.TabIndex = 1;
             this.tabResultados.Text = "Resultados";
             this.tabResultados.Click += new System.EventHandler(this.tabPage2_Click);
@@ -4190,9 +4213,9 @@ namespace PG
             this.panel47.Controls.Add(this.panel48);
             this.panel47.Controls.Add(this.label20);
             this.panel47.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel47.Location = new System.Drawing.Point(1211, 3);
+            this.panel47.Location = new System.Drawing.Point(1239, 3);
             this.panel47.Name = "panel47";
-            this.panel47.Size = new System.Drawing.Size(50, 62);
+            this.panel47.Size = new System.Drawing.Size(50, 76);
             this.panel47.TabIndex = 52;
             // 
             // panel48
@@ -4255,13 +4278,14 @@ namespace PG
             this.imgTemaEscuroResultados_24x24.Images.SetKeyName(21, "tensao cisalhamento 2.bmp");
             this.imgTemaEscuroResultados_24x24.Images.SetKeyName(22, "modos_vibracao_24x24.png");
             this.imgTemaEscuroResultados_24x24.Images.SetKeyName(23, "frequencias.bmp");
+            this.imgTemaEscuroResultados_24x24.Images.SetKeyName(24, "modos flambagem.png");
             // 
             // label20
             // 
             this.label20.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.label20.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.label20.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.label20.Location = new System.Drawing.Point(0, 49);
+            this.label20.Location = new System.Drawing.Point(0, 63);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(50, 13);
             this.label20.TabIndex = 17;
@@ -4273,9 +4297,9 @@ namespace PG
             this.panel44.Controls.Add(this.panel45);
             this.panel44.Controls.Add(this.label19);
             this.panel44.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel44.Location = new System.Drawing.Point(1160, 3);
+            this.panel44.Location = new System.Drawing.Point(1188, 3);
             this.panel44.Name = "panel44";
-            this.panel44.Size = new System.Drawing.Size(51, 62);
+            this.panel44.Size = new System.Drawing.Size(51, 76);
             this.panel44.TabIndex = 51;
             // 
             // panel45
@@ -4315,7 +4339,7 @@ namespace PG
             this.label19.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.label19.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.label19.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.label19.Location = new System.Drawing.Point(0, 49);
+            this.label19.Location = new System.Drawing.Point(0, 63);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(51, 13);
             this.label19.TabIndex = 17;
@@ -4327,22 +4351,37 @@ namespace PG
             this.panel29.BackColor = System.Drawing.Color.Black;
             this.panel29.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel29.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel29.Location = new System.Drawing.Point(1157, 3);
+            this.panel29.Location = new System.Drawing.Point(1185, 3);
             this.panel29.Name = "panel29";
-            this.panel29.Size = new System.Drawing.Size(3, 62);
+            this.panel29.Size = new System.Drawing.Size(3, 76);
             this.panel29.TabIndex = 50;
             // 
             // panelTensoes
             // 
+            this.panelTensoes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.panelTensoes.Controls.Add(this.label30);
             this.panelTensoes.Controls.Add(this.panel28);
             this.panelTensoes.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panelTensoes.Location = new System.Drawing.Point(846, 3);
+            this.panelTensoes.Location = new System.Drawing.Point(874, 3);
             this.panelTensoes.Name = "panelTensoes";
-            this.panelTensoes.Size = new System.Drawing.Size(311, 62);
+            this.panelTensoes.Size = new System.Drawing.Size(311, 76);
             this.panelTensoes.TabIndex = 47;
+            // 
+            // label30
+            // 
+            this.label30.BackColor = System.Drawing.Color.DimGray;
+            this.label30.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label30.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label30.Location = new System.Drawing.Point(0, 63);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(311, 13);
+            this.label30.TabIndex = 22;
+            this.label30.Text = "Tensões";
+            this.label30.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel28
             // 
+            this.panel28.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.panel28.Controls.Add(this.btOkTensoes);
             this.panel28.Controls.Add(this.cbFiltroTensao);
             this.panel28.Controls.Add(this.label21);
@@ -4355,7 +4394,7 @@ namespace PG
             this.panel28.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel28.Location = new System.Drawing.Point(0, 0);
             this.panel28.Name = "panel28";
-            this.panel28.Size = new System.Drawing.Size(311, 63);
+            this.panel28.Size = new System.Drawing.Size(311, 61);
             this.panel28.TabIndex = 21;
             // 
             // btOkTensoes
@@ -4407,7 +4446,7 @@ namespace PG
             this.panel49.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel49.Location = new System.Drawing.Point(90, 0);
             this.panel49.Name = "panel49";
-            this.panel49.Size = new System.Drawing.Size(3, 63);
+            this.panel49.Size = new System.Drawing.Size(3, 61);
             this.panel49.TabIndex = 172;
             // 
             // btIsobandaTensao
@@ -4426,7 +4465,7 @@ namespace PG
             this.btIsobandaTensao.ImageList = this.imgTemaEscuroResultados_24x24;
             this.btIsobandaTensao.Location = new System.Drawing.Point(62, 0);
             this.btIsobandaTensao.Name = "btIsobandaTensao";
-            this.btIsobandaTensao.Size = new System.Drawing.Size(28, 63);
+            this.btIsobandaTensao.Size = new System.Drawing.Size(28, 61);
             this.btIsobandaTensao.TabIndex = 171;
             this.btIsobandaTensao.Tag = "0";
             this.btIsobandaTensao.Text = "  ";
@@ -4444,7 +4483,7 @@ namespace PG
             this.panel27.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel27.Location = new System.Drawing.Point(0, 0);
             this.panel27.Name = "panel27";
-            this.panel27.Size = new System.Drawing.Size(62, 63);
+            this.panel27.Size = new System.Drawing.Size(62, 61);
             this.panel27.TabIndex = 170;
             // 
             // button42
@@ -4460,7 +4499,7 @@ namespace PG
             this.button42.ForeColor = System.Drawing.Color.White;
             this.button42.ImageIndex = 21;
             this.button42.ImageList = this.imgTemaEscuroResultados_24x24;
-            this.button42.Location = new System.Drawing.Point(31, 33);
+            this.button42.Location = new System.Drawing.Point(31, 31);
             this.button42.Name = "button42";
             this.button42.Size = new System.Drawing.Size(28, 28);
             this.button42.TabIndex = 173;
@@ -4482,7 +4521,7 @@ namespace PG
             this.button40.ForeColor = System.Drawing.Color.White;
             this.button40.ImageIndex = 20;
             this.button40.ImageList = this.imgTemaEscuroResultados_24x24;
-            this.button40.Location = new System.Drawing.Point(0, 33);
+            this.button40.Location = new System.Drawing.Point(0, 31);
             this.button40.Name = "button40";
             this.button40.Size = new System.Drawing.Size(28, 28);
             this.button40.TabIndex = 172;
@@ -4505,7 +4544,7 @@ namespace PG
             this.button39.ForeColor = System.Drawing.Color.White;
             this.button39.ImageIndex = 19;
             this.button39.ImageList = this.imgTemaEscuroResultados_24x24;
-            this.button39.Location = new System.Drawing.Point(30, 2);
+            this.button39.Location = new System.Drawing.Point(30, 1);
             this.button39.Name = "button39";
             this.button39.Size = new System.Drawing.Size(28, 28);
             this.button39.TabIndex = 171;
@@ -4528,7 +4567,7 @@ namespace PG
             this.btTensaoNormal.ForeColor = System.Drawing.Color.White;
             this.btTensaoNormal.ImageIndex = 18;
             this.btTensaoNormal.ImageList = this.imgTemaEscuroResultados_24x24;
-            this.btTensaoNormal.Location = new System.Drawing.Point(1, 2);
+            this.btTensaoNormal.Location = new System.Drawing.Point(1, 1);
             this.btTensaoNormal.Name = "btTensaoNormal";
             this.btTensaoNormal.Size = new System.Drawing.Size(28, 28);
             this.btTensaoNormal.TabIndex = 170;
@@ -4545,7 +4584,7 @@ namespace PG
             this.panel50.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel50.Location = new System.Drawing.Point(59, 0);
             this.panel50.Name = "panel50";
-            this.panel50.Size = new System.Drawing.Size(3, 63);
+            this.panel50.Size = new System.Drawing.Size(3, 61);
             this.panel50.TabIndex = 169;
             // 
             // EscalaTensao_UpDown
@@ -4598,9 +4637,9 @@ namespace PG
             this.panel46.BackColor = System.Drawing.Color.Black;
             this.panel46.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel46.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel46.Location = new System.Drawing.Point(843, 3);
+            this.panel46.Location = new System.Drawing.Point(870, 3);
             this.panel46.Name = "panel46";
-            this.panel46.Size = new System.Drawing.Size(3, 62);
+            this.panel46.Size = new System.Drawing.Size(4, 76);
             this.panel46.TabIndex = 45;
             // 
             // panel43
@@ -4608,9 +4647,9 @@ namespace PG
             this.panel43.BackColor = System.Drawing.Color.Gray;
             this.panel43.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel43.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel43.Location = new System.Drawing.Point(840, 3);
+            this.panel43.Location = new System.Drawing.Point(867, 3);
             this.panel43.Name = "panel43";
-            this.panel43.Size = new System.Drawing.Size(3, 62);
+            this.panel43.Size = new System.Drawing.Size(3, 76);
             this.panel43.TabIndex = 40;
             // 
             // panelDiagramas
@@ -4619,14 +4658,14 @@ namespace PG
             this.panelDiagramas.Controls.Add(this.panel39);
             this.panelDiagramas.Controls.Add(this.label16);
             this.panelDiagramas.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panelDiagramas.Location = new System.Drawing.Point(516, 3);
+            this.panelDiagramas.Location = new System.Drawing.Point(543, 3);
             this.panelDiagramas.Name = "panelDiagramas";
-            this.panelDiagramas.Size = new System.Drawing.Size(324, 62);
+            this.panelDiagramas.Size = new System.Drawing.Size(324, 76);
             this.panelDiagramas.TabIndex = 39;
             // 
             // panel39
             // 
-            this.panel39.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.panel39.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.panel39.Controls.Add(this.btOkEsforco);
             this.panel39.Controls.Add(this.cbFiltroEsforcos);
             this.panel39.Controls.Add(this.label11);
@@ -4647,7 +4686,7 @@ namespace PG
             this.panel39.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel39.Location = new System.Drawing.Point(0, 0);
             this.panel39.Name = "panel39";
-            this.panel39.Size = new System.Drawing.Size(324, 64);
+            this.panel39.Size = new System.Drawing.Size(324, 61);
             this.panel39.TabIndex = 21;
             // 
             // btOkEsforco
@@ -4768,7 +4807,7 @@ namespace PG
             this.panel42.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel42.Location = new System.Drawing.Point(0, 0);
             this.panel42.Name = "panel42";
-            this.panel42.Size = new System.Drawing.Size(3, 64);
+            this.panel42.Size = new System.Drawing.Size(3, 61);
             this.panel42.TabIndex = 47;
             // 
             // button48
@@ -4827,7 +4866,7 @@ namespace PG
             this.btmz.ForeColor = System.Drawing.Color.White;
             this.btmz.ImageIndex = 13;
             this.btmz.ImageList = this.imgTemaEscuroResultados_24x24;
-            this.btmz.Location = new System.Drawing.Point(67, 32);
+            this.btmz.Location = new System.Drawing.Point(67, 30);
             this.btmz.Name = "btmz";
             this.btmz.Size = new System.Drawing.Size(28, 28);
             this.btmz.TabIndex = 26;
@@ -4849,7 +4888,7 @@ namespace PG
             this.btmy.ForeColor = System.Drawing.Color.White;
             this.btmy.ImageIndex = 12;
             this.btmy.ImageList = this.imgTemaEscuroResultados_24x24;
-            this.btmy.Location = new System.Drawing.Point(36, 32);
+            this.btmy.Location = new System.Drawing.Point(36, 30);
             this.btmy.Name = "btmy";
             this.btmy.Size = new System.Drawing.Size(28, 28);
             this.btmy.TabIndex = 25;
@@ -4871,7 +4910,7 @@ namespace PG
             this.btmx.ForeColor = System.Drawing.Color.White;
             this.btmx.ImageIndex = 11;
             this.btmx.ImageList = this.imgTemaEscuroResultados_24x24;
-            this.btmx.Location = new System.Drawing.Point(5, 32);
+            this.btmx.Location = new System.Drawing.Point(5, 30);
             this.btmx.Name = "btmx";
             this.btmx.Size = new System.Drawing.Size(28, 28);
             this.btmx.TabIndex = 24;
@@ -4950,24 +4989,24 @@ namespace PG
             // 
             // label16
             // 
-            this.label16.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label16.BackColor = System.Drawing.Color.DimGray;
             this.label16.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label16.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.label16.Location = new System.Drawing.Point(0, 49);
+            this.label16.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label16.Location = new System.Drawing.Point(0, 63);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(324, 13);
             this.label16.TabIndex = 17;
-            this.label16.Text = "Diagramas";
+            this.label16.Text = "Esforços";
             this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel36
             // 
-            this.panel36.BackColor = System.Drawing.Color.Gray;
+            this.panel36.BackColor = System.Drawing.Color.Black;
             this.panel36.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel36.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel36.Location = new System.Drawing.Point(512, 3);
+            this.panel36.Location = new System.Drawing.Point(539, 3);
             this.panel36.Name = "panel36";
-            this.panel36.Size = new System.Drawing.Size(4, 62);
+            this.panel36.Size = new System.Drawing.Size(4, 76);
             this.panel36.TabIndex = 38;
             // 
             // panelDeformacoes
@@ -4976,14 +5015,14 @@ namespace PG
             this.panelDeformacoes.Controls.Add(this.pnDeformacaoRibbon);
             this.panelDeformacoes.Controls.Add(this.label15);
             this.panelDeformacoes.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panelDeformacoes.Location = new System.Drawing.Point(175, 3);
+            this.panelDeformacoes.Location = new System.Drawing.Point(202, 3);
             this.panelDeformacoes.Name = "panelDeformacoes";
-            this.panelDeformacoes.Size = new System.Drawing.Size(337, 62);
+            this.panelDeformacoes.Size = new System.Drawing.Size(337, 76);
             this.panelDeformacoes.TabIndex = 37;
             // 
             // pnDeformacaoRibbon
             // 
-            this.pnDeformacaoRibbon.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.pnDeformacaoRibbon.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.pnDeformacaoRibbon.Controls.Add(this.btConfirmaDeslocamentos);
             this.pnDeformacaoRibbon.Controls.Add(this.cbFiltroDeslocamentos);
             this.pnDeformacaoRibbon.Controls.Add(this.label23);
@@ -5006,7 +5045,7 @@ namespace PG
             this.pnDeformacaoRibbon.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnDeformacaoRibbon.Location = new System.Drawing.Point(0, 0);
             this.pnDeformacaoRibbon.Name = "pnDeformacaoRibbon";
-            this.pnDeformacaoRibbon.Size = new System.Drawing.Size(337, 63);
+            this.pnDeformacaoRibbon.Size = new System.Drawing.Size(337, 61);
             this.pnDeformacaoRibbon.TabIndex = 21;
             // 
             // btConfirmaDeslocamentos
@@ -5017,7 +5056,7 @@ namespace PG
             this.btConfirmaDeslocamentos.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.btConfirmaDeslocamentos.ForeColor = System.Drawing.SystemColors.Desktop;
             this.btConfirmaDeslocamentos.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btConfirmaDeslocamentos.Location = new System.Drawing.Point(276, 37);
+            this.btConfirmaDeslocamentos.Location = new System.Drawing.Point(276, 35);
             this.btConfirmaDeslocamentos.Margin = new System.Windows.Forms.Padding(0);
             this.btConfirmaDeslocamentos.Name = "btConfirmaDeslocamentos";
             this.btConfirmaDeslocamentos.Size = new System.Drawing.Size(59, 24);
@@ -5034,7 +5073,7 @@ namespace PG
             this.cbFiltroDeslocamentos.Items.AddRange(new object[] {
             "Todos",
             "Selecionados"});
-            this.cbFiltroDeslocamentos.Location = new System.Drawing.Point(185, 38);
+            this.cbFiltroDeslocamentos.Location = new System.Drawing.Point(185, 37);
             this.cbFiltroDeslocamentos.Name = "cbFiltroDeslocamentos";
             this.cbFiltroDeslocamentos.Size = new System.Drawing.Size(88, 21);
             this.cbFiltroDeslocamentos.TabIndex = 178;
@@ -5044,7 +5083,7 @@ namespace PG
             // 
             this.label23.AutoSize = true;
             this.label23.ForeColor = System.Drawing.Color.White;
-            this.label23.Location = new System.Drawing.Point(123, 46);
+            this.label23.Location = new System.Drawing.Point(123, 45);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(61, 13);
             this.label23.TabIndex = 177;
@@ -5170,7 +5209,7 @@ namespace PG
             this.button46.ForeColor = System.Drawing.Color.White;
             this.button46.ImageIndex = 6;
             this.button46.ImageList = this.imgTemaEscuroResultados_24x24;
-            this.button46.Location = new System.Drawing.Point(87, 32);
+            this.button46.Location = new System.Drawing.Point(87, 30);
             this.button46.Name = "button46";
             this.button46.Size = new System.Drawing.Size(28, 28);
             this.button46.TabIndex = 41;
@@ -5214,7 +5253,7 @@ namespace PG
             this.btDeformacaoSolida.ForeColor = System.Drawing.Color.White;
             this.btDeformacaoSolida.ImageIndex = 4;
             this.btDeformacaoSolida.ImageList = this.imgTemaEscuroResultados_24x24;
-            this.btDeformacaoSolida.Location = new System.Drawing.Point(52, 30);
+            this.btDeformacaoSolida.Location = new System.Drawing.Point(52, 29);
             this.btDeformacaoSolida.Name = "btDeformacaoSolida";
             this.btDeformacaoSolida.Size = new System.Drawing.Size(28, 28);
             this.btDeformacaoSolida.TabIndex = 39;
@@ -5258,7 +5297,7 @@ namespace PG
             this.btDefZ.ForeColor = System.Drawing.Color.White;
             this.btDefZ.ImageIndex = 3;
             this.btDefZ.ImageList = this.imgTemaEscuroResultados_18x18;
-            this.btDefZ.Location = new System.Drawing.Point(24, 22);
+            this.btDefZ.Location = new System.Drawing.Point(24, 28);
             this.btDefZ.Name = "btDefZ";
             this.btDefZ.Size = new System.Drawing.Size(19, 23);
             this.btDefZ.TabIndex = 24;
@@ -5289,7 +5328,7 @@ namespace PG
             this.btDefY.ForeColor = System.Drawing.Color.White;
             this.btDefY.ImageIndex = 2;
             this.btDefY.ImageList = this.imgTemaEscuroResultados_18x18;
-            this.btDefY.Location = new System.Drawing.Point(2, 22);
+            this.btDefY.Location = new System.Drawing.Point(2, 28);
             this.btDefY.Name = "btDefY";
             this.btDefY.Size = new System.Drawing.Size(19, 23);
             this.btDefY.TabIndex = 23;
@@ -5311,7 +5350,7 @@ namespace PG
             this.btDefX.ForeColor = System.Drawing.Color.White;
             this.btDefX.ImageIndex = 1;
             this.btDefX.ImageList = this.imgTemaEscuroResultados_18x18;
-            this.btDefX.Location = new System.Drawing.Point(24, 0);
+            this.btDefX.Location = new System.Drawing.Point(24, 6);
             this.btDefX.Name = "btDefX";
             this.btDefX.Size = new System.Drawing.Size(19, 23);
             this.btDefX.TabIndex = 22;
@@ -5334,7 +5373,7 @@ namespace PG
             this.btDefTotal.ForeColor = System.Drawing.Color.White;
             this.btDefTotal.ImageIndex = 0;
             this.btDefTotal.ImageList = this.imgTemaEscuroResultados_18x18;
-            this.btDefTotal.Location = new System.Drawing.Point(2, 0);
+            this.btDefTotal.Location = new System.Drawing.Point(2, 6);
             this.btDefTotal.Name = "btDefTotal";
             this.btDefTotal.Size = new System.Drawing.Size(18, 23);
             this.btDefTotal.TabIndex = 21;
@@ -5346,11 +5385,11 @@ namespace PG
             // 
             // label15
             // 
-            this.label15.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label15.BackColor = System.Drawing.Color.DimGray;
             this.label15.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.label15.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.label15.Location = new System.Drawing.Point(0, 49);
+            this.label15.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label15.Location = new System.Drawing.Point(0, 63);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(337, 13);
             this.label15.TabIndex = 17;
@@ -5359,12 +5398,12 @@ namespace PG
             // 
             // panel35
             // 
-            this.panel35.BackColor = System.Drawing.Color.Gray;
+            this.panel35.BackColor = System.Drawing.Color.Black;
             this.panel35.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel35.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel35.Location = new System.Drawing.Point(171, 3);
+            this.panel35.Location = new System.Drawing.Point(198, 3);
             this.panel35.Name = "panel35";
-            this.panel35.Size = new System.Drawing.Size(4, 62);
+            this.panel35.Size = new System.Drawing.Size(4, 76);
             this.panel35.TabIndex = 36;
             // 
             // panelTipoResultado
@@ -5374,11 +5413,13 @@ namespace PG
             this.panelTipoResultado.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelTipoResultado.Location = new System.Drawing.Point(3, 3);
             this.panelTipoResultado.Name = "panelTipoResultado";
-            this.panelTipoResultado.Size = new System.Drawing.Size(168, 62);
+            this.panelTipoResultado.Size = new System.Drawing.Size(195, 76);
             this.panelTipoResultado.TabIndex = 31;
             // 
             // panel34
             // 
+            this.panel34.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.panel34.Controls.Add(this.btFlambagem);
             this.panel34.Controls.Add(this.btDinamica1);
             this.panel34.Controls.Add(this.btReacao);
             this.panel34.Controls.Add(this.btTensoes);
@@ -5387,12 +5428,34 @@ namespace PG
             this.panel34.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel34.Location = new System.Drawing.Point(0, 0);
             this.panel34.Name = "panel34";
-            this.panel34.Size = new System.Drawing.Size(168, 47);
+            this.panel34.Size = new System.Drawing.Size(195, 61);
             this.panel34.TabIndex = 21;
+            // 
+            // btFlambagem
+            // 
+            this.btFlambagem.AccessibleName = "Modos de flambagem/Fatores críticos";
+            this.btFlambagem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.btFlambagem.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.btFlambagem.FlatAppearance.BorderSize = 0;
+            this.btFlambagem.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
+            this.btFlambagem.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.btFlambagem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btFlambagem.ForeColor = System.Drawing.Color.White;
+            this.btFlambagem.ImageIndex = 24;
+            this.btFlambagem.ImageList = this.imgTemaEscuroResultados_24x24;
+            this.btFlambagem.Location = new System.Drawing.Point(167, 12);
+            this.btFlambagem.Name = "btFlambagem";
+            this.btFlambagem.Size = new System.Drawing.Size(28, 38);
+            this.btFlambagem.TabIndex = 27;
+            this.btFlambagem.Tag = "0";
+            this.btFlambagem.Text = "  ";
+            this.btFlambagem.UseVisualStyleBackColor = false;
+            this.btFlambagem.Click += new System.EventHandler(this.btFlambagem_Click);
+            this.btFlambagem.MouseEnter += new System.EventHandler(this.btBarra_MouseEnter);
             // 
             // btDinamica1
             // 
-            this.btDinamica1.AccessibleName = "Modos/Frequências";
+            this.btDinamica1.AccessibleName = "Modos de vibração/Frequências";
             this.btDinamica1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btDinamica1.FlatAppearance.BorderColor = System.Drawing.Color.Black;
             this.btDinamica1.FlatAppearance.BorderSize = 0;
@@ -5402,7 +5465,7 @@ namespace PG
             this.btDinamica1.ForeColor = System.Drawing.Color.White;
             this.btDinamica1.ImageIndex = 22;
             this.btDinamica1.ImageList = this.imgTemaEscuroResultados_24x24;
-            this.btDinamica1.Location = new System.Drawing.Point(134, 5);
+            this.btDinamica1.Location = new System.Drawing.Point(134, 12);
             this.btDinamica1.Name = "btDinamica1";
             this.btDinamica1.Size = new System.Drawing.Size(28, 38);
             this.btDinamica1.TabIndex = 26;
@@ -5424,7 +5487,7 @@ namespace PG
             this.btReacao.ForeColor = System.Drawing.Color.White;
             this.btReacao.ImageIndex = 2;
             this.btReacao.ImageList = this.imgTemaEscuroResultados_24x24;
-            this.btReacao.Location = new System.Drawing.Point(101, 5);
+            this.btReacao.Location = new System.Drawing.Point(101, 12);
             this.btReacao.Name = "btReacao";
             this.btReacao.Size = new System.Drawing.Size(28, 38);
             this.btReacao.TabIndex = 25;
@@ -5446,7 +5509,7 @@ namespace PG
             this.btTensoes.ForeColor = System.Drawing.Color.White;
             this.btTensoes.ImageIndex = 16;
             this.btTensoes.ImageList = this.imgTemaEscuroResultados_24x24;
-            this.btTensoes.Location = new System.Drawing.Point(69, 5);
+            this.btTensoes.Location = new System.Drawing.Point(69, 12);
             this.btTensoes.Name = "btTensoes";
             this.btTensoes.Size = new System.Drawing.Size(28, 38);
             this.btTensoes.TabIndex = 24;
@@ -5468,7 +5531,7 @@ namespace PG
             this.btDiagrama.ForeColor = System.Drawing.Color.White;
             this.btDiagrama.ImageIndex = 1;
             this.btDiagrama.ImageList = this.imgTemaEscuroResultados_24x24;
-            this.btDiagrama.Location = new System.Drawing.Point(36, 5);
+            this.btDiagrama.Location = new System.Drawing.Point(36, 12);
             this.btDiagrama.Name = "btDiagrama";
             this.btDiagrama.Size = new System.Drawing.Size(28, 38);
             this.btDiagrama.TabIndex = 22;
@@ -5490,7 +5553,7 @@ namespace PG
             this.btDeformacao.ForeColor = System.Drawing.Color.White;
             this.btDeformacao.ImageIndex = 0;
             this.btDeformacao.ImageList = this.imgTemaEscuroResultados_24x24;
-            this.btDeformacao.Location = new System.Drawing.Point(4, 5);
+            this.btDeformacao.Location = new System.Drawing.Point(4, 12);
             this.btDeformacao.Name = "btDeformacao";
             this.btDeformacao.Size = new System.Drawing.Size(28, 38);
             this.btDeformacao.TabIndex = 21;
@@ -5502,12 +5565,12 @@ namespace PG
             // 
             // label14
             // 
-            this.label14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label14.BackColor = System.Drawing.Color.DimGray;
             this.label14.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label14.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.label14.Location = new System.Drawing.Point(0, 49);
+            this.label14.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label14.Location = new System.Drawing.Point(0, 63);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(168, 13);
+            this.label14.Size = new System.Drawing.Size(195, 13);
             this.label14.TabIndex = 17;
             this.label14.Text = "Tipo de resultados";
             this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -5661,9 +5724,9 @@ namespace PG
             this.pnCargasCombinacoes.Controls.Add(this.pnCombinacoes);
             this.pnCargasCombinacoes.Controls.Add(this.btVisualizarCargas);
             this.pnCargasCombinacoes.Controls.Add(this.button2);
-            this.pnCargasCombinacoes.Location = new System.Drawing.Point(247, 107);
+            this.pnCargasCombinacoes.Location = new System.Drawing.Point(5, 204);
             this.pnCargasCombinacoes.Name = "pnCargasCombinacoes";
-            this.pnCargasCombinacoes.Size = new System.Drawing.Size(486, 26);
+            this.pnCargasCombinacoes.Size = new System.Drawing.Size(531, 26);
             this.pnCargasCombinacoes.TabIndex = 166;
             this.pnCargasCombinacoes.Paint += new System.Windows.Forms.PaintEventHandler(this.pnCargasCombinacoes_Paint);
             this.pnCargasCombinacoes.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel50_MouseDown);
@@ -5675,7 +5738,7 @@ namespace PG
             this.pnCasos.Controls.Add(this.cbResultadoCasos);
             this.pnCasos.Location = new System.Drawing.Point(110, 54);
             this.pnCasos.Name = "pnCasos";
-            this.pnCasos.Size = new System.Drawing.Size(305, 21);
+            this.pnCasos.Size = new System.Drawing.Size(360, 21);
             this.pnCasos.TabIndex = 172;
             // 
             // cbResultadoCasos
@@ -5684,7 +5747,7 @@ namespace PG
             this.cbResultadoCasos.FormattingEnabled = true;
             this.cbResultadoCasos.Location = new System.Drawing.Point(1, 0);
             this.cbResultadoCasos.Name = "cbResultadoCasos";
-            this.cbResultadoCasos.Size = new System.Drawing.Size(303, 21);
+            this.cbResultadoCasos.Size = new System.Drawing.Size(358, 21);
             this.cbResultadoCasos.TabIndex = 160;
             this.cbResultadoCasos.SelectedIndexChanged += new System.EventHandler(this.cbResultadoCasos_SelectedIndexChanged);
             // 
@@ -5718,7 +5781,7 @@ namespace PG
             this.pnVisualizacaoCargas.Controls.Add(this.cbCasoCarga);
             this.pnVisualizacaoCargas.Location = new System.Drawing.Point(87, 2);
             this.pnVisualizacaoCargas.Name = "pnVisualizacaoCargas";
-            this.pnVisualizacaoCargas.Size = new System.Drawing.Size(329, 22);
+            this.pnVisualizacaoCargas.Size = new System.Drawing.Size(382, 22);
             this.pnVisualizacaoCargas.TabIndex = 166;
             // 
             // cbCasoCarga
@@ -5728,7 +5791,7 @@ namespace PG
             this.cbCasoCarga.FormattingEnabled = true;
             this.cbCasoCarga.Location = new System.Drawing.Point(0, 0);
             this.cbCasoCarga.Name = "cbCasoCarga";
-            this.cbCasoCarga.Size = new System.Drawing.Size(329, 21);
+            this.cbCasoCarga.Size = new System.Drawing.Size(382, 21);
             this.cbCasoCarga.TabIndex = 163;
             this.cbCasoCarga.SelectedIndexChanged += new System.EventHandler(this.cbCasoCarga_SelectedIndexChanged);
             // 
@@ -5737,7 +5800,7 @@ namespace PG
             this.pnCombinacoes.Controls.Add(this.cbResultadoCombinacoes);
             this.pnCombinacoes.Location = new System.Drawing.Point(109, 28);
             this.pnCombinacoes.Name = "pnCombinacoes";
-            this.pnCombinacoes.Size = new System.Drawing.Size(306, 21);
+            this.pnCombinacoes.Size = new System.Drawing.Size(361, 21);
             this.pnCombinacoes.TabIndex = 165;
             // 
             // cbResultadoCombinacoes
@@ -5746,7 +5809,7 @@ namespace PG
             this.cbResultadoCombinacoes.FormattingEnabled = true;
             this.cbResultadoCombinacoes.Location = new System.Drawing.Point(3, 0);
             this.cbResultadoCombinacoes.Name = "cbResultadoCombinacoes";
-            this.cbResultadoCombinacoes.Size = new System.Drawing.Size(302, 21);
+            this.cbResultadoCombinacoes.Size = new System.Drawing.Size(357, 21);
             this.cbResultadoCombinacoes.TabIndex = 160;
             this.cbResultadoCombinacoes.SelectedIndexChanged += new System.EventHandler(this.cbResultadoCombinacoes_SelectedIndexChanged);
             // 
@@ -5759,7 +5822,7 @@ namespace PG
             this.pnUtilitarios.Controls.Add(this.btMostrarNos);
             this.pnUtilitarios.Controls.Add(this.panel6);
             this.pnUtilitarios.Controls.Add(this.button12);
-            this.pnUtilitarios.Location = new System.Drawing.Point(6, 106);
+            this.pnUtilitarios.Location = new System.Drawing.Point(8, 173);
             this.pnUtilitarios.Name = "pnUtilitarios";
             this.pnUtilitarios.Size = new System.Drawing.Size(235, 26);
             this.pnUtilitarios.TabIndex = 169;
@@ -6272,17 +6335,40 @@ namespace PG
             // panelDinamica1
             // 
             this.panelDinamica1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.panelDinamica1.Controls.Add(this.panel41);
             this.panelDinamica1.Controls.Add(this.label27);
-            this.panelDinamica1.Location = new System.Drawing.Point(308, 157);
+            this.panelDinamica1.Controls.Add(this.panel33);
+            this.panelDinamica1.Controls.Add(this.panel41);
+            this.panelDinamica1.Location = new System.Drawing.Point(314, 125);
             this.panelDinamica1.Name = "panelDinamica1";
-            this.panelDinamica1.Size = new System.Drawing.Size(278, 62);
+            this.panelDinamica1.Size = new System.Drawing.Size(291, 73);
             this.panelDinamica1.TabIndex = 175;
+            // 
+            // label27
+            // 
+            this.label27.BackColor = System.Drawing.Color.DimGray;
+            this.label27.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label27.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label27.Location = new System.Drawing.Point(4, 60);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(287, 13);
+            this.label27.TabIndex = 40;
+            this.label27.Text = "Modos de vibração / Frequências";
+            this.label27.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel33
+            // 
+            this.panel33.BackColor = System.Drawing.Color.Black;
+            this.panel33.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel33.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel33.Location = new System.Drawing.Point(0, 0);
+            this.panel33.Name = "panel33";
+            this.panel33.Size = new System.Drawing.Size(4, 73);
+            this.panel33.TabIndex = 39;
             // 
             // panel41
             // 
-            this.panel41.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.panel41.Controls.Add(this.panel33);
+            this.panel41.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.panel41.Controls.Add(this.cbModosVibracao);
             this.panel41.Controls.Add(this.label24);
             this.panel41.Controls.Add(this.btConfirmaModos);
@@ -6294,22 +6380,11 @@ namespace PG
             this.panel41.Controls.Add(this.btRelatorioAnaliseModal);
             this.panel41.Controls.Add(this.btModoRenderizado);
             this.panel41.Controls.Add(this.btModoColorido);
-            this.panel41.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel41.Location = new System.Drawing.Point(0, 0);
+            this.panel41.Location = new System.Drawing.Point(3, 1);
             this.panel41.Name = "panel41";
-            this.panel41.Size = new System.Drawing.Size(278, 63);
+            this.panel41.Size = new System.Drawing.Size(287, 61);
             this.panel41.TabIndex = 21;
             this.panel41.Paint += new System.Windows.Forms.PaintEventHandler(this.panel41_Paint);
-            // 
-            // panel33
-            // 
-            this.panel33.BackColor = System.Drawing.Color.Black;
-            this.panel33.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel33.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel33.Location = new System.Drawing.Point(0, 0);
-            this.panel33.Name = "panel33";
-            this.panel33.Size = new System.Drawing.Size(4, 63);
-            this.panel33.TabIndex = 182;
             // 
             // cbModosVibracao
             // 
@@ -6320,7 +6395,7 @@ namespace PG
             "Selecionados"});
             this.cbModosVibracao.Location = new System.Drawing.Point(111, 5);
             this.cbModosVibracao.Name = "cbModosVibracao";
-            this.cbModosVibracao.Size = new System.Drawing.Size(131, 21);
+            this.cbModosVibracao.Size = new System.Drawing.Size(140, 21);
             this.cbModosVibracao.TabIndex = 181;
             this.cbModosVibracao.SelectedIndexChanged += new System.EventHandler(this.cbModosVibracao_SelectedIndexChanged);
             // 
@@ -6343,7 +6418,7 @@ namespace PG
             this.btConfirmaModos.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.btConfirmaModos.ForeColor = System.Drawing.SystemColors.Desktop;
             this.btConfirmaModos.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btConfirmaModos.Location = new System.Drawing.Point(178, 33);
+            this.btConfirmaModos.Location = new System.Drawing.Point(186, 31);
             this.btConfirmaModos.Margin = new System.Windows.Forms.Padding(0);
             this.btConfirmaModos.Name = "btConfirmaModos";
             this.btConfirmaModos.Size = new System.Drawing.Size(65, 24);
@@ -6357,7 +6432,7 @@ namespace PG
             // edEscalaModo
             // 
             this.edEscalaModo.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.edEscalaModo.Location = new System.Drawing.Point(111, 35);
+            this.edEscalaModo.Location = new System.Drawing.Point(111, 32);
             this.edEscalaModo.Name = "edEscalaModo";
             this.edEscalaModo.Size = new System.Drawing.Size(47, 21);
             this.edEscalaModo.TabIndex = 149;
@@ -6377,7 +6452,7 @@ namespace PG
             this.btAnimarModo.ForeColor = System.Drawing.Color.White;
             this.btAnimarModo.ImageIndex = 7;
             this.btAnimarModo.ImageList = this.imgTemaEscuroResultados_24x24;
-            this.btAnimarModo.Location = new System.Drawing.Point(247, 0);
+            this.btAnimarModo.Location = new System.Drawing.Point(257, 1);
             this.btAnimarModo.Name = "btAnimarModo";
             this.btAnimarModo.Size = new System.Drawing.Size(28, 28);
             this.btAnimarModo.TabIndex = 45;
@@ -6400,7 +6475,7 @@ namespace PG
             // 
             this.label26.AutoSize = true;
             this.label26.ForeColor = System.Drawing.Color.White;
-            this.label26.Location = new System.Drawing.Point(75, 45);
+            this.label26.Location = new System.Drawing.Point(75, 42);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(37, 13);
             this.label26.TabIndex = 43;
@@ -6408,7 +6483,7 @@ namespace PG
             // 
             // EscalaModo_UpDown
             // 
-            this.EscalaModo_UpDown.Location = new System.Drawing.Point(159, 35);
+            this.EscalaModo_UpDown.Location = new System.Drawing.Point(159, 32);
             this.EscalaModo_UpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -6463,7 +6538,7 @@ namespace PG
             this.btModoRenderizado.ForeColor = System.Drawing.Color.White;
             this.btModoRenderizado.ImageIndex = 4;
             this.btModoRenderizado.ImageList = this.imgTemaEscuroResultados_24x24;
-            this.btModoRenderizado.Location = new System.Drawing.Point(4, 30);
+            this.btModoRenderizado.Location = new System.Drawing.Point(4, 29);
             this.btModoRenderizado.Name = "btModoRenderizado";
             this.btModoRenderizado.Size = new System.Drawing.Size(28, 28);
             this.btModoRenderizado.TabIndex = 39;
@@ -6495,18 +6570,212 @@ namespace PG
             this.btModoColorido.Click += new System.EventHandler(this.btModoColorido_Click);
             this.btModoColorido.MouseEnter += new System.EventHandler(this.btBarra_MouseEnter);
             // 
-            // label27
+            // panelModosFlambagem
             // 
-            this.label27.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label27.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label27.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.label27.Location = new System.Drawing.Point(0, 49);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(278, 13);
-            this.label27.TabIndex = 17;
-            this.label27.Text = "Deslocamentos";
-            this.label27.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.panelModosFlambagem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.panelModosFlambagem.Controls.Add(this.label29);
+            this.panelModosFlambagem.Controls.Add(this.panel53);
+            this.panelModosFlambagem.Controls.Add(this.panel51);
+            this.panelModosFlambagem.Location = new System.Drawing.Point(329, 273);
+            this.panelModosFlambagem.Name = "panelModosFlambagem";
+            this.panelModosFlambagem.Size = new System.Drawing.Size(248, 73);
+            this.panelModosFlambagem.TabIndex = 178;
+            // 
+            // label29
+            // 
+            this.label29.BackColor = System.Drawing.Color.DimGray;
+            this.label29.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label29.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label29.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label29.Location = new System.Drawing.Point(4, 60);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(244, 13);
+            this.label29.TabIndex = 184;
+            this.label29.Text = "Modos de flambagem / Fatores críticos";
+            this.label29.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel53
+            // 
+            this.panel53.BackColor = System.Drawing.Color.Black;
+            this.panel53.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel53.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel53.Location = new System.Drawing.Point(0, 0);
+            this.panel53.Name = "panel53";
+            this.panel53.Size = new System.Drawing.Size(4, 73);
+            this.panel53.TabIndex = 183;
+            // 
+            // panel51
+            // 
+            this.panel51.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.panel51.Controls.Add(this.cbModosFlambagem);
+            this.panel51.Controls.Add(this.label25);
+            this.panel51.Controls.Add(this.btConfirmaFlambagem);
+            this.panel51.Controls.Add(this.edEscalaFlambagem);
+            this.panel51.Controls.Add(this.btAnimarFlambagem);
+            this.panel51.Controls.Add(this.panel54);
+            this.panel51.Controls.Add(this.label28);
+            this.panel51.Controls.Add(this.edEscalaFlambagem_UpDown);
+            this.panel51.Controls.Add(this.btFlambagemRenderizado);
+            this.panel51.Controls.Add(this.btFlambagemColorido);
+            this.panel51.Location = new System.Drawing.Point(0, 0);
+            this.panel51.Name = "panel51";
+            this.panel51.Size = new System.Drawing.Size(248, 60);
+            this.panel51.TabIndex = 21;
+            // 
+            // cbModosFlambagem
+            // 
+            this.cbModosFlambagem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbModosFlambagem.FormattingEnabled = true;
+            this.cbModosFlambagem.Items.AddRange(new object[] {
+            "Todos",
+            "Selecionados"});
+            this.cbModosFlambagem.Location = new System.Drawing.Point(78, 5);
+            this.cbModosFlambagem.Name = "cbModosFlambagem";
+            this.cbModosFlambagem.Size = new System.Drawing.Size(131, 21);
+            this.cbModosFlambagem.TabIndex = 181;
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.ForeColor = System.Drawing.Color.White;
+            this.label25.Location = new System.Drawing.Point(43, 15);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(33, 13);
+            this.label25.TabIndex = 180;
+            this.label25.Text = "Modo";
+            // 
+            // btConfirmaFlambagem
+            // 
+            this.btConfirmaFlambagem.AccessibleName = "Confirmar";
+            this.btConfirmaFlambagem.BackColor = System.Drawing.SystemColors.Control;
+            this.btConfirmaFlambagem.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.btConfirmaFlambagem.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.btConfirmaFlambagem.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.btConfirmaFlambagem.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.btConfirmaFlambagem.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btConfirmaFlambagem.Location = new System.Drawing.Point(145, 31);
+            this.btConfirmaFlambagem.Margin = new System.Windows.Forms.Padding(0);
+            this.btConfirmaFlambagem.Name = "btConfirmaFlambagem";
+            this.btConfirmaFlambagem.Size = new System.Drawing.Size(65, 24);
+            this.btConfirmaFlambagem.TabIndex = 179;
+            this.btConfirmaFlambagem.Tag = "Nova";
+            this.btConfirmaFlambagem.Text = "Ok";
+            this.btConfirmaFlambagem.UseVisualStyleBackColor = false;
+            this.btConfirmaFlambagem.Click += new System.EventHandler(this.btConfirmaFlambagem_Click);
+            // 
+            // edEscalaFlambagem
+            // 
+            this.edEscalaFlambagem.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.edEscalaFlambagem.Location = new System.Drawing.Point(78, 33);
+            this.edEscalaFlambagem.Name = "edEscalaFlambagem";
+            this.edEscalaFlambagem.Size = new System.Drawing.Size(47, 21);
+            this.edEscalaFlambagem.TabIndex = 149;
+            this.edEscalaFlambagem.Text = "0";
+            // 
+            // btAnimarFlambagem
+            // 
+            this.btAnimarFlambagem.AccessibleName = "Animar o modo de vibração";
+            this.btAnimarFlambagem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.btAnimarFlambagem.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.btAnimarFlambagem.FlatAppearance.BorderSize = 0;
+            this.btAnimarFlambagem.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
+            this.btAnimarFlambagem.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.btAnimarFlambagem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btAnimarFlambagem.ForeColor = System.Drawing.Color.White;
+            this.btAnimarFlambagem.ImageIndex = 7;
+            this.btAnimarFlambagem.ImageList = this.imgTemaEscuroResultados_24x24;
+            this.btAnimarFlambagem.Location = new System.Drawing.Point(214, 0);
+            this.btAnimarFlambagem.Name = "btAnimarFlambagem";
+            this.btAnimarFlambagem.Size = new System.Drawing.Size(28, 28);
+            this.btAnimarFlambagem.TabIndex = 45;
+            this.btAnimarFlambagem.Tag = "0";
+            this.btAnimarFlambagem.Text = "  ";
+            this.btAnimarFlambagem.UseVisualStyleBackColor = false;
+            this.btAnimarFlambagem.Click += new System.EventHandler(this.btAnimarFlambagem_Click);
+            // 
+            // panel54
+            // 
+            this.panel54.BackColor = System.Drawing.Color.Black;
+            this.panel54.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel54.Location = new System.Drawing.Point(36, 1);
+            this.panel54.Name = "panel54";
+            this.panel54.Size = new System.Drawing.Size(3, 60);
+            this.panel54.TabIndex = 44;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.ForeColor = System.Drawing.Color.White;
+            this.label28.Location = new System.Drawing.Point(42, 43);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(37, 13);
+            this.label28.TabIndex = 43;
+            this.label28.Text = "Escala";
+            // 
+            // edEscalaFlambagem_UpDown
+            // 
+            this.edEscalaFlambagem_UpDown.Location = new System.Drawing.Point(126, 33);
+            this.edEscalaFlambagem_UpDown.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.edEscalaFlambagem_UpDown.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            -2147483648});
+            this.edEscalaFlambagem_UpDown.Name = "edEscalaFlambagem_UpDown";
+            this.edEscalaFlambagem_UpDown.Size = new System.Drawing.Size(16, 21);
+            this.edEscalaFlambagem_UpDown.TabIndex = 42;
+            this.edEscalaFlambagem_UpDown.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.edEscalaFlambagem_UpDown.ValueChanged += new System.EventHandler(this.edEscalaFlambagem_UpDown_ValueChanged);
+            // 
+            // btFlambagemRenderizado
+            // 
+            this.btFlambagemRenderizado.AccessibleName = "Modo de flambagem renderizado";
+            this.btFlambagemRenderizado.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.btFlambagemRenderizado.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.btFlambagemRenderizado.FlatAppearance.BorderSize = 0;
+            this.btFlambagemRenderizado.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
+            this.btFlambagemRenderizado.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.btFlambagemRenderizado.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btFlambagemRenderizado.ForeColor = System.Drawing.Color.White;
+            this.btFlambagemRenderizado.ImageIndex = 4;
+            this.btFlambagemRenderizado.ImageList = this.imgTemaEscuroResultados_24x24;
+            this.btFlambagemRenderizado.Location = new System.Drawing.Point(4, 28);
+            this.btFlambagemRenderizado.Name = "btFlambagemRenderizado";
+            this.btFlambagemRenderizado.Size = new System.Drawing.Size(28, 28);
+            this.btFlambagemRenderizado.TabIndex = 39;
+            this.btFlambagemRenderizado.Tag = "0";
+            this.btFlambagemRenderizado.Text = "  ";
+            this.btFlambagemRenderizado.UseVisualStyleBackColor = false;
+            this.btFlambagemRenderizado.Click += new System.EventHandler(this.btFlambagemRenderizado_Click);
+            // 
+            // btFlambagemColorido
+            // 
+            this.btFlambagemColorido.AccessibleName = "Modo de vibração colorido";
+            this.btFlambagemColorido.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.btFlambagemColorido.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.btFlambagemColorido.FlatAppearance.BorderSize = 0;
+            this.btFlambagemColorido.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
+            this.btFlambagemColorido.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.btFlambagemColorido.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btFlambagemColorido.ForeColor = System.Drawing.Color.White;
+            this.btFlambagemColorido.ImageIndex = 3;
+            this.btFlambagemColorido.ImageList = this.imgTemaEscuroResultados_24x24;
+            this.btFlambagemColorido.Location = new System.Drawing.Point(4, 0);
+            this.btFlambagemColorido.Name = "btFlambagemColorido";
+            this.btFlambagemColorido.Size = new System.Drawing.Size(28, 28);
+            this.btFlambagemColorido.TabIndex = 38;
+            this.btFlambagemColorido.Tag = "0";
+            this.btFlambagemColorido.Text = "  ";
+            this.btFlambagemColorido.UseVisualStyleBackColor = false;
+            this.btFlambagemColorido.Click += new System.EventHandler(this.btFlambagemColorido_Click);
             // 
             // Gerenciador
             // 
@@ -6514,6 +6783,7 @@ namespace PG
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Menu;
             this.ClientSize = new System.Drawing.Size(1370, 574);
+            this.Controls.Add(this.panelModosFlambagem);
             this.Controls.Add(this.panelDinamica1);
             this.Controls.Add(this.pnCorResultados);
             this.Controls.Add(this.pnUtilitarios);
@@ -6571,7 +6841,6 @@ namespace PG
             this.panel30.ResumeLayout(false);
             this.panel32.ResumeLayout(false);
             this.panel24.ResumeLayout(false);
-            this.panel24.PerformLayout();
             this.panel26.ResumeLayout(false);
             this.panel22.ResumeLayout(false);
             this.panel23.ResumeLayout(false);
@@ -6623,6 +6892,10 @@ namespace PG
             this.panel41.ResumeLayout(false);
             this.panel41.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.EscalaModo_UpDown)).EndInit();
+            this.panelModosFlambagem.ResumeLayout(false);
+            this.panel51.ResumeLayout(false);
+            this.panel51.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.edEscalaFlambagem_UpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -6911,7 +7184,6 @@ namespace PG
         private System.Windows.Forms.Panel panel15;
         private System.Windows.Forms.Panel panel16;
         private System.Windows.Forms.Button button26;
-        private System.Windows.Forms.Button button27;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Panel panel20;
         private System.Windows.Forms.Panel panel18;
@@ -6931,7 +7203,6 @@ namespace PG
         private System.Windows.Forms.Panel panel26;
         private System.Windows.Forms.Button button33;
         private System.Windows.Forms.Button button35;
-        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Button button32;
         private System.Windows.Forms.Button button36;
         private System.Windows.Forms.Button button31;
@@ -7089,11 +7360,29 @@ namespace PG
         private System.Windows.Forms.Button btRelatorioAnaliseModal;
         private System.Windows.Forms.Button btModoRenderizado;
         private System.Windows.Forms.Button btModoColorido;
-        private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Button btDinamica1;
-        private System.Windows.Forms.Panel panel33;
         public System.Windows.Forms.ComboBox cbModosVibracao;
+        private System.Windows.Forms.Panel panelModosFlambagem;
+        private System.Windows.Forms.Panel panel51;
+        public System.Windows.Forms.ComboBox cbModosFlambagem;
+        private System.Windows.Forms.Label label25;
+        public System.Windows.Forms.Button btConfirmaFlambagem;
+        public System.Windows.Forms.TextBox edEscalaFlambagem;
+        private System.Windows.Forms.Button btAnimarFlambagem;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.NumericUpDown edEscalaFlambagem_UpDown;
+        private System.Windows.Forms.Button btFlambagemRenderizado;
+        private System.Windows.Forms.Button btFlambagemColorido;
+        private System.Windows.Forms.Panel panel54;
+        private System.Windows.Forms.Button btFlambagem;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button button51;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Panel panel33;
+        private System.Windows.Forms.Panel panel53;
+        private System.Windows.Forms.Label label29;
     }
 }
 

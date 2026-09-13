@@ -76,10 +76,15 @@ namespace PG
               sisSolver_cg.Checked = Cfg.sistema.Solver_gradiente_conjugado;
               sisDll.Checked     = Cfg.sistema.UsarDll;
 
-                if (Cfg.sistema.numeroModos == 0) Cfg.sistema.numeroModos = 1;
+                if (Cfg.sistema.numeroModosVibracao == 0) Cfg.sistema.numeroModosVibracao = 1;
+                if (Cfg.sistema.numeroModosFlambagem == 0) Cfg.sistema.numeroModosFlambagem = 1;
 
-              numModos.Value = Cfg.sistema.numeroModos;
-              chCalcularModos.Checked = Cfg.sistema.CalculaModosVibracao;
+                numModosVibracao.Value = Cfg.sistema.numeroModosVibracao;
+              chCalcularModosVibracao.Checked = Cfg.sistema.CalculaModosVibracao;
+
+              numModosFlambagem.Value = Cfg.sistema.numeroModosFlambagem;
+              chCalcularModosFlambagem.Checked = Cfg.sistema.CalculaModosFlambagem;
+
               InterromperCalculoConexoesPerdidas.Checked = Cfg.sistema.Interromper_calculo_conexao_perdida;
               InterromperCalculoElementosSobrepostos.Checked = Cfg.sistema.Interromper_calculo_elementos_sobrepostos;
                 if (Cfg.sistema.toleranciaConexaoPerdida == 0)
@@ -99,12 +104,16 @@ namespace PG
                 Cfg.sistema.Solver_gradiente_conjugado = sisSolver_cg.Checked;
                 Cfg.sistema.Solver_choleskypadrao = sisSolver_Cholheskypadrao.Checked;
                 Cfg.sistema.UsarDll = sisDll.Checked;
-                Cfg.sistema.CalculaModosVibracao= chCalcularModos.Checked;
 
                 Cfg.sistema.Interromper_calculo_conexao_perdida = InterromperCalculoConexoesPerdidas.Checked;
                 Cfg.sistema.Interromper_calculo_elementos_sobrepostos= InterromperCalculoElementosSobrepostos.Checked;
                 Cfg.sistema.toleranciaConexaoPerdida = (int)toleranciaInterromperCalculo.Value;
-                Cfg.sistema.numeroModos = (int)numModos.Value;
+
+                Cfg.sistema.numeroModosVibracao = (int)numModosVibracao.Value;
+                Cfg.sistema.CalculaModosVibracao = chCalcularModosVibracao.Checked;
+
+                Cfg.sistema.numeroModosFlambagem = (int)numModosFlambagem.Value;
+                Cfg.sistema.CalculaModosFlambagem  = chCalcularModosFlambagem.Checked;
             }
         }
 
