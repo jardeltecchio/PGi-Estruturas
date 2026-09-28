@@ -646,6 +646,7 @@
     <Compile Include="Forms\FSplash.Designer.cs">
       <DependentUpon>FSplash.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pórtico\ElementosRigidos.cs" />
     <Compile Include="Pórtico\TBarraPortico_Diagramas.cs" />
     <Compile Include="Pórtico\TBibliotecaLaminados.cs" />
     <Compile Include="Pórtico\TGeradorSecoes.cs" />
@@ -655,6 +656,10 @@
     <Compile Include="Pórtico\TGradienteCoresDiagramas.cs" />
     <Compile Include="Pórtico\TPorticoEspacialModal.cs" />
     <Compile Include="Pórtico\TPorticoEspacial_FlambagemLinear.cs" />
+    <Compile Include="Pórtico\TIteracaoSubespaco.cs" />
+    <Compile Include="Pórtico\TPorticoEspacial_MPC.cs" />
+    <Compile Include="Pórtico\TPorticoEspacial_EliminacaoMPC.cs" />
+    <Compile Include="Pórtico\TPorticoEspacial_NaoLinear.cs" />
     <Compile Include="Pórtico\TRelatoriosResultados.cs" />
     <Compile Include="Pórtico\TSuavizacaoDiagramas.cs" />
     <Compile Include="Utilitários\GeracaoLoopsGeometria.cs" />

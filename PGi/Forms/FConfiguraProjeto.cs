@@ -16,6 +16,7 @@ namespace PG
         public FConfiguraProjeto()
         {
             InitializeComponent();
+
         }
         Gerenciador gerenciador;
         SConfiguracoesProjeto Cfg;
@@ -25,6 +26,7 @@ namespace PG
             Cfg = gerenciador.ConfiguracoesPGi.CfgProjeto;
              
             InitializeComponent();
+         
             ShowInTaskbar = false;
         }
 
@@ -70,8 +72,12 @@ namespace PG
         {
             carregando = true;
             if (Cfg.sistema != null)
-            {         
+            {
+              cbMetodoMPC.SelectedIndex = Cfg.sistema.MetodoMPC == MetodoVinculosMPC.Penalidade ? 1 : 0;
               sisSolver_cholesky.Checked = Cfg.sistema.Solver_cholesky_supernodal;
+              rbiterSubespaco.Checked = Cfg.sistema.Solver_IteracaoSubEspaco;
+              rbLanczos.Checked = Cfg.sistema.Solver_Lanczos;
+
               sisSolver_Cholheskypadrao.Checked = Cfg.sistema.Solver_choleskypadrao;
               sisSolver_cg.Checked = Cfg.sistema.Solver_gradiente_conjugado;
               sisDll.Checked     = Cfg.sistema.UsarDll;
@@ -79,7 +85,7 @@ namespace PG
                 if (Cfg.sistema.numeroModosVibracao == 0) Cfg.sistema.numeroModosVibracao = 1;
                 if (Cfg.sistema.numeroModosFlambagem == 0) Cfg.sistema.numeroModosFlambagem = 1;
 
-                numModosVibracao.Value = Cfg.sistema.numeroModosVibracao;
+              numModosVibracao.Value = Cfg.sistema.numeroModosVibracao;
               chCalcularModosVibracao.Checked = Cfg.sistema.CalculaModosVibracao;
 
               numModosFlambagem.Value = Cfg.sistema.numeroModosFlambagem;
@@ -87,8 +93,8 @@ namespace PG
 
               InterromperCalculoConexoesPerdidas.Checked = Cfg.sistema.Interromper_calculo_conexao_perdida;
               InterromperCalculoElementosSobrepostos.Checked = Cfg.sistema.Interromper_calculo_elementos_sobrepostos;
-                if (Cfg.sistema.toleranciaConexaoPerdida == 0)
-                    Cfg.sistema.toleranciaConexaoPerdida = 20;
+             if (Cfg.sistema.toleranciaConexaoPerdida == 0)
+                 Cfg.sistema.toleranciaConexaoPerdida = 20;
 
               toleranciaInterromperCalculo.Value = (int)Cfg.sistema.toleranciaConexaoPerdida;
             }
@@ -100,8 +106,13 @@ namespace PG
             if (!carregando)
             {
                 if (Cfg.sistema == null) Cfg.sistema = new SSistema(true);
+                Cfg.sistema.MetodoMPC = cbMetodoMPC.SelectedIndex == 1 ? MetodoVinculosMPC.Penalidade : MetodoVinculosMPC.Eliminacao;
                 Cfg.sistema.Solver_cholesky_supernodal = sisSolver_cholesky.Checked;
                 Cfg.sistema.Solver_gradiente_conjugado = sisSolver_cg.Checked;
+
+                Cfg.sistema.Solver_IteracaoSubEspaco = rbiterSubespaco.Checked;
+                Cfg.sistema.Solver_Lanczos = rbLanczos.Checked;
+
                 Cfg.sistema.Solver_choleskypadrao = sisSolver_Cholheskypadrao.Checked;
                 Cfg.sistema.UsarDll = sisDll.Checked;
 
@@ -514,6 +525,11 @@ namespace PG
         }
 
         private void sisSolver_cholesky_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void geoUndComp_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }

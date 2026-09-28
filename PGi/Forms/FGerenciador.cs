@@ -785,6 +785,9 @@ namespace PG
                 formDesenho.AdicionaFerramentasDesenho(Const.ID_TRECHOVIGA, new TTrechoViga(formDesenho.DadosTrecho));
                 formDesenho.AdicionaFerramentasDesenho(Const.ID_BARRAGENERICA, new TBarraGenerica(formDesenho.DadosBarra));
                 formDesenho.AdicionaFerramentasDesenho(Const.ID_APOIO, new TApoio(formDesenho.DadosApoio));
+                formDesenho.AdicionaFerramentasDesenho(Const.ID_BRACO_RIGIDO , new TBracoRigido());
+                formDesenho.AdicionaFerramentasDesenho(Const.ID_DIAFRAGMA_RIGIDO, new TDiafragmaRigido());
+
                 formDesenho.AdicionaFerramentasDesenho(Const.ID_PILAR, new TPilar(formDesenho.DadosPilar));
 
                 formDesenho.AdicionaFerramentasDesenho(Const.ID_LINHA, new TLinha());
@@ -1367,135 +1370,143 @@ namespace PG
         public List<string> ArquivosRecentes = new List<string>();
         string nomePasta = string.Empty;
         public bool Salvar(bool SalvarComo = false)
-        {         
-            string filename = arquivoAtual;
-            FileStream arquivo;
-            BinaryFormatter arqBin = new BinaryFormatter();
-            
-            DialogResult result;
-            
-            result = DialogResult.OK;
-            if (filename == null || filename == "" ||  SalvarComo)
+        {
+            try
             {
-                using (SaveFileDialog fileChooser = new SaveFileDialog())
-                {
-                    fileChooser.CheckFileExists = false;
-                    fileChooser.FileName        = ConfiguracoesPGi.NomeProjeto;
-                    result                      = fileChooser.ShowDialog();
-                    filename                    = fileChooser.FileName;
-                }
-            }
+                string filename = arquivoAtual;
+                FileStream arquivo;
+                BinaryFormatter arqBin = new BinaryFormatter();
 
-            if (result == DialogResult.OK)
-            {
-                if (filename == string.Empty)
-                    MessageBox.Show("Arquivo inválido", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else
+                DialogResult result;
+
+                result = DialogResult.OK;
+                if (filename == null || filename == "" || SalvarComo)
                 {
-                    try
+                    using (SaveFileDialog fileChooser = new SaveFileDialog())
+                    {
+                        fileChooser.CheckFileExists = false;
+                        fileChooser.FileName = ConfiguracoesPGi.NomeProjeto;
+                        result = fileChooser.ShowDialog();
+                        filename = fileChooser.FileName;
+                    }
+                }
+
+                if (result == DialogResult.OK)
+                {
+                    if (filename == string.Empty)
+                        MessageBox.Show("Arquivo inválido", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    else
                     {
                         try
                         {
-                            if (filename != null)
+                            try
                             {
-                                if (!ArquivosRecentes.Exists(o => o == filename))
-                                  ArquivosRecentes.Add(filename);
-                                else
+                                if (filename != null)
                                 {
-                                    int iii = ArquivosRecentes.FindIndex(o => o == filename);
-                                    ArquivosRecentes.RemoveAt(iii);
-                                    ArquivosRecentes.Add(filename);
+                                    if (!ArquivosRecentes.Exists(o => o == filename))
+                                        ArquivosRecentes.Add(filename);
+                                    else
+                                    {
+                                        int iii = ArquivosRecentes.FindIndex(o => o == filename);
+                                        ArquivosRecentes.RemoveAt(iii);
+                                        ArquivosRecentes.Add(filename);
+                                    }
+
+                                    arquivo = new FileStream(Directory.GetCurrentDirectory() + @"\recentes", FileMode.OpenOrCreate, FileAccess.Write);
+                                    arqBin.Serialize(arquivo, ArquivosRecentes);
+                                    arquivo.Close();
                                 }
+                                pbAguardar.Value = 0;
+                                pbAguardar.Maximum = 11;
 
-                                arquivo = new FileStream(Directory.GetCurrentDirectory() + @"\recentes", FileMode.OpenOrCreate, FileAccess.Write);
-                                arqBin.Serialize(arquivo, ArquivosRecentes);
+                                ChamaAguardar(this, "Salvando. Aguarde...");
+
+                                Application.DoEvents();
+
+                                /*  if (Directory.Exists(filename + "\\bkp"))
+                                  {
+                                      Directory.Delete(filename + "\\bkp");
+                                  }
+                                  Directory.CreateDirectory(filename + "\\bkp");
+
+                                  if (Directory.Exists(filename))
+                                  {
+                                      Directory.Delete(filename, true);
+                                  }*/
+
+                                // Directory.CreateDirectory(filename);
+
+                                arquivoAtual = filename;
+                                BarrasSerializar_ = new List<sObjSerializar>();
+                                SecoesSerializar_ = new List<TSecao>();
+
+                                formDesenho.SetaSelecionados(false, -1);
+
+                                EstruturaSerializar_ = formDesenho.Estrutura;
+                                EstruturaSerializar_.x_rot_angle = (float)formDesenho.camera.x_rot_angle;
+                                EstruturaSerializar_.y_rot_angle = (float)formDesenho.camera.y_rot_angle;
+                                EstruturaSerializar_.x_trans = (float)formDesenho.camera.x_trans;
+                                EstruturaSerializar_.y_trans = (float)formDesenho.camera.y_trans;
+                                EstruturaSerializar_.z_trans = (float)formDesenho.camera.z_trans;
+
+                                EstruturaSerializar_.cameraOrto = formDesenho.CameraOrto;
+
+                                pbAguardar.Value += 1; Application.DoEvents();
+
+                                SecoesSerializar_.Clear();
+                                foreach (TSecao o in formDesenho.Secoes)
+                                    SecoesSerializar_.Add(o);
+
+                                nomePasta = filename;
+                                TArquivo ArquivoFinal = new TArquivo(formDesenho.Estrutura.apoios,
+                                                                     SecoesSerializar_,
+                                                                     EstruturaSerializar_,
+                                                                     formDesenho.Estrutura.cargaPontual,
+                                                                     formDesenho.Estrutura.cargaLinear,
+                                                                     formDesenho.CasosCarga,
+                                                                     formDesenho.Estrutura.combinacoes,
+                                                                     formDesenho.Estrutura.barras,
+                                                                     formDesenho.Estrutura.bracosRigidos,
+                                                                     ConfiguracoesPGi);
+
+                                arquivo = new FileStream(nomePasta, FileMode.OpenOrCreate, FileAccess.Write);
+                                arqBin.Serialize(arquivo, ArquivoFinal);
                                 arquivo.Close();
+
+                                this.Text = "PGi - [" + arquivoAtual + "]";
+                                alterado = false;
+                                arquivo.Dispose();
                             }
-                            pbAguardar.Value = 0;
-                            pbAguardar.Maximum = 11;
-
-                            ChamaAguardar(this, "Salvando. Aguarde...");
-
-                            Application.DoEvents();
-
-                          /*  if (Directory.Exists(filename + "\\bkp"))
+                            catch (Exception e)
                             {
-                                Directory.Delete(filename + "\\bkp");
+                                formDesenho.Comando.Text = "";
+                                MessageBox.Show(e.Message, "Erro", System.Windows.Forms.MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
-                            Directory.CreateDirectory(filename + "\\bkp");
 
-                            if (Directory.Exists(filename))
-                            {
-                                Directory.Delete(filename, true);
-                            }*/
-
-                           // Directory.CreateDirectory(filename);
-
-                            arquivoAtual = filename;
-                            BarrasSerializar_ = new List<sObjSerializar>();
-                            SecoesSerializar_ = new List<TSecao>();
-                            
-                            formDesenho.SetaSelecionados(false,-1);
-
-                            EstruturaSerializar_ = formDesenho.Estrutura;
-                            EstruturaSerializar_.x_rot_angle = (float)formDesenho.camera.x_rot_angle;
-                            EstruturaSerializar_.y_rot_angle = (float)formDesenho.camera.y_rot_angle;
-                            EstruturaSerializar_.x_trans = (float)formDesenho.camera.x_trans;
-                            EstruturaSerializar_.y_trans = (float)formDesenho.camera.y_trans;
-                            EstruturaSerializar_.z_trans = (float)formDesenho.camera.z_trans;
-
-                            EstruturaSerializar_.cameraOrto = formDesenho.CameraOrto;
-
-                            pbAguardar.Value += 1;Application.DoEvents();
-
-                            SecoesSerializar_.Clear();
-                            foreach (TSecao o in formDesenho.Secoes)
-                                SecoesSerializar_.Add(o);
-
-                            nomePasta = filename;
-                            TArquivo ArquivoFinal =new TArquivo( formDesenho.Estrutura.apoios,
-                                                                 SecoesSerializar_,
-                                                                 EstruturaSerializar_,
-                                                                 formDesenho.Estrutura.cargaPontual,
-                                                                 formDesenho.Estrutura.cargaLinear,
-                                                                 formDesenho.CasosCarga,
-                                                                 formDesenho.Estrutura.combinacoes,
-                                                                 formDesenho.Estrutura.barras,
-                                                                 ConfiguracoesPGi);
-                          
-                            arquivo = new FileStream(nomePasta, FileMode.OpenOrCreate, FileAccess.Write);
-                            arqBin.Serialize(arquivo, ArquivoFinal);
-                            arquivo.Close();
-
-                            this.Text = "PGi - [" + arquivoAtual + "]";
-                            alterado = false;
-                            arquivo.Dispose();
                         }
-                        catch (Exception e)
+                        catch (SerializationException)
                         {
-                            formDesenho.Comando.Text = "";
-                            MessageBox.Show(e.Message, "Erro", System.Windows.Forms.MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Erro ao escrever o arquivo", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        catch (IOException)
+                        {
+                            MessageBox.Show("Erro ao acessar o aqruivo", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
 
+                        formDesenho.Comando.Text = "";
+                        FechaAguardar();
+                        AtualizaDesenho();
                     }
-                    catch (SerializationException)
-                    {
-                        MessageBox.Show("Erro ao escrever o arquivo", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    catch (IOException)
-                    {
-                        MessageBox.Show("Erro ao acessar o aqruivo", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    
-                    formDesenho.Comando.Text = "";
-                    FechaAguardar();
-                    AtualizaDesenho();
+
+                    return true;
                 }
 
-                return true;
+                return false;
             }
-         
-            return false;
+            catch(Exception ee)
+            {
+                return false;
+            }
         }
         //    Poligono = new TPoligono(cbTipo.Text, edh1.Text, edb1.Text, edb2.Text, edh2.Text, "","",false);
         //formDesenho.CommandDraw(button.Tag.ToString(), arg);
@@ -1717,8 +1728,13 @@ namespace PG
                              formDesenho.Estrutura.apoios = (List<TApoio>)arqBin.Deserialize(arquivo);
                              arquivo.Close();*/
                         formDesenho.Estrutura.apoios = arquivoProjeto.apoios;
-                          formDesenho.Estrutura.cargaLinear = arquivoProjeto.cargalinear;
-                          formDesenho.Estrutura.combinacoes = arquivoProjeto.combinacoes;
+
+                        if (arquivoProjeto.bracosRigidos == null)
+                            arquivoProjeto.bracosRigidos = new List<TBracoRigido>();
+
+                        formDesenho.Estrutura.bracosRigidos = arquivoProjeto.bracosRigidos;
+                        formDesenho.Estrutura.cargaLinear = arquivoProjeto.cargalinear;
+                        formDesenho.Estrutura.combinacoes = arquivoProjeto.combinacoes;
 
                         /*arq = filename + "\\@ModCargasLineares";
                       arquivo = new FileStream(arq, FileMode.Open, FileAccess.Read);
@@ -2151,6 +2167,14 @@ namespace PG
                 MessageBox.Show("A estrutura não possui nenhum apoio. \nA estrutura não pode ser calculada.", "Atenção", System.Windows.Forms.MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
+
+            if (ConfiguracoesPGi.CfgProjeto.sistema.CalculaModosFlambagem && !formDesenho.Estrutura.combinacoes.Exists(o=>o.categoriaCombinacao == CategoriaCombinacao.Estabilidade))
+            {
+
+                MessageBox.Show("Para o cálculo de estabilidade/flambagem é necessária a criação de pelo menos uma combinação de estabilidade.", "Atenção! Cálculo cancelado.", System.Windows.Forms.MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
+            }
+
             Application.DoEvents();
             formDesenho.Estrutura.DeletaElementosComTamanhoZero();
             Application.DoEvents();
@@ -2398,6 +2422,8 @@ namespace PG
                         cbCargas_SelectedIndexChanged(cbCasoCarga, null);
                     }
 
+                    SalvarHistoricoUltimoCalculo(); 
+                    
                     if (ConfiguracaoPrograma.FecharJanelaResultadosAposCalculo)
                     {
                         processo.Close();
@@ -2447,6 +2473,15 @@ namespace PG
             this.Focus();
         }
 
+        StringBuilder historicoUltimoCalculo;
+        void SalvarHistoricoUltimoCalculo()
+        {
+            historicoUltimoCalculo = new StringBuilder();
+            for (int i = 0; i < processo.ListaCalculo.Items.Count; i++)
+            {
+                historicoUltimoCalculo.AppendLine((string)processo.ListaCalculo.Items[i]);
+            }
+        }
         void CalculaPortico()
         {
 
@@ -2459,7 +2494,8 @@ namespace PG
                 ConfiguracoesPGi.CfgProjeto.materiais,
                 formDesenho.CargasPontuais,
                 formDesenho.CargasLineares,
-                this,ConfiguracoesPGi.CfgProjeto.portico.qtdbarrasPortico);
+                this,ConfiguracoesPGi.CfgProjeto.portico.qtdbarrasPortico,
+                formDesenho.Estrutura.bracosRigidos);
             
             if (ConfiguracoesPGi.CfgProjeto.portico == null)
                 throw new TErroPortico(PorticoEspacial, "Não há configurações de pórtico.");
@@ -2469,7 +2505,8 @@ namespace PG
                                                                             ConfiguracoesPGi.CfgProjeto.sistema.CalculaModosVibracao, 
                                                                             ConfiguracoesPGi.CfgProjeto.sistema.numeroModosVibracao,
                                                                             ConfiguracoesPGi.CfgProjeto.sistema.CalculaModosFlambagem,
-                                                                            ConfiguracoesPGi.CfgProjeto.sistema.numeroModosFlambagem);
+                                                                            ConfiguracoesPGi.CfgProjeto.sistema.numeroModosFlambagem,
+                                                                            ConfiguracoesPGi.CfgProjeto.sistema.Solver_Lanczos);
 
             HistoricoCalculo("");
             if (calculoOk)
@@ -2487,6 +2524,8 @@ namespace PG
 
                     CalcularEscalaModosVibracao();
                 }
+
+                cbModosFlambagem.Items.Clear();
             }
         }
 
@@ -4941,6 +4980,8 @@ namespace PG
                     b.DirtyArestas = true;
                     b.DirtySelecao = true;
                 }
+                foreach (TBracoRigido b in formDesenho.Estrutura.bracosRigidos)
+                    b.Visivel = true;
 
                 btAnimarDeformacao.Tag = "0";
                 btAnimarDeformacao.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
@@ -4975,6 +5016,9 @@ namespace PG
                     b.DirtyArestas = true;
                     b.DirtySelecao = true;
                 }
+
+                foreach (TBracoRigido b in formDesenho.Estrutura.bracosRigidos)
+                    b.Visivel = false;
 
                 formDesenho.DirtyPortico();
 
@@ -5133,6 +5177,8 @@ namespace PG
                     b.DirtySelecao = true;
                     b.Visivel = (string)btDeformacao.Tag == "0";
                 }
+                foreach (TBracoRigido b in formDesenho.Estrutura.bracosRigidos)
+                    b.Visivel = true;
 
                 btfx.Tag = "0";
                 btfy.Tag = "0";
@@ -5168,6 +5214,10 @@ namespace PG
                     b.DirtyArestas = true;
                     b.DirtySelecao = true;
                 }
+
+                foreach (TBracoRigido b in formDesenho.Estrutura.bracosRigidos)
+                    b.Visivel = true;
+
             }
 
 //            formDesenho.AtualizaShaders();
@@ -6521,9 +6571,12 @@ namespace PG
                                 formDesenho.Estrutura.combinacoes[cbResultadoCombinacoes.SelectedIndex].Id)
                         {
                             index_combinacao_flambagem = j;
+                            if (formDesenho.Estrutura.PorticoEspacial.ResultadosFlambagem[j].Multiplicadores.Count()== 0)
+                                continue;
+
                             for (int i = 1; i <= ConfiguracoesPGi.CfgProjeto.sistema.numeroModosFlambagem; i++)
                             {
-                                cbModosFlambagem.Items.Add(i + " - Fator: " + formDesenho.Estrutura.PorticoEspacial.ResultadosFlambagem[j].Multiplicadores[i - 1].ToString("n3"));
+                                cbModosFlambagem.Items.Add(i + " - Fator: " + formDesenho.Estrutura.PorticoEspacial.ResultadosFlambagem[j].Multiplicadores[i - 1].ToString("n5"));
                             }
                         }
                     }
@@ -6653,13 +6706,20 @@ namespace PG
                     b.DirtySelecao = true;
                 }
             }
+
+            foreach (TBracoRigido b in formDesenho.Estrutura.bracosRigidos)
+                b.Visivel = mostrar;
+
             //    formDesenho.DirtyPortico();
             if ((string)btTensoes.Tag == "1")
                 ChamarAtualizacaoResultados(btOkTensoes, true);
 
             if ((string)btDeformacao.Tag == "1")
                 ChamarAtualizacaoResultados(btConfirmaDeslocamentos, true);
-
+            if ((string)btFlambagem.Tag == "1")
+                ChamarAtualizacaoResultados(btConfirmaFlambagem, true);
+            if ((string)btDinamica1.Tag == "1")
+                ChamarAtualizacaoResultados(btConfirmaModos, true);
         }
 
         private void button23_Click_1(object sender, EventArgs e)
@@ -6729,6 +6789,8 @@ namespace PG
                 b.DirtyTriangulos = true;
                 b.DirtySelecao = true;
             }
+            foreach (TBracoRigido b in formDesenho.Estrutura.bracosRigidos)
+                b.Visivel = true;
 
             formDesenho.MostraTensoesNormaisGradiente = false;
             formDesenho.TipoTensao = -1;
@@ -6785,6 +6847,8 @@ namespace PG
                     b.DirtyTriangulos = true;
                     b.DirtySelecao = true;
                 }
+                foreach (TBracoRigido b in formDesenho.Estrutura.bracosRigidos)
+                    b.Visivel = true;
 
                 pnCorResultados.Visible = false;
             }
@@ -7166,6 +7230,8 @@ namespace PG
                         b.DirtyArestas = true;
                         b.DirtySelecao = true;
                     }
+                    foreach (TBracoRigido b in formDesenho.Estrutura.bracosRigidos)
+                        b.Visivel = true;
 
                     btAnimarModo.Tag = "0";
                     btAnimarModo.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
@@ -7184,7 +7250,7 @@ namespace PG
                     if ((string)btFlambagem.Tag == "1")
                         btFlambagem_Click(btFlambagem, null);
 
-                    formDesenho.Text = "Resultados: " + btDinamica1.AccessibleName;
+                    formDesenho.Text = btDinamica1.AccessibleName;
 
                     this.tabResultados.Controls.Remove(this.panelTipoResultado);
 
@@ -7208,6 +7274,8 @@ namespace PG
                         b.DirtyArestas = true;
                         b.DirtySelecao = true;
                     }
+                    foreach (TBracoRigido b in formDesenho.Estrutura.bracosRigidos)
+                        b.Visivel = false;
 
                     formDesenho.DirtyPortico();
                 }
@@ -7483,6 +7551,8 @@ namespace PG
                         b.DirtyArestas = true;
                         b.DirtySelecao = true;
                     }
+                    foreach (TBracoRigido b in formDesenho.Estrutura.bracosRigidos)
+                        b.Visivel = true;
 
                     btAnimarModo.Tag = "0";
                     btAnimarModo.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
@@ -7511,7 +7581,7 @@ namespace PG
                     if ((string)btDinamica1.Tag == "1")
                         btDinamica1_Click(btDinamica1, null);
 
-                    formDesenho.Text = "Resultados: " + btFlambagem.AccessibleName;
+                    formDesenho.Text = btFlambagem.AccessibleName;
 
                     this.tabResultados.Controls.Remove(this.panelTipoResultado);
                     this.tabResultados.Controls.Add(this.panelModosFlambagem);
@@ -7534,6 +7604,8 @@ namespace PG
                         b.DirtyArestas = true;
                         b.DirtySelecao = true;
                     }
+                    foreach (TBracoRigido b in formDesenho.Estrutura.bracosRigidos)
+                        b.Visivel = false;
 
                     formDesenho.DirtyPortico();
                 }
@@ -7675,22 +7747,91 @@ namespace PG
             escalaDef_anterior = (int)edEscalaFlambagem_UpDown.Value;
         }
 
+        private void btRelatorioFlambagem_Click(object sender, EventArgs e)
+        {
+            var estrutura = formDesenho?.Estrutura;
+            if (necessitaCalculo || estrutura?.PorticoEspacial == null)
+            {
+                MessageBox.Show("Calcule a flambagem linear antes de gerar o relatório.", "Flambagem linear",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            try
+            {
+                string texto = new TRelatoriosResultados().RelatorioFlambagemLinear(
+                    estrutura.PorticoEspacial, estrutura.combinacoes);
+                var relatorio = new FRelatorios
+                {
+                    Text = "Relatório de flambagem linear",
+                    TextoRelatorio = texto,
+                    StartPosition = FormStartPosition.CenterScreen
+                };
+                relatorio.Show(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Relatório de flambagem linear", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void cbModosFlambagem_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if ((string)btAnimarFlambagem.Tag == "1")
+                btAnimarFlambagem_Click(btAnimarFlambagem, null);
+
+            int modo = cbModosFlambagem.SelectedIndex;
+            var portico = formDesenho?.Estrutura?.PorticoEspacial;
+            if (!ConfiguracoesPGi.CfgProjeto.sistema.CalculaModosFlambagem) 
+                return;
+
+            CalcularEscalaModosFlambagem(id_combinacao_flambagem);
+            if (formDesenho.MostraModosFlambagem)
+            {
+                ChamarAtualizacaoResultados(btConfirmaFlambagem, true);
+            }
+        }
+
+        private void button27_Click_1(object sender, EventArgs e)
+        {
+            if (historicoUltimoCalculo == null) return;
+            string texto = historicoUltimoCalculo.ToString();
+            var relatorio = new FRelatorios
+            {
+                Text = "Protocolo do último cálculo",
+                TextoRelatorio = texto,
+                StartPosition = FormStartPosition.CenterScreen
+            };
+            relatorio.Show(this);
+        }
+
+        private void btBracoRigido_Click(object sender, EventArgs e)
+        {
+            formDesenho.ComandoDesenhar(Const.ID_BRACO_RIGIDO, null, arg, Const.ID_INSERCAO_INDIVIDUAL);
+            formDesenho.HabilitaCoords(true);
+        }
+
+        private void btDiafragmaRigido_Click(object sender, EventArgs e)
+        {
+            formDesenho.ComandoDesenhar(Const.ID_DIAFRAGMA_RIGIDO, null, arg, Const.ID_INSERCAO_INDIVIDUAL);
+            formDesenho.HabilitaCoords(true);
+        }
+
         private void btAnimarFlambagem_Click(object sender, EventArgs e)
         {
             if ((formDesenho.MostraModosFlambagem))
             {
-                if ((string)btAnimarModo.Tag == "1")
+                if ((string)btAnimarFlambagem.Tag == "1")
                 {
-                    btAnimarModo.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
-                    btAnimarModo.Tag = "0";
+                    btAnimarFlambagem.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
+                    btAnimarFlambagem.Tag = "0";
                 }
                 else
                 {
-                    btAnimarModo.BackColor = System.Drawing.Color.White;
-                    btAnimarModo.Tag = "1";
+                    btAnimarFlambagem.BackColor = System.Drawing.Color.White;
+                    btAnimarFlambagem.Tag = "1";
                 }
 
-                bool animar = (string)btAnimarModo.Tag == "1";
+                bool animar = (string)btAnimarFlambagem.Tag == "1";
 
                 formDesenho.AnimarModo(animar, formDesenho.FlambagemSolido, formDesenho.fatorFlambagem);
             }

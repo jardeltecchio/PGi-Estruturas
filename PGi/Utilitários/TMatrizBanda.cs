@@ -514,12 +514,21 @@ namespace PG
                         if (decomposicaoOk)
                         {
                             if (fatorar)
-                              decomposicaoOk = alglib.sparsecholeskyfactorize(anals, false, out s, out d, out p);
+                            {
+                                alglib.sparsematrix fatorada;
+                                decomposicaoOk = alglib.sparsecholeskyfactorize(anals, false, out fatorada, out d, out p);
+                                if (decomposicaoOk) s = fatorada;
+                            }
                         }
                         //      decomposicaoOk = alglib.sparsecholesky(s, false);
 
                         if (portico.gerenciador.CalculoCancelado)
                             return -6;
+
+                        if (!decomposicaoOk)
+                            throw new InvalidOperationException(
+                                "Falha na decomposicao de Cholesky. A rigidez pode apresentar um mecanismo " +
+                                "ou condicionamento numérico inadequado. Verifique apoios, conectividade e penalidades dos vínculos.");
 
                         if (decomposicaoOk)
                         {
@@ -537,6 +546,8 @@ namespace PG
                             portico.Atualiza(1);
 
                             alglib.sparsespdcholeskysolve(s, false, ladodireito, out resultado, out rep);
+                            if (rep.terminationtype <= 0)
+                                throw new InvalidOperationException("Falha na solucao de Cholesky: codigo " + rep.terminationtype + ".");
 
                             Application.DoEvents();
                             //  Cholesky_subst(s, nLinhas, ladodireito, ref resultado);

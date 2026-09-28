@@ -83,7 +83,7 @@ namespace PG
             }
 
             gerenciador.formDesenho.AtualizaCargas();
-            gerenciador.formDesenho.Alterou(true);
+            gerenciador.formDesenho.Alterou(false);
             gerenciador.cbCasoCarga.SelectedIndex = ind;
             // gerenciador.AtualizaComboCarga();     
         }
@@ -121,6 +121,7 @@ namespace PG
             gerenciador.formDesenho.CasosCarga.Add(new TCasosCarga(contagem,"Caso " + (contagem+1).ToString(),"",TipoCasoCarga.Permanente, corCaso, SimNao.Sim));
             AtualizaListBox(gerenciador.formDesenho.CasosCarga.Count-1);
             ultSelecao = gerenciador.formDesenho.CasosCarga.Count - 1;
+            gerenciador.formDesenho.Alterou(true, false);
         }
      
         private void button1_Click(object sender, EventArgs e)
@@ -153,6 +154,7 @@ namespace PG
                         gerenciador.formDesenho.CasosCarga.RemoveAt(lbCasos.SelectedIndex);
 
                         Carregar();
+                        gerenciador.formDesenho.Alterou(true, false);
                     }                
             }
         }

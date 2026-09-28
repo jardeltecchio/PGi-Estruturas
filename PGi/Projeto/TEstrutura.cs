@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using TriangleNet.Topology;
 
 namespace PG
@@ -38,6 +39,10 @@ namespace PG
               [NonSerialized]
               public List<TCargaPontual> cargaPontual;
               [NonSerialized]
+              public List<TBracoRigido> bracosRigidos;
+              [NonSerialized]
+              public List<TDiafragmaRigido> diafragmasRigidos;
+              [NonSerialized]
               public List<TCombinacoes> combinacoes;
 
         public Dictionary<string, TLayer> LayersByIdPrincipal, LayersByIdArquitetura;
@@ -57,6 +62,9 @@ namespace PG
             cargaPontual = new List<TCargaPontual>();
             combinacoes = new List<TCombinacoes>();
             PorticoEspacial = new TPorticoEspacial();
+            bracosRigidos = new List<TBracoRigido>();
+            diafragmasRigidos = new List<TDiafragmaRigido>();
+
             this.gerenciador = gerenciador;
             this.CreateStandardLayers();
         }
@@ -99,10 +107,37 @@ namespace PG
                             temApoio = true;
                             break;
                         }
-
                     }
 
-                    if (!temApoio)
+                    bool temBracoRigido = false;
+                    foreach (TBracoRigido a in bracosRigidos)
+                    {
+                        if ((Geom.Iguais(a.pIni.x, b.pIni.x) &&
+                           Geom.Iguais(a.pIni.y, b.pIni.y) &&
+                           Geom.Iguais(a.pIni.z, b.pIni.z))
+
+                           ||
+
+                           (Geom.Iguais(a.pIni.x, b.pFin.x) &&
+                           Geom.Iguais(a.pIni.y, b.pFin.y) &&
+                           Geom.Iguais(a.pIni.z, b.pFin.z))
+                           ||
+
+                           (Geom.Iguais(a.pFin.x, b.pFin.x) &&
+                           Geom.Iguais(a.pFin.y, b.pFin.y) &&
+                           Geom.Iguais(a.pFin.z, b.pFin.z))
+                           ||
+
+                           (Geom.Iguais(a.pFin.x, b.pIni.x) &&
+                           Geom.Iguais(a.pFin.y, b.pIni.y) &&
+                           Geom.Iguais(a.pFin.z, b.pIni.z)))
+                        {
+                            temBracoRigido = true;
+                            break;
+                        }
+                    }
+
+                    if (!temApoio && !temBracoRigido)
                     {
                         b.SetaSelecao(true, true, false);
 
@@ -316,6 +351,8 @@ namespace PG
             cargaLinear = new List<TCargaLinear>();
             cargaPontual = new List<TCargaPontual>();
             combinacoes = new List<TCombinacoes>();
+            bracosRigidos = new List<TBracoRigido>();
+            diafragmasRigidos = new List<TDiafragmaRigido>();
 
             this.gerenciador = gerenciador;
         }
@@ -380,6 +417,14 @@ namespace PG
                 objetos.Add(o);
             foreach (TCargaPontual o in cargaPontual)
                 objetos.Add(o);
+           
+            if (bracosRigidos != null)
+              foreach (TBracoRigido o in bracosRigidos)
+                objetos.Add(o);
+
+            if (diafragmasRigidos != null)
+                foreach (TDiafragmaRigido o in diafragmasRigidos)
+                    objetos.Add(o);
         }
 
         public int GetCountElementosSelecionados()
@@ -414,6 +459,15 @@ namespace PG
                         kk++;
 
             foreach (TCargaPontual obj in cargaPontual)
+                if (obj.Selecionado)
+                    if (obj.ObjetoPrimario)
+                        kk++;
+
+            foreach (TBracoRigido obj in bracosRigidos)
+                if (obj.Selecionado)
+                    if (obj.ObjetoPrimario)
+                        kk++;
+            foreach (TDiafragmaRigido obj in diafragmasRigidos)
                 if (obj.Selecionado)
                     if (obj.ObjetoPrimario)
                         kk++;

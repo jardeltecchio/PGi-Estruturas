@@ -531,7 +531,7 @@ namespace PG
         {
             foreach (TSecao sec in gerenciador.formDesenho.Secoes)
             {
-                double pp = sec.material.PesoEspecifico * sec.propriedades.area / 100; //kgf/m -> kn/m
+                double pp = (sec.material.PesoEspecifico * sec.propriedades.area / 1000000) / 100; //kgf/m -> kn/m
                 sec.PesoProprio = pp;
 
                 foreach (TBarraGenerica b in gerenciador.formDesenho.Estrutura.barras)

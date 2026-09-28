@@ -1,4 +1,5 @@
 ﻿using Microsoft.TeamFoundation.MVVM;
+using MS.WindowsAPICodePack.Internal;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
@@ -872,6 +873,7 @@ namespace PG
                 Estrutura.lajes.RemoveAll(obj => obj.Selecionado);
                 Estrutura.barras.RemoveAll(obj => obj.Selecionado);
                 Estrutura.cargaLinear.RemoveAll(obj => obj.Selecionado);
+                Estrutura.bracosRigidos.RemoveAll(obj => obj.Selecionado);
 
                 /*  bool noConectado = false;
                   foreach (TPonto p in Estrutura.nos)
@@ -2502,7 +2504,8 @@ namespace PG
 
                 if (newobj != null)
                 {
-                    newobj.Layer = Estrutura.LayersByIdPrincipal[newobj.IdLayer];
+                    if (newobj.Layer != null)
+                      newobj.Layer = Estrutura.LayersByIdPrincipal[newobj.IdLayer];
 
                     try
                     {
@@ -3228,12 +3231,12 @@ namespace PG
             return val;
         }
 
-        public void MouseDrawing(double x, double y, double z, bool addTextos = true)
+        public void MouseDrawing(double x, double y, double z, bool addTextos = true, string comando = "")
         {
             try
             {
                 point = null;
-                string cmd = string.Empty;
+                string cmd = comando;
 
                 point = new TPonto(x, y, z, pixelX(x), pixelY(y), -1);
 
@@ -3365,15 +3368,17 @@ namespace PG
                             if (IdObjetoDesenho == Const.ID_BARRAGENERICA)
                                 Atualiza_Segmentos_e_Snap();
                         }
-                    }
-                  //  AtualizaConfiguracoes3D();
 
-                    if (undoBuffer.CanCapture)
-                    {
-                        undoBuffer.AdicionaComando(new ComandoAdicionar(ObjetosAdicionados, comandosMover));
-                        comandosMover.Clear();
-                        ObjetosAdicionados.Clear();
+                        if (result != eObjetoDesenhoMouseDown.Continue)
+                            if (undoBuffer.CanCapture)
+                            {
+                                undoBuffer.AdicionaComando(new ComandoAdicionar(ObjetosAdicionados, comandosMover));
+                                comandosMover.Clear();
+                                ObjetosAdicionados.Clear();
+                            }
                     }
+                    //  AtualizaConfiguracoes3D();
+
                 }
 
                 NovaCoordZ = false;
@@ -3909,6 +3914,18 @@ namespace PG
                     }*/
 
                     Atualiza_pIni_pFin_das_Barras_e_Cargas();
+                }
+                else
+                if (obj.Tipo == Const.ID_BRACO_RIGIDO)
+                {
+                    Estrutura.bracosRigidos.Add(obj as TBracoRigido);
+                    (obj as TBracoRigido).ID = Estrutura.bracosRigidos.Max(o => o.ID) + 1;
+                }
+                else
+                if (obj.Tipo == Const.ID_DIAFRAGMA_RIGIDO)
+                {
+                    Estrutura.diafragmasRigidos.Add(obj as TDiafragmaRigido);
+                    (obj as TDiafragmaRigido).ID = Estrutura.diafragmasRigidos.Max(o => o.ID) + 1;
                 }
                 else
                 if (obj.Tipo == Const.ID_CARGA_PONTUAL)
@@ -5233,10 +5250,16 @@ namespace PG
 
                 if (animar)
                 {
-                    if (solido)
+                    if (solido && MostraModosVibracao)
                     {
                         incrementosAnimacao = 10;
                         this.timer1.Interval = 50;
+                    }
+                    else
+                    if (solido && MostraModosFlambagem)
+                    {
+                        incrementosAnimacao = 35;
+                        this.timer1.Interval = 20;
                     }
                     else
                     {
@@ -5324,8 +5347,8 @@ namespace PG
 
                     if (DeformacaoSolida)
                     {
-                        incrementosAnimacao = 10;
-                        this.timer1.Interval = 100;
+                        incrementosAnimacao = 14;
+                        this.timer1.Interval = 70;
                     }
                     else
                     {
@@ -6173,6 +6196,21 @@ namespace PG
                     coords_arestas.AddRange(b.BatchArestas);
 
               //      b.Preenche_Arestas(ref coords_arestas, ref Arestas, ref ArestasConfObjeto, ref Unifilar);
+                }
+
+                foreach (TBracoRigido b in Estrutura.bracosRigidos)
+                {
+                 //   if (b.DirtyArestas)
+                    b.AtualizaArestas();
+
+                    coords_arestas.AddRange(b.BatchArestas);
+                }
+
+                foreach (TDiafragmaRigido b in Estrutura.diafragmasRigidos)
+                {
+                    b.AtualizaArestas();
+
+                    coords_arestas.AddRange(b.BatchArestas);
                 }
 
                 foreach (TApoio b in Estrutura.apoios)
@@ -9318,7 +9356,7 @@ namespace PG
                                 {
                                     x1 = barAtual.pIni_Offset.x;
                                     y1 = -barAtual.pIni_Offset.y;
-                                    z1 =- barAtual.pIni_Offset.z;
+                                    z1 = -barAtual.pIni_Offset.z;
                                     x2 = barAtual.pFin_Offset.x;
                                     y2 = -barAtual.pFin_Offset.y;
                                     z2 = -barAtual.pFin_Offset.z;
@@ -9341,14 +9379,6 @@ namespace PG
                             a.y = ViewPortSelecao[3] - zy1 ;
                             b.x = zx2;
                             b.y = ViewPortSelecao[3] - zy2;
-
-                          /*  a.x = RetPixelX(ref x1, ref y1, ref z1, ref z_pixel1);
-                            a.y = RetPixelY(ref x1, ref y1, ref z1, ref z_pixel2);
-                            b.x = RetPixelX(ref x2, ref y2, ref z2, ref z_pixel3);
-                            b.y = RetPixelY(ref x2, ref y2, ref z2, ref z_pixel4);*/
-
-                            //      if ((z_pixel1 > 1 || z_pixel1 < 0) && z_pixel2 > 1 || z_pixel2 < 0 && z_pixel3 > 1 && z_pixel3 < 0 && z_pixel4 > 1 && z_pixel4 < 0)
-                            //     continue;
 
                             c.x = RetanguloSelecao2[0].x;
                             c.y = RetanguloSelecao2[0].y;
@@ -9462,6 +9492,67 @@ namespace PG
                             {
                                 o.SetaSelecao(true, true);
                                 ObjetosSelecionados.Add((o as TPonto));
+                            }
+                        }
+
+                        foreach (TBracoRigido o in Estrutura.bracosRigidos)
+                        {
+                            selec = false;
+
+                            if (!o.Visivel) continue;
+
+                            p1 = new Vector3d(o.pIni.x, o.pIni.y, o.pIni.z);
+                            p2 = new Vector3d(o.pFin.x, o.pFin.y, o.pFin.z);
+
+                            double zx1 = 0, zy1 = 0, zx2 = 0, zy2 = 0;
+
+                            if (!Clipper3D.ProjetarLinhaSelecao(View_x_Proj, cameraPerspectiva, p1, p2, out zx1, out zy1, out zx2, out zy2))
+                                continue;
+
+                            a.x = zx1;//RetPixelX(ref o.setas[o.qtdSetas].l_principal.p1.x, ref o.setas[o.qtdSetas].l_principal.p1.y, ref o.setas[o.qtdSetas].l_principal.p1.z, ref z_pixel1);
+                            a.y = ViewPortSelecao[3] - zy1;//RetPixelY(ref o.setas[o.qtdSetas].l_principal.p1.x, ref o.setas[o.qtdSetas].l_principal.p1.y, ref o.setas[o.qtdSetas].l_principal.p1.z, ref z_pixel2);
+                            b.x = zx2;//RetPixelX(ref o.setas[0].l_principal.p1.x, ref o.setas[0].l_principal.p1.y, ref o.setas[0].l_principal.p1.z, ref z_pixel3);
+                            b.y = ViewPortSelecao[3] - zy2;//RetPixelY(ref o.setas[0].l_principal.p1.x, ref o.setas[0].l_principal.p1.y, ref o.setas[0].l_principal.p1.z, ref z_pixel4);
+
+                            c.x = RetanguloSelecao2[0].x;
+                            c.y = RetanguloSelecao2[0].y;
+                            d.x = RetanguloSelecao2[1].x;
+                            d.y = RetanguloSelecao2[1].y;
+
+                            if (Geom.calcIntersecEQU_RETA(ref a, ref b, ref c, ref d, ref intersec))
+                                selec = true;
+
+                            c.x = RetanguloSelecao2[0].x;
+                            c.y = RetanguloSelecao2[0].y;
+                            d.x = RetanguloSelecao2[3].x;
+                            d.y = RetanguloSelecao2[3].y;
+
+                            if (Geom.calcIntersecEQU_RETA(ref a, ref b, ref c, ref d, ref intersec))
+                                selec = true;
+
+                            c.x = RetanguloSelecao2[1].x;
+                            c.y = RetanguloSelecao2[1].y;
+                            d.x = RetanguloSelecao2[2].x;
+                            d.y = RetanguloSelecao2[2].y;
+
+                            if (Geom.calcIntersecEQU_RETA(ref a, ref b, ref c, ref d, ref intersec))
+                                selec = true;
+
+                            c.x = RetanguloSelecao2[2].x;
+                            c.y = RetanguloSelecao2[2].y;
+                            d.x = RetanguloSelecao2[3].x;
+                            d.y = RetanguloSelecao2[3].y;
+
+                            if (Geom.calcIntersecEQU_RETA(ref a, ref b, ref c, ref d, ref intersec))
+                                selec = true;
+
+                            if (PontoEmRetanguloSelecao(a.x, a.y) && PontoEmRetanguloSelecao(b.x, b.y))
+                                selec = true;
+
+                            if (selec)
+                            {
+                                o.SetaSelecao(true, true);
+                                ObjetosSelecionados.Add((o as TBracoRigido));
                             }
                         }
 
@@ -9744,6 +9835,24 @@ namespace PG
                                 }
                             }
                         };
+
+                        foreach (TBracoRigido o in Estrutura.bracosRigidos)
+                        {
+                            selec = false;
+
+                            if (!o.Visivel) continue;
+
+                                a.x = RetPixelX(ref o.pIni.x, ref o.pIni.y, ref o.pIni.z, ref z_pixel1);
+                                a.y = RetPixelY(ref o.pIni.x, ref o.pIni.y, ref o.pIni.z, ref z_pixel2);
+                                b.x = RetPixelX(ref o.pFin.x, ref o.pFin.y, ref o.pFin.z, ref z_pixel3);
+                                b.y = RetPixelY(ref o.pFin.x, ref o.pFin.y, ref o.pFin.z, ref z_pixel4);
+
+                            if (PontoEmRetanguloSelecao(a.x, a.y) && PontoEmRetanguloSelecao(b.x, b.y))
+                            {
+                                o.SetaSelecao(true, true);
+                                ObjetosSelecionados.Add((o as TBracoRigido));
+                            }
+                        }
 
                         foreach (TCargaLinear o in Estrutura.cargaLinear)
                         {
@@ -11128,7 +11237,16 @@ namespace PG
         void ConfirmaCoordenada()
         {
             if (tipoComando == eTipoComando.draw)
-                MouseDrawing(mousepoint.x, mousepoint.y, mousepoint.z);
+            {
+                string comando = "";
+                if (ObjetoNovo!= null)
+                if (ObjetoNovo.Tipo == Const.ID_DIAFRAGMA_RIGIDO)
+                {
+                    comando = "finalizar";
+                }
+
+                MouseDrawing(mousepoint.x, mousepoint.y, mousepoint.z,true, comando);
+            }
             else
             if (tipoComando == eTipoComando.edit)
                 MouseEdit(mousepoint.x, mousepoint.y, mousepoint.z, 0, "", 0);
@@ -11372,6 +11490,14 @@ namespace PG
                 }
             }
 
+            foreach (TBracoRigido b in Estrutura.bracosRigidos)
+            {
+                b.Visivel = false;
+
+                if (b.Selecionado)
+                    b.Visivel = true;
+            }
+
             foreach (TApoio b in Estrutura.apoios)
             {
                 b.Visivel = false;
@@ -11437,7 +11563,15 @@ namespace PG
                     b.Selecionado = false;
                 }
             }
-
+            foreach (TBracoRigido b in Estrutura.bracosRigidos)
+            {
+                //    b.Visivel = true;
+                if (b.Selecionado)
+                {
+                    b.Visivel = false;
+                    b.Selecionado = false;
+                }
+            }
             if (MostraTextoDiagramas)
                 if (fx || my || mz || mx || fy || fz)
                 {
@@ -11472,7 +11606,10 @@ namespace PG
 
             foreach (TApoio b in Estrutura.apoios)
                 b.Visivel = true;
-           
+
+            foreach (TBracoRigido b in Estrutura.bracosRigidos)
+                b.Visivel = true;
+
             foreach (TObjetoDesenho o in Estrutura.objetos)
                 o.Visivel = true;
 

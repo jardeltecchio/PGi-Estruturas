@@ -180,6 +180,7 @@ namespace PG
 
             gerenciador.formDesenho.Estrutura.combinacoes.Add(new TCombinacoes(contagem, "Combinação " + contagem.ToString(), "C" + contagem.ToString(), TipoEstadoLimite.ELU, categoria));
             AtualizaListBox(contagem, categoria);
+            gerenciador.formDesenho.Alterou(true, false);
         }
 
         private void pg_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
@@ -229,6 +230,8 @@ namespace PG
                         }
                         else
                             AtualizaListBox(-1, CategoriaAtual);
+
+                        gerenciador.formDesenho.Alterou(true, false);
                     }
                 }
         }
@@ -279,6 +282,8 @@ namespace PG
             AtualizaListBox(contagem, categoria);
 
             AtuDescricao();
+
+            gerenciador.formDesenho.Alterou(true, false);
         }
         void FiltrarCategoria(CategoriaCombinacao categoria)
         {

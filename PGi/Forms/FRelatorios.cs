@@ -19,7 +19,11 @@ namespace PG
 
         public string TextoRelatorio
         {
-            get { return edRelatorio.Text; }
+            get 
+            { 
+                return edRelatorio.Text; 
+            }
+
             set
             {
                 edRelatorio.Text = value ?? string.Empty;

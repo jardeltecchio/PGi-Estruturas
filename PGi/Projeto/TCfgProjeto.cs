@@ -76,6 +76,7 @@ namespace PG
     {
         public TConfiguracoesPGi cfg;
         public List<TBarraGenerica> barras;
+        public List<TBracoRigido> bracosRigidos;
         public List<TCasosCarga> casos;
         public List<TCargaLinear> cargalinear;
         public List<TCargaPontual> cargapontual;
@@ -86,10 +87,13 @@ namespace PG
       //  public string caminho;
 
         public TArquivo(List<TApoio> _apoios, List<TSecao> _secoes, TEstrutura _estrutura, List<TCargaPontual> _cargapontual,
-            List<TCargaLinear> _cargalinear, List<TCasosCarga> _casos, List<TCombinacoes> _combinacoes, List<TBarraGenerica> _barras, TConfiguracoesPGi _cfg)
+            List<TCargaLinear> _cargalinear, List<TCasosCarga> _casos, List<TCombinacoes> _combinacoes, List<TBarraGenerica> _barras, 
+            List<TBracoRigido> bracosrigidos,
+            TConfiguracoesPGi _cfg)
         {
             this.apoios = _apoios;
-            this.secoes = _secoes;   
+            this.secoes = _secoes;
+            this.bracosRigidos = bracosrigidos;
             cargalinear = _cargalinear; 
             cargapontual = _cargapontual;
             this.barras = _barras;  
@@ -190,16 +194,22 @@ namespace PG
         }
     }
 
+    public enum MetodoVinculosMPC { Eliminacao = 0, Penalidade = 1 }
+
     [Serializable]
     public class SSistema
     {
-        public bool CalculaModosVibracao, CalculaModosFlambagem, Solver_cholesky_supernodal, Solver_gradiente_conjugado, Solver_choleskypadrao,UsarDll,
+        [System.Runtime.Serialization.OptionalField]
+        public MetodoVinculosMPC MetodoMPC; // Zero tambem e o padrao de arquivos anteriores.
+        public bool CalculaModosVibracao, CalculaModosFlambagem, Solver_Lanczos, Solver_IteracaoSubEspaco, Solver_cholesky_supernodal, Solver_gradiente_conjugado, Solver_choleskypadrao,UsarDll,
             Interromper_calculo_elementos_sobrepostos,Interromper_calculo_conexao_perdida;
         public int toleranciaConexaoPerdida, numeroModosVibracao, numeroModosFlambagem;
         public SSistema(bool padrao = true)
         {
             Solver_cholesky_supernodal = true;
             Solver_choleskypadrao = false;
+            Solver_Lanczos = true;
+            Solver_IteracaoSubEspaco = false;
             Solver_gradiente_conjugado = false;
             UsarDll = false;
             Interromper_calculo_conexao_perdida = true;

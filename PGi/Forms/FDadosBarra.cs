@@ -1060,7 +1060,7 @@ namespace PG
             if (multi && cbSecoes.SelectedIndex == 0) // primeiro item selecionado '<>'
                 return;
 
-            if (cbSecoes.Items.Count > 0)
+            if (cbSecoes.Items.Count > 0 && cbSecoes.SelectedIndex > -1)
             {
                 int sel = cbSecoes.SelectedIndex;
                 if (gerenciador.formDesenho.Barras.Exists(p => p.Dados.secao.id == secao_click.id))

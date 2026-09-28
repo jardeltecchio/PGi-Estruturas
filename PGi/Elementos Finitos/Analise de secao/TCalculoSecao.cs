@@ -889,7 +889,7 @@ namespace PG
             else
                 propriedades.anguloEixosPrincipais = 0;
 
-         //   propriedades.anguloEixosPrincipais *= -1;
+            propriedades.anguloEixosPrincipais *= -1;
 
             return propriedades.anguloEixosPrincipais;
         }

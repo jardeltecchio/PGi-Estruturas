@@ -216,7 +216,9 @@ namespace PG
         public const string ID_PILAR     = "pilar";
         public const string ID_LAJE      = "laje";
         public const string ID_TRECHOVIGA = "trecho viga";
-        public const string ID_BARRAGENERICA = "barra generica"; 
+        public const string ID_BARRAGENERICA = "barra generica";
+        public const string ID_BRACO_RIGIDO = "braco rigido";
+        public const string ID_DIAFRAGMA_RIGIDO = "diafragma rigido";
         public const string ID_APOIO = "apoio";
         public const string ID_COTA = "cota";
 
@@ -281,6 +283,11 @@ namespace PG
         public const string CMD_BARRA_2_P = "Novo membro - Selecione o segundo ponto";
         
         public const string CMD_APOIO_1_P = "Apoio - Selecione o(s) nó(s)";
+
+        public const string CMD_BRACORIGIDO_1_P = "Braço rígido - Selecione o nó mestre";
+        public const string CMD_BRACORIGIDO_2_P = "Braço rígido - Selecione o nó escravo";
+
+        public const string CMD_DIAFRAGMA_RIGIDO_1_P = "Diafragma - Selecione os nós de contorno e aperte enter para confirmar";
 
         public const string CMD_LAJE_1_P = "Laje - Clique em um ponto interno à laje";
         public const string CMD_LAJE_2_P = "Laje - Indique a posição do título";

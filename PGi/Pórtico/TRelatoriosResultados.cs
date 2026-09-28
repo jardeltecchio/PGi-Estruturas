@@ -9,6 +9,43 @@ namespace PG
 {
     public class TRelatoriosResultados
     {
+        public string RelatorioFlambagemLinear(TPorticoEspacial portico, IEnumerable<TCombinacoes> combinacoes)
+        {
+            if (portico?.ResultadosFlambagem == null || combinacoes == null)
+                throw new InvalidOperationException("Calcule a flambagem linear antes de gerar o relatório.");
+            var resultados = portico.ResultadosFlambagem.Where(r => r.EhCombinacao).ToList();
+            if (resultados.Count == 0)
+                throw new InvalidOperationException("Não existem resultados de flambagem para combinações.");
+            var descricoes = combinacoes.ToList();
+            var cultura = CultureInfo.GetCultureInfo("pt-BR");
+            var texto = new StringBuilder();
+            texto.AppendLine("RELATÓRIO DE FLAMBAGEM LINEAR");
+            texto.AppendLine();
+            const string formato = "{0,6} | {1,26}";
+            string cabecalho = string.Format(formato, "Modo", "Multiplicador crítico");
+            foreach (var resultado in resultados)
+            {
+                var combinacao = descricoes.FirstOrDefault(c => c.Id == resultado.IdReferencia);
+                texto.AppendLine();
+                texto.AppendLine($"Combinação ID {resultado.IdReferencia} — {combinacao?.Descricao ?? "Descrição indisponível"}");
+                texto.AppendLine();
+                if (!resultado.Convergiu)
+                    texto.AppendLine("Não concluída: " + (resultado.Erro ?? "Modos sem convergência."));
+                else if (resultado.Multiplicadores == null || resultado.Multiplicadores.Length == 0 ||
+                    resultado.Multiplicadores.Any(v => !(v > 0) || double.IsInfinity(v)))
+                    texto.AppendLine("Resultados incompletos ou inválidos. Recalcule esta combinação.");
+                else
+                {
+                    texto.AppendLine(cabecalho);
+                    texto.AppendLine(new string('-', cabecalho.Length));
+                    for (int modo = 0; modo < resultado.Multiplicadores.Length; modo++)
+                        texto.AppendLine(string.Format(cultura, formato, modo + 1,
+                            resultado.Multiplicadores[modo].ToString("F6", cultura)));
+                }
+                texto.AppendLine();
+            }
+            return texto.ToString();
+        }
 
         public string RelatorioAnaliseModal(TPorticoEspacial portico)
         {

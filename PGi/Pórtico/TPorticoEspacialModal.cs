@@ -18,6 +18,7 @@ namespace PG
         public double[] MassasTotaisBarras { get; private set; }
         public double MassaTotalEstrutura { get; private set; }
         public alglib.sparsematrix MatrizMassa { get; private set; }
+        private alglib.sparsematrix massaAntesMPC;
         public double ErroMaximoSimetriaRigidez { get; private set; }
         public double ErroMaximoSimetriaMassa { get; private set; }
         public List<double[]> BaseLanczos { get; private set; }
@@ -43,7 +44,7 @@ namespace PG
             double[] massasModais = new double[numModos];
             for (int modo = 0; modo < numModos; modo++)
             {
-                double[] phi = new double[portico.NLinhas];
+                double[] phi = new double[portico.OrdemSistemaMPC];
                 for (int i = 0; i < phi.Length; i++) phi[i] = ModosVibracao[i, modo];
                 massasModais[modo] = ProdutoInternoMassa(phi, phi);
                 if (massasModais[modo] <= 0.0)
@@ -56,7 +57,7 @@ namespace PG
             {
                 double[] influencia = new double[portico.NLinhas];
                 bool possuiGlLivre = false;
-                for (int gl = glPorDirecao[direcao]; gl <= portico.Ngl; gl += 6)
+                for (int gl = glPorDirecao[direcao]; gl <= portico.nNos * 6; gl += 6)
                     if (!portico.glRestrito[gl])
                     {
                         influencia[portico.id[gl] - 1] = 1.0;
@@ -64,8 +65,10 @@ namespace PG
                     }
                 if (!possuiGlLivre) 
                     continue;
-                double[] massaInfluencia = MultiplicarMassa(influencia);
+                double[] massaInfluencia = new double[portico.NLinhas];
+                alglib.sparsemv(massaAntesMPC ?? MatrizMassa, influencia, ref massaInfluencia);
                 double massaDirecao = ProdutoEscalar(influencia, massaInfluencia);
+                massaInfluencia = portico.ReduzirForcasMPC(massaInfluencia);
                 
                 if (massaDirecao <= 0.0 || double.IsNaN(massaDirecao) || double.IsInfinity(massaDirecao))
                     throw new InvalidOperationException("Massa de referência inválida na participação modal.");
@@ -73,7 +76,7 @@ namespace PG
                 for (int modo = 0; modo < numModos; modo++)
                 {
                     double projecao = 0.0;
-                    for (int i = 0; i < influencia.Length; i++)
+                    for (int i = 0; i < massaInfluencia.Length; i++)
                         projecao += ModosVibracao[i, modo] * massaInfluencia[i];
                     // 100 * (phi^T M r)^2 / [(phi^T M phi) * (r^T M r)].
                     double razao = (projecao / Math.Sqrt(massasModais[modo])) / Math.Sqrt(massaDirecao);
@@ -185,7 +188,7 @@ namespace PG
 
         private void MontarMatrizMassa()
         {
-            if (portico.NLinhas <= 0)
+            if (portico.OrdemSistemaMPC <= 0)
                 throw new InvalidOperationException(
                     "O pórtico não possui graus de liberdade livres.");
 
@@ -238,7 +241,8 @@ namespace PG
             }
 
             alglib.sparseconverttocrs(matrizMassa);
-            MatrizMassa = matrizMassa;
+            massaAntesMPC = matrizMassa;
+            MatrizMassa = portico.ReduzirMatrizMPC(matrizMassa);
         }
 
         private double VerificarMatrizSimetrica(
@@ -253,10 +257,10 @@ namespace PG
             int numeroLinhas = alglib.sparsegetnrows(matriz);
             int numeroColunas = alglib.sparsegetncols(matriz);
 
-            if (numeroLinhas != portico.NLinhas || numeroColunas != portico.NLinhas)
+            if (numeroLinhas != portico.OrdemSistemaMPC || numeroColunas != portico.OrdemSistemaMPC)
                 throw new InvalidOperationException(
                     $"A matriz {nome} possui dimensão {numeroLinhas}x{numeroColunas}; " +
-                    $"era esperada a dimensão {portico.NLinhas}x{portico.NLinhas}.");
+                    $"era esperada a dimensão {portico.OrdemSistemaMPC}x{portico.OrdemSistemaMPC}.");
 
             double maiorErroAbsoluto = 0.0;
             int cursor1 = 0;
@@ -294,7 +298,7 @@ namespace PG
                 throw new InvalidOperationException(
                     $"A matriz {nome} não possui coeficientes não nulos.");
 
-            for (int i = 0; i < portico.NLinhas; i++)
+            for (int i = 0; i < portico.OrdemSistemaMPC; i++)
             {
                 double diagonal = alglib.sparsegetdiagonal(matriz, i);
 
@@ -302,6 +306,9 @@ namespace PG
                     throw new InvalidOperationException(
                         $"A matriz {nome} possui diagonal inválida em [{i},{i}].");
 
+                // Mestres auxiliares do diafragma nao possuem massa fisica.
+                if (diagonal == 0.0 && nome == "de massa" && portico.EquacaoAuxiliarMPC(i))
+                    continue;
                 if (diagonal <= 0.0)
                     throw new InvalidOperationException(
                         $"A matriz {nome} possui diagonal não positiva em [{i},{i}]: {diagonal}.");
@@ -316,10 +323,10 @@ namespace PG
                 throw new InvalidOperationException(
                     "A matriz de rigidez esparsa do pórtico não foi montada.");
 
-            if (numModos > portico.NLinhas)
+            if (numModos > portico.OrdemSistemaMPC)
                 throw new InvalidOperationException(
                     $"Foram solicitados {numModos} modos, mas o sistema possui apenas " +
-                    $"{portico.NLinhas} graus de liberdade livres.");
+                    $"{portico.OrdemSistemaMPC} graus de liberdade livres.");
 
             const double toleranciaSimetria = 1e-10;
 
@@ -355,10 +362,10 @@ namespace PG
                 throw new InvalidOperationException(
                     "Não foi possível analisar a matriz de rigidez para a fatoração de Cholesky.");
 
-            double[] diagonal = new double[portico.NLinhas];
-            int[] permutacao = new int[portico.NLinhas];
+            double[] diagonal = new double[portico.OrdemSistemaMPC];
+            int[] permutacao = new int[portico.OrdemSistemaMPC];
 
-            for (int i = 0; i < portico.NLinhas; i++)
+            for (int i = 0; i < portico.OrdemSistemaMPC; i++)
             {
                 diagonal[i] = 1.0;
                 permutacao[i] = i;
@@ -389,9 +396,9 @@ namespace PG
                 throw new InvalidOperationException(
                     "A matriz de rigidez deve ser fatorada antes da solução.");
 
-            if (ladoDireito == null || ladoDireito.Length != portico.NLinhas)
+            if (ladoDireito == null || ladoDireito.Length != portico.OrdemSistemaMPC)
                 throw new ArgumentException(
-                    $"O vetor deve possuir {portico.NLinhas} componentes.",
+                    $"O vetor deve possuir {portico.OrdemSistemaMPC} componentes.",
                     nameof(ladoDireito));
 
             double[] resultado;
@@ -420,9 +427,9 @@ namespace PG
 
         private void ValidarVetorModal(double[] vetor, string nome)
         {
-            if (vetor == null || vetor.Length != portico.NLinhas)
+            if (vetor == null || vetor.Length != portico.OrdemSistemaMPC)
                 throw new ArgumentException(
-                    $"O vetor {nome} deve possuir {portico.NLinhas} componentes.",
+                    $"O vetor {nome} deve possuir {portico.OrdemSistemaMPC} componentes.",
                     nameof(vetor));
 
             for (int i = 0; i < vetor.Length; i++)
@@ -441,7 +448,7 @@ namespace PG
                 throw new InvalidOperationException(
                     "A matriz de massa deve ser montada antes da multiplicação.");
 
-            double[] resultado = new double[portico.NLinhas];
+            double[] resultado = new double[portico.OrdemSistemaMPC];
             alglib.sparsemv(MatrizMassa, vetor, ref resultado);
 
             ValidarVetorModal(resultado, "resultante da matriz de massa");
@@ -456,7 +463,7 @@ namespace PG
             double[] massaVetor2 = MultiplicarMassa(vetor2);
             double produto = 0.0;
 
-            for (int i = 0; i < portico.NLinhas; i++)
+            for (int i = 0; i < portico.OrdemSistemaMPC; i++)
                 produto += vetor1[i] * massaVetor2[i];
 
             if (double.IsNaN(produto) || double.IsInfinity(produto))
@@ -483,9 +490,9 @@ namespace PG
             ValidarVetorModal(vetor, "a normalizar");
 
             double norma = NormaMassa(vetor);
-            double[] normalizado = new double[portico.NLinhas];
+            double[] normalizado = new double[portico.OrdemSistemaMPC];
 
-            for (int i = 0; i < portico.NLinhas; i++)
+            for (int i = 0; i < portico.OrdemSistemaMPC; i++)
                 normalizado[i] = vetor[i] / norma;
 
             return normalizado;
@@ -520,7 +527,7 @@ namespace PG
             // Semente fixa: resultados reproduzíveis e baixa chance de o vetor
             // ser ortogonal a algum dos primeiros modos.
             Random gerador = new Random(19790619);
-            double[] vetorInicial = new double[portico.NLinhas];
+            double[] vetorInicial = new double[portico.OrdemSistemaMPC];
 
             for (int i = 0; i < vetorInicial.Length; i++)
                 vetorInicial[i] = gerador.NextDouble() - 0.5;
@@ -556,14 +563,14 @@ namespace PG
         {
             Convergiu = false;
             int proximaVerificacao = Math.Min(
-                portico.NLinhas,
+                portico.OrdemSistemaMPC,
                 Math.Max(numModos + 8, 2 * numModos));
             if (LimiteVetoresLanczos < 0 ||
                 (LimiteVetoresLanczos > 0 && LimiteVetoresLanczos < numModos))
                 throw new InvalidOperationException("O limite de vetores deve ser zero (automático) ou pelo menos o número de modos.");
             if (LimiteTempoLanczos <= TimeSpan.Zero)
                 throw new InvalidOperationException("O limite de tempo do Lanczos deve ser positivo.");
-            int numeroMaximoVetores = (int)Math.Min(portico.NLinhas,
+            int numeroMaximoVetores = (int)Math.Min(portico.OrdemSistemaMPC,
                 LimiteVetoresLanczos == 0 ? Math.Max(300L, 20L * numModos) : LimiteVetoresLanczos);
             proximaVerificacao = Math.Min(proximaVerificacao, numeroMaximoVetores);
             var cronometro = System.Diagnostics.Stopwatch.StartNew();
@@ -577,6 +584,9 @@ namespace PG
             List<double> subdiagonal = new List<double>();
 
             double[] qAtual = CriarVetorInicialLanczos();
+            // Elimina do vetor inicial os movimentos arbitrarios dos mestres sem massa.
+            if (portico.Ngl > portico.nNos * 6)
+                qAtual = NormalizarPelaMassa(AplicarOperadorShiftInvert(qAtual));
             double[] massaQAtual = MultiplicarMassa(qAtual);
             double[] qAnterior = null;
             double betaAnterior = 0.0;
@@ -619,6 +629,31 @@ namespace PG
 
                 double beta = Math.Sqrt(betaQuadrado);
 
+                // A eliminacao exata pode revelar autovalores repetidos sem a
+                // perturbacao da penalidade. Inicia outro bloco ortogonal.
+                if (portico.UsaEliminacaoMPC && beta <= toleranciaQuebra && baseLanczos.Count < numeroMaximoVetores)
+                {
+                    var aleatorio = new Random(1729 + iteracao);
+                    double[] reinicio = null;
+                    for (int tentativa = 0; tentativa < 8 && reinicio == null; tentativa++)
+                    {
+                        var candidato = new double[portico.OrdemSistemaMPC];
+                        for (int g = 0; g < candidato.Length; g++) candidato[g] = aleatorio.NextDouble() - 0.5;
+                        var mc = ReortogonalizarLanczos(candidato, baseLanczos, massasBaseLanczos);
+                        double norma2 = ProdutoEscalar(candidato, mc);
+                        if (norma2 > 1e-20) reinicio = NormalizarPelaMassa(candidato);
+                    }
+                    if (reinicio != null)
+                    {
+                        subdiagonal.Add(0);
+                        qAtual = reinicio;
+                        massaQAtual = MultiplicarMassa(qAtual);
+                        qAnterior = null;
+                        betaAnterior = 0;
+                        continue;
+                    }
+                }
+
                 bool fimDaBase = iteracao + 1 >= numeroMaximoVetores || beta <= toleranciaQuebra;
                 if (baseLanczos.Count >= numModos &&
                     (baseLanczos.Count >= proximaVerificacao || fimDaBase))
@@ -643,7 +678,7 @@ namespace PG
                     if (Convergiu)
                         return;
                     
-                    if (baseLanczos.Count >= numeroMaximoVetores && numeroMaximoVetores < portico.NLinhas)
+                    if (baseLanczos.Count >= numeroMaximoVetores && numeroMaximoVetores < portico.OrdemSistemaMPC)
                     {
                         double maiorResiduo = 0.0;
                         foreach (double residuo in ResiduosRelativos)
@@ -668,9 +703,9 @@ namespace PG
 
                 subdiagonal.Add(beta);
 
-                double[] proximoQ = new double[portico.NLinhas];
+                double[] proximoQ = new double[portico.OrdemSistemaMPC];
 
-                for (int i = 0; i < portico.NLinhas; i++)
+                for (int i = 0; i < portico.OrdemSistemaMPC; i++)
                 {
                     proximoQ[i] = z[i] / beta;
                 }
@@ -760,7 +795,7 @@ namespace PG
             double[] autovalores = new double[numModos];
             double[] angulares = new double[numModos];
             double[] frequencias = new double[numModos];
-            double[,] modos = new double[portico.NLinhas, numModos];
+            double[,] modos = new double[portico.OrdemSistemaMPC, numModos];
 
             for (int modo = 0; modo < numModos; modo++)
             {
@@ -772,13 +807,17 @@ namespace PG
                         "Foi obtido autovalor inválido ao recuperar os modos estruturais.");
 
                 // phi = Q y: combinação dos vetores da base de Lanczos.
-                double[] phi = new double[portico.NLinhas];
+                double[] phi = new double[portico.OrdemSistemaMPC];
                 for (int j = 0; j < BaseLanczos.Count; j++)
                     SomarMultiplo(phi, BaseLanczos[j], AutovetoresReduzidos[j, modo]);
 
+                // A metrica de massa nao detecta deriva nas coordenadas auxiliares.
+                // Reaplicar K^-1 M recupera seu equilibrio sem inventar massa.
+                if (portico.Ngl > portico.nNos * 6)
+                    phi = AplicarOperadorShiftInvert(phi);
                 phi = NormalizarPelaMassa(phi);
                 ValidarVetorModal(phi, "modal normalizado");
-                for (int linha = 0; linha < portico.NLinhas; linha++)
+                for (int linha = 0; linha < portico.OrdemSistemaMPC; linha++)
                     modos[linha, modo] = phi[linha];
 
                 autovalores[modo] = lambda;
@@ -798,7 +837,7 @@ namespace PG
             ResiduosRelativos = null;
             ModosConvergidos = null;
             if (Autovalores == null || Autovalores.Length != numModos ||
-                ModosVibracao == null || ModosVibracao.GetLength(0) != portico.NLinhas ||
+                ModosVibracao == null || ModosVibracao.GetLength(0) != portico.OrdemSistemaMPC ||
                 ModosVibracao.GetLength(1) != numModos)
                 throw new InvalidOperationException("Os modos devem ser recuperados antes de verificar a convergência.");
 
@@ -807,7 +846,7 @@ namespace PG
             int primeiroNaoConvergido = -1;
             for (int modo = 0; modo < numModos; modo++)
             {
-                double[] phi = new double[portico.NLinhas];
+                double[] phi = new double[portico.OrdemSistemaMPC];
                 for (int i = 0; i < phi.Length; i++)
                     phi[i] = ModosVibracao[i, modo];
                 ValidarVetorModal(phi, "da verificação de convergência");
@@ -854,11 +893,46 @@ namespace PG
                 throw new InvalidOperationException(
                     $"O modo {primeiroNaoConvergido + 1} não convergiu: resíduo relativo " +
                     $"{residuos[primeiroNaoConvergido]:E3}, tolerância {ToleranciaConvergencia:E3}. " +
-                    $"Base com {BaseLanczos?.Count ?? 0} vetores para {portico.NLinhas} graus de liberdade; " +
+                    $"Base com {BaseLanczos?.Count ?? 0} vetores para {portico.OrdemSistemaMPC} graus de liberdade; " +
                     "o Lanczos esgotou a base disponível ou atingiu uma quebra numérica.");
         }
 
-        public void Calcular(int numeroDeModos)
+        public int LimiteIteracoesSubespaco { get; set; } = 200;
+        public TimeSpan LimiteTempoSubespaco { get; set; } = TimeSpan.FromMinutes(5);
+
+        private void CalcularPorSubespaco()
+        {
+            ResiduosPorTentativa.Clear(); VetoresPorTentativa.Clear();
+            if (LimiteVetoresLanczos < 0) throw new ArgumentOutOfRangeException(nameof(LimiteVetoresLanczos));
+            int limite = (int)Math.Min(portico.OrdemSistemaMPC, LimiteVetoresLanczos == 0 ? Math.Max(300L, 20L * numModos) : LimiteVetoresLanczos);
+            
+            TIteracaoSubespaco.Resolver(portico.OrdemSistemaMPC, numModos, limite, LimiteIteracoesSubespaco,
+               
+                LimiteTempoSubespaco, AplicarOperadorShiftInvert, MultiplicarMassa,
+                (baseAtual, valores, vetores) =>
+                {
+                    int n = valores.Length;
+                    BaseLanczos = baseAtual;
+                    AutovaloresReduzidos = new double[numModos];
+                    AutovetoresReduzidos = new double[n, numModos];
+                    for (int m = 0; m < numModos; m++)
+                    {
+                        double mu = valores[n - 1 - m];
+                        if (!(mu > 0)) throw new InvalidOperationException("Autovalor modal nao positivo no subespaco.");
+                        AutovaloresReduzidos[m] = mu;
+                        for (int i = 0; i < n; i++) AutovetoresReduzidos[i, m] = vetores[i, n - 1 - m];
+                    }
+                    RecuperarModosEFrequencias();
+                    VerificarConvergencia(false);
+                    ResiduosPorTentativa.Add((double[])ResiduosRelativos.Clone());
+                    VetoresPorTentativa.Add(n);
+                    return Convergiu;
+                },
+                (iteracao, vetores) => InformarProgresso(15,
+                    $"Análise modal: Subespaço, iteração {iteracao}"));
+        }
+
+        public void Calcular(int numeroDeModos, bool lanczos = true)
         {
             if (numeroDeModos != numModos)
                 throw new ArgumentException(
@@ -885,7 +959,12 @@ namespace PG
             VerificarMatrizesModais();
             InformarProgresso(15, "Análise modal: fatoração da rigidez");
             PrepararOperadorShiftInvert();
-            ConstruirBaseLanczos();
+            if (!lanczos)
+            {
+                try { CalcularPorSubespaco(); }
+                catch { Convergiu = false; throw; }
+            }
+            else ConstruirBaseLanczos();
             CalcularParticipacaoModal();
             InformarProgresso(100, "Análise modal concluída");
 

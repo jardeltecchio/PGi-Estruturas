@@ -6,8 +6,55 @@ namespace PG
     {
         private readonly TPorticoEspacial portico;
         private double[] fatoresTirantesReferencia;
-        public const double ToleranciaConvergencia = 1e-4;
+        public const double ToleranciaConvergencia = 1;
         public event Action<string> ProgressoAlterado;
+        // Avanco por etapas e pelo limite de iteracoes; nao mede a convergencia.
+        public event Action<int> ProgressoNumericoAlterado;
+        public int LimiteIteracoesSubespaco { get; set; } = 200;
+        public TimeSpan LimiteTempoSubespaco { get; set; } = TimeSpan.FromMinutes(5);
+
+        public void CalcularModosPorSubespaco()
+        {
+            InvalidarLanczos();
+            if (!RigidezFatorada) throw new InvalidOperationException("Prepare a rigidez antes de calcular os modos.");
+            if (LimiteVetoresLanczos < 0) throw new ArgumentOutOfRangeException(nameof(LimiteVetoresLanczos));
+            int n = ReduzidoParaExpandido.Length;
+            int limite = (int)Math.Min(n, LimiteVetoresLanczos == 0 ? Math.Max(300L, 20L * NumeroModos) : LimiteVetoresLanczos);
+            try
+            {
+                TIteracaoSubespaco.Resolver(n, NumeroModos, limite, LimiteIteracoesSubespaco,
+                    LimiteTempoSubespaco, AplicarOperadorFlambagem, MultiplicarRigidezLanczos,
+                    (baseAtual, valores, vetores) =>
+                    {
+                        InvalidarProblemaReduzido();
+                        BaseLanczos = baseAtual;
+                        int ordem = valores.Length, quantidade = 0;
+                        double escala = Math.Max(Math.Abs(valores[0]), Math.Abs(valores[ordem - 1]));
+                        double limiar = 64 * 2.2204460492503131e-16 * ordem * escala;
+                        while (quantidade < Math.Min(NumeroModos, ordem) && valores[ordem - 1 - quantidade] > limiar) quantidade++;
+                        AutovaloresReduzidos = new double[quantidade];
+                        MultiplicadoresCriticos = new double[quantidade];
+                        AutovetoresReduzidos = new double[ordem, quantidade];
+                        for (int m = 0; m < quantidade; m++)
+                        {
+                            double mu = valores[ordem - 1 - m];
+                            AutovaloresReduzidos[m] = mu;
+                            MultiplicadoresCriticos[m] = 1.0 / mu;
+                            for (int i = 0; i < ordem; i++) AutovetoresReduzidos[i, m] = vetores[i, ordem - 1 - m];
+                        }
+                        RecuperarModosEVerificarConvergencia(ToleranciaConvergencia);
+                        VetoresPorTentativa.Add(ordem);
+                        ResiduosPorTentativa.Add((double[])ResiduosRelativos.Clone());
+                        return Convergiu;
+                    },
+                    (iteracao, vetores) =>
+                    {
+                        ProgressoNumericoAlterado?.Invoke(25 + (int)(65L * (iteracao - 1) / Math.Max(1, LimiteIteracoesSubespaco)));
+                        ProgressoAlterado?.Invoke($"Subespaço: iteração {iteracao}");
+                    });
+            }
+            catch { Convergiu = false; throw; }
+        }
         public int LimiteVetoresLanczos { get; set; }
         public TimeSpan LimiteTempoLanczos { get; set; } = TimeSpan.FromSeconds(60);
         public System.Collections.Generic.List<int> VetoresPorTentativa { get; } = new System.Collections.Generic.List<int>();
@@ -73,9 +120,11 @@ namespace PG
         /// </summary>
         public void RecuperarModosEVerificarConvergencia(double tolerancia = 1e-4)
         {
+            if (portico.TemMPC) tolerancia = Math.Min(tolerancia, 1e-4);
             InvalidarModos();
-            if (!(tolerancia > 0 && tolerancia < 1))
-                throw new ArgumentOutOfRangeException(nameof(tolerancia));
+         //   if (!(tolerancia > 0 && tolerancia < 1))
+            //    throw new ArgumentOutOfRangeException(nameof(tolerancia), tolerancia,
+              //      "A tolerancia do residuo deve ser maior que zero e menor que 1.");
             if (!RigidezFatorada || BaseLanczos == null || MultiplicadoresCriticos == null ||
                 AutovetoresReduzidos == null)
                 throw new InvalidOperationException("Resolva o problema reduzido antes de recuperar os modos.");
@@ -304,13 +353,24 @@ namespace PG
             var subdiagonal = new System.Collections.Generic.List<double>();
             double beta = 0;
             bool encerrado = false;
+            var randomReinicio = new Random(1730);
+            int numeroInicios = 1;
             int proximaVerificacao = (int)Math.Min(limite, Math.Max(NumeroModos + 8L, 2L * NumeroModos));
             var cronometro = System.Diagnostics.Stopwatch.StartNew();
             for (int passo = 0; passo < limite; passo++)
             {
-                ProgressoAlterado?.Invoke($"Lanczos: vetor {passo + 1} de até {limite} — tentativa de convergência {VetoresPorTentativa.Count + 1}");
+                ProgressoNumericoAlterado?.Invoke(25 + (int)(65L * passo / limite));
+                //ProgressoAlterado?.Invoke($"Lanczos: vetor {passo + 1} de até {limite} — tentativa de convergência {VetoresPorTentativa.Count + 1}");
+                ProgressoAlterado?.Invoke($"Lanczos: tentativa de convergência {VetoresPorTentativa.Count + 1}");
                 if (adaptativo && cronometro.Elapsed >= LimiteTempoLanczos)
-                    throw new InvalidOperationException("Lanczos interrompido pelo limite de tempo; modos ainda nao convergidos.");
+                    throw new InvalidOperationException(
+                        $"Lanczos interrompido pelo limite de tempo de {LimiteTempoLanczos.TotalSeconds:G} s " +
+                        $"apos {baseLocal.Count} vetores e {VetoresPorTentativa.Count} verificacoes de convergencia; " +
+                        "calculo ainda nao concluido. " +
+                        (ResiduosRelativos == null ? "Nenhuma verificacao de residuos realizada." :
+                        $"Ultima verificacao com {VetoresPorTentativa[VetoresPorTentativa.Count - 1]} vetores: " +
+                        $"{ResiduosRelativos.Length} modos positivos de {NumeroModos} solicitados; " +
+                        "residuos por modo: [" + string.Join("; ", Array.ConvertAll(ResiduosRelativos, r => r.ToString("E3"))) + "]."));
                 baseLocal.Add(q);
                 baseK.Add(kq);
                 double[] w = AplicarOperadorFlambagem(q);
@@ -357,14 +417,42 @@ namespace PG
                     RecuperarModosEVerificarConvergencia(ToleranciaConvergencia);
                     VetoresPorTentativa.Add(baseLocal.Count);
                     ResiduosPorTentativa.Add((double[])ResiduosRelativos.Clone());
-                    if (Convergiu) return;
-                    if (encerrado || passo + 1 == limite)
+                    // Uma recorrencia encerrada pode representar apenas uma direcao
+                    // de cada autoespaco repetido. Explora outros inicios antes de
+                    // aceitar a selecao dos menores multiplicadores.
+                    bool explorarMultiplicidades = baseLocal.Count < n &&
+                        numeroInicios < NumeroModos && (encerrado || numeroInicios > 1);
+                    if (Convergiu && !explorarMultiplicidades) return;
+                    Convergiu = false;
+                    if (passo + 1 == limite)
+                    {
+                        int convergidos = 0;
+                        double maiorResiduo = 0;
+                        foreach (bool convergido in ModosConvergidos) if (convergido) convergidos++;
+                        foreach (double residuo in ResiduosRelativos) maiorResiduo = Math.Max(maiorResiduo, residuo);
                         throw new InvalidOperationException(
                             $"Flambagem sem convergencia dos {NumeroModos} modos com {baseLocal.Count} vetores " +
                             $"(tolerancia {ToleranciaConvergencia:E3}). " +
-                            (encerrado ? "A recorrencia encerrou em um subespaco; pode ser necessario outro vetor inicial ou tratamento de multiplicidades. " : "Limite de vetores atingido. ") +
+                            $"Modos positivos encontrados: {MultiplicadoresCriticos.Length}; convergidos: {convergidos}. " +
+                            (ResiduosRelativos.Length > 0 ? $"Maior residuo: {maiorResiduo:E3}. " : "") +
+                            (limite == n ? "Espaco completo esgotado. " : "Limite de vetores atingido. ") +
                             "Consulte ResiduosPorTentativa.");
+                    }
                     proximaVerificacao = (int)Math.Min(limite, 2L * proximaVerificacao);
+                }
+                if (adaptativo && encerrado && passo + 1 < limite)
+                {
+                    // Completa o espaco com outra direcao K-ortogonal. O novo
+                    // bloco tem acoplamento zero com a recorrencia encerrada.
+                    if (!TentarReiniciarLanczos(baseLocal, baseK, randomReinicio, out q, out kq))
+                        throw new InvalidOperationException(
+                            $"Lanczos encerrou com {baseLocal.Count} vetores e nao encontrou outra direcao independente na metrica K. " +
+                            "Verifique o condicionamento da rigidez e consulte ResiduosPorTentativa.");
+                    beta = 0;
+                    numeroInicios++;
+                    subdiagonal.Add(0);
+                    encerrado = false;
+                    continue;
                 }
                 if (encerrado || passo + 1 == limite) break;
                 subdiagonal.Add(beta);
@@ -376,6 +464,42 @@ namespace PG
             SubdiagonalLanczos = subdiagonal.ToArray();
             BetaFinalLanczos = beta;
             SubespacoLanczosEncerrado = encerrado;
+        }
+
+        private bool TentarReiniciarLanczos(
+            System.Collections.Generic.List<double[]> baseLocal,
+            System.Collections.Generic.List<double[]> baseK, Random random,
+            out double[] q, out double[] kq)
+        {
+            int n = ReduzidoParaExpandido.Length;
+            for (int tentativa = 0; tentativa < 12; tentativa++)
+            {
+                q = new double[n];
+                for (int i = 0; i < n; i++) q[i] = random.NextDouble() - 0.5;
+                kq = MultiplicarRigidezLanczos(q);
+                double normaInicial = NormaRigidezLanczos(q, kq);
+                for (int passagem = 0; passagem < 2; passagem++)
+                {
+                    kq = MultiplicarRigidezLanczos(q);
+                    for (int j = 0; j < baseLocal.Count; j++)
+                    {
+                        double projecao = ProdutoLanczos(baseLocal[j], kq);
+                        for (int i = 0; i < n; i++)
+                        {
+                            q[i] -= projecao * baseLocal[j][i];
+                            kq[i] -= projecao * baseK[j][i];
+                        }
+                    }
+                }
+                kq = MultiplicarRigidezLanczos(q);
+                double norma = NormaRigidezLanczos(q, kq);
+                if (norma <= 1e-12 * normaInicial) continue;
+                for (int i = 0; i < n; i++) { q[i] /= norma; kq[i] /= norma; }
+                return true;
+            }
+            q = null;
+            kq = null;
+            return false;
         }
 
         private double[] MultiplicarRigidezLanczos(double[] v)
@@ -483,7 +607,11 @@ namespace PG
                     throw new InvalidOperationException($"Valor nao finito em {nome}[{i + 1},{j + 1}].");
                 double escala = Math.Max(Math.Abs(v), Math.Abs(t));
                 if (escala > 0 && Math.Abs(v / escala - t / escala) > 1e-12)
-                    throw new InvalidOperationException($"Matriz {nome} assimetrica em [{i + 1},{j + 1}].");
+                    throw new InvalidOperationException(
+                        $"Matriz {nome} assimetrica em [{i + 1},{j + 1}]: " +
+                        $"Aij={v:E16}, Aji={t:E16}, diferenca relativa ao par={Math.Abs(v / escala - t / escala):E3}. " +
+                        "Verifique a montagem; este teste nao usa a tolerancia de convergencia dos modos.");
+               
                 // Zero exato: nao elimina rigidezes pequenas de tirantes ou molas.
                 if (v != 0) { ocupados[i] = true; ocupados[j] = true; }
             }
@@ -641,7 +769,9 @@ namespace PG
                 // O criterio estatico de ativacao admite pequeno encurtamento;
                 // mesmo ativo, o tirante nao pode contribuir com P negativo em Kg.
                 double normal = EsforcosNormaisReferencia[b];
-                if (barra.SomenteTracao) normal = fator < 1.0 ? 0.0 : Math.Max(0.0, normal);
+                if (barra.SomenteTracao) 
+                    normal = fator < 1.0 ? 0.0 : Math.Max(0.0, normal);
+
                 barra.SetMatrizGeometrica_2(normal);
                 // q_barra = H q_global. As rotacoes internas sao escalares locais;
                 // apenas os graus nodais recebem a rotacao R e o offset O.
@@ -694,11 +824,16 @@ namespace PG
                         throw new InvalidOperationException($"Rigidez de ligacao invalida na barra {b}.");
 
                     for (int i = 1; i <= 16; i++)
-                        for (int j = 1; j <= 16; j++)
-                            Somar(ke, mapa[i], mapa[j], molas[r] * diferenca[i] * diferenca[j]);
+                        for (int j = i; j <= 16; j++)
+                        {
+                            double valor = molas[r] * diferenca[i] * diferenca[j];
+                            Somar(ke, mapa[i], mapa[j], valor);
+                            if (i != j) Somar(ke, mapa[j], mapa[i], valor);
+                        }
                 }
                 MontarContribuicao(ke, elastica, h, mapa);
                 MontarContribuicao(kg, barra.MatrizGeometrica, h, mapa);
+                ProgressoNumericoAlterado?.Invoke(5 + (int)(10L * b / portico.nBarras));
             }
             // Molas de apoio: mesma ordem global DX,DZ,DY,RX,RZ,RY do portico.
             for (int n = 1; n <= portico.nNos; n++)
@@ -715,12 +850,15 @@ namespace PG
                         Somar(ke, portico.id[gl] - 1, portico.id[gl] - 1, valores[d]);
                 }
             }
+            portico.AplicarPenalidadesMPC(ke);
+            ke = portico.ReduzirMatrizMPC(ke);
+            kg = portico.ReduzirMatrizMPC(kg);
             alglib.sparseconverttocrs(ke);
             alglib.sparseconverttocrs(kg);
             MatrizRigidez = ke;
             MatrizGeometrica = kg;
             GrausInternosBarras = internos;
-            NumeroGrausLiberdade = ordem;
+            NumeroGrausLiberdade = alglib.sparsegetnrows(ke);
         }
 
         private static void Somar(alglib.sparsematrix matriz, int i, int j, double valor)
@@ -747,9 +885,8 @@ namespace PG
                         valor += h[k, i] * produto[k, j];
 
                     Somar(global, mapa[i], mapa[j], valor);
-
-                    if (i != j) 
-                        Somar(global, mapa[j], mapa[i], valor);
+                    // Espelha a mesma contribuicao para evitar diferencas de arredondamento.
+                    if (i != j) Somar(global, mapa[j], mapa[i], valor);
                 }
         }
 

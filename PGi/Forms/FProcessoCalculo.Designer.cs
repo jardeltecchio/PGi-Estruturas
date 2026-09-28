@@ -139,6 +139,7 @@
             this.ListaCalculo.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ListaCalculo.ForeColor = System.Drawing.Color.White;
             this.ListaCalculo.FormattingEnabled = true;
+            this.ListaCalculo.HorizontalScrollbar = true;
             this.ListaCalculo.ItemHeight = 14;
             this.ListaCalculo.Location = new System.Drawing.Point(0, 0);
             this.ListaCalculo.Name = "ListaCalculo";

@@ -3848,7 +3848,7 @@ namespace PG
         /// </summary>
         public void SetMatrizGeometrica_2(double P)
         {
-            double Ip = Iy1 + Iz1; // Momento polar de inercia.
+            double Ip = J1;// Iy1 + Iz1; // Momento polar de inercia.
 
             MatrizGeometrica = new double[13, 13];
             MatrizGeometrica[1, 1] = 1.0;
@@ -4050,8 +4050,8 @@ namespace PG
                 tensoes_ini = new double[qtd_CoordsSecao - 1];
                 tensoes_fin = new double[qtd_CoordsSecao - 1];
 
-                double iy = Dados.secao.propriedades.inercia_flexao_y / 1e12;
-                double iz = Dados.secao.propriedades.inercia_flexao_z / 1e12;
+            double iy = Iz1;//Dados.secao.propriedades.inercia_flexao_y / 1e12;
+            double iz = Iy1;//Dados.secao.propriedades.inercia_flexao_z / 1e12;
 
                 double area = Dados.secao.propriedades.area / 1000000;
 

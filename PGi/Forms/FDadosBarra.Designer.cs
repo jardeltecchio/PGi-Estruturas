@@ -890,7 +890,7 @@
             "Somente tração (Tirante)",
             "Somente compressão",
             "Cabo",
-            "Braço rígido"});
+            "Elemento rígido"});
             this.cbTipo.Location = new System.Drawing.Point(60, 30);
             this.cbTipo.Name = "cbTipo";
             this.cbTipo.Size = new System.Drawing.Size(184, 21);

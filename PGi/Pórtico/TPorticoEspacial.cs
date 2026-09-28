@@ -63,6 +63,7 @@ namespace PG
         List<Forcas_Portico> casos_x_forcas;
         List<Forcas_Portico> combinacoes_x_forcas;
         List<Deslocamentos_Portico> casos_x_deslocamentos, combinacoes_x_deslocamentos;
+        List<TBracoRigido> bracosRigidos;
 
         public TPorticoEspacial()
         {
@@ -79,12 +80,14 @@ namespace PG
         }
 
         public TPorticoEspacial(List<TPavimento> _Pavimentos, List<TBarraGenerica> _barras, List<TApoio> _apoios, List<TMateriais> _materiais, List<TCargaPontual> CargasPontuais,
-            List<TCargaLinear> CargasLineares, Gerenciador _gerenciador, int divisoesBarras)
+            List<TCargaLinear> CargasLineares, Gerenciador _gerenciador, int divisoesBarras, List<TBracoRigido> bracosrigidos)
         {
             this.Pavimentos = _Pavimentos;
             this.gerenciador = _gerenciador;
             this.Progresso = gerenciador.processo.Progresso;
             this.Tipo = "PORTICO";
+            this.bracosRigidos = bracosrigidos;
+
             trechos = new List<TTrechoViga>();
             pilares = new List<TPilar>();
             barrasgenericas = new List<TBarraGenerica>();
@@ -403,7 +406,7 @@ namespace PG
         private bool CriarVetores()
         {
             Ndj = 6;
-            Ngl = (nNos * Ndj);
+            Ngl = (nNos * Ndj) + numeroGrausAuxiliaresMPC;
             NglBarra = Ndj * 2;
             NLinhas = Ngl - NumeroDeRestricoes;
 
@@ -419,7 +422,7 @@ namespace PG
         {
             Atualiza(1);
 
-            if (UsarDll && gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_gradiente_conjugado)
+            if (!TemMPC && UsarDll && gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_gradiente_conjugado)
             {
                 mBanda_Dll = new double[NLinhas][];
                 for (int i = 0; i < mBanda_Dll.Length; i++)
@@ -434,7 +437,7 @@ namespace PG
                   //  gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver1 = true;
 
                 MatrizRigidez = null;
-                MatrizRigidez = new TMatrizBanda(NLinhas, LarguraBanda, Ngl, this, gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_choleskypadrao, gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.UsarDll);
+                MatrizRigidez = new TMatrizBanda(NLinhas, LarguraBanda, Ngl, this, gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_choleskypadrao && !UsaEliminacaoMPC, gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.UsarDll);
             }
 
             return true;
@@ -443,6 +446,7 @@ namespace PG
         private bool DadosEstruturais()
         {
             Atualiza(1);
+            PrepararPenalidadesMPC();
             NumeroDeRestricoes = GetNumeroDeRestricoes();
             NumeroDeNosComRestricoes = GetNumeroDeNosComRestricoes();
 
@@ -485,12 +489,22 @@ namespace PG
                     LarguraBanda = nbi;
             }
             // LarguraBanda = NLinhas;
+
+            foreach (var restricao in restricoesMPC)
+            {
+                var equacoes = restricao.Where(t => t.Value != 0 && !glRestrito[t.Key]).Select(t => id[t.Key]).ToArray();
+                if (equacoes.Length > 0)
+                    LarguraBanda = Math.Max(LarguraBanda, equacoes.Max() - equacoes.Min() + 1);
+            }
+            PrepararEliminacaoMPC();
+
             return true;
         }
 
         double[][] mBanda_Dll;
         private bool MatrizDeRigidez(bool UsarDll)
         {
+
             try
             {
                 Atualiza(1);
@@ -499,7 +513,7 @@ namespace PG
                 // MsgCalculo("", "Pórtico - Gerando sistema de equações...", nBarras, false, false);
                // HistoricoCalculo("      > Gerando o sistema de equações...");
                 #region solver2
-                if (!gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_choleskypadrao)
+                if (!gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_choleskypadrao || UsaEliminacaoMPC)
                 {
                     for (i = 1; i <= nBarras; i++)
                     {
@@ -613,16 +627,33 @@ namespace PG
                     {
                         gl = id[i + 1] - 1;
 
-                        if (!glRestrito[gl])
+                        if (!glRestrito[i + 1])
                         {
-                            double coef = alglib.sparseget(MatrizRigidez.s, gl, gl);
-                            coef += K_Mola[i];
-                            alglib.sparseset(MatrizRigidez.s, gl, gl, coef);
+                            if (gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_choleskypadrao && !UsaEliminacaoMPC)
+                                MatrizRigidez.Sff[(gl + 1) * LarguraBanda + 1] += K_Mola[i];
+                            else
+                                alglib.sparseset(MatrizRigidez.s, gl, gl,
+                                    alglib.sparseget(MatrizRigidez.s, gl, gl) + K_Mola[i]);
                         }
                     }
                 }
 
-                alglib.sparseconverttocrs(MatrizRigidez.s);
+                AplicarPenalidadesMPC(MatrizRigidez.s, MatrizRigidez.Sff);
+                // Modal usa a representacao esparsa, inclusive quando a estatica usa banda.
+                if (TemMPC && MatrizRigidez.s == null)
+                {
+                    alglib.sparsecreate(NLinhas, NLinhas, out MatrizRigidez.s);
+                    for (int linha = 1; linha <= NLinhas; linha++)
+                        for (int coluna = linha; coluna <= Math.Min(NLinhas, linha + LarguraBanda - 1); coluna++)
+                        {
+                            double valor = MatrizRigidez.Sff[linha * LarguraBanda + coluna - linha + 1];
+                            if (valor == 0) continue;
+                            alglib.sparseset(MatrizRigidez.s, linha - 1, coluna - 1, valor);
+                            alglib.sparseset(MatrizRigidez.s, coluna - 1, linha - 1, valor);
+                        }
+                }
+                if (UsaEliminacaoMPC) MatrizRigidez.s = ReduzirMatrizMPC(MatrizRigidez.s);
+                if (MatrizRigidez.s != null) alglib.sparseconverttocrs(MatrizRigidez.s);
                 //HistoricoCalculo("      > Gerando o sistema de equações...");
                 //HistoricoCalculo("      - Geração do sistema de equações [" + NLinhas + "] - [Ok]", true);
                 MostraMatrizRigidez();
@@ -1363,7 +1394,8 @@ namespace PG
         }
 
         public bool Calcular(bool calculaEsforco, bool UsarDll, bool modal, int numModos,
-            bool flambagemLinear = false, int numeroModosFlambagem = 5)
+            bool flambagemLinear = false, int numeroModosFlambagem = 5,
+            bool lanczos = true)
         {
             ResultadosFlambagem.Clear();
             try
@@ -1405,6 +1437,7 @@ namespace PG
                     return calculoOk;
                 }
 
+
                 CriarMatrizSFF(UsarDll);
                 SetCoeficientesMola();
                 
@@ -1427,12 +1460,10 @@ namespace PG
                 Atualiza(1);
 
                 if (modal)
-                {
-                    CalculaModal(UsarDll, numModos);
-                }
+                  CalculaModal(UsarDll, numModos, lanczos);
 
                 if (flambagemLinear)
-                    CalcularFlambagemLinear(numeroModosFlambagem);
+                  CalcularFlambagemLinear(numeroModosFlambagem, 0, lanczos ? 240 : 300, lanczos);
 
                 Progresso.Value = 0;
 
@@ -1487,7 +1518,7 @@ namespace PG
         public List<ResultadoFlambagemReferencia> ResultadosFlambagem { get; } = new List<ResultadoFlambagemReferencia>();
 
         /// <summary>Executar apos Resultados(), antes da liberacao de id/glRestrito.</summary>
-        public void CalcularFlambagemLinear(int numeroModos, int limiteVetores = 0, double limiteSegundos = 60)
+        public void CalcularFlambagemLinear(int numeroModos, int limiteVetores = 0, double limiteSegundos = 240, bool lanczos = true)
         {
             HistoricoCalculo("");
             HistoricoCalculo("      ---- Início da análise de estabilidade linear ----");
@@ -1537,9 +1568,17 @@ namespace PG
                     };
                     historico($"      > Flambagem linear: combinação de estabilidade: {combinacaoAtual.Descricao} ----", false);
                     string etapaAtual = null, mensagemAtual = null;
+                    Action<int> atualizarBarra = valor =>
+                    {
+                        if (Progresso == null) return;
+                        int novoValor = Math.Max(Progresso.Value, Math.Min(Progresso.Maximum, valor));
+                        if (novoValor == Progresso.Value) return;
+                        Progresso.Value = novoValor;
+                        Progresso.Refresh();
+                    };
                     Action<string> informar = mensagem =>
                     {
-                        string etapa = mensagem.StartsWith("Lanczos:") ? "Lanczos" : mensagem;
+                        string etapa = mensagem.StartsWith("Lanczos:") ? "Lanczos" : mensagem.StartsWith("Subespaço:") ? "Subespaço" : mensagem;
                         if (etapa == etapaAtual)
                             historico("      > " + mensagem, true);
                         else
@@ -1563,18 +1602,28 @@ namespace PG
                     var analise = new TPorticoEspacial_FlambagemLinear(this, numeroModos)
                     {
                         LimiteVetoresLanczos = limiteVetores,
-                        LimiteTempoLanczos = TimeSpan.FromSeconds(limiteSegundos)
+                        LimiteTempoLanczos = TimeSpan.FromSeconds(limiteSegundos),
+                        LimiteTempoSubespaco = TimeSpan.FromSeconds(limiteSegundos)
                     };
                     try
                     {
                         analise.ProgressoAlterado += informar;
+                        analise.ProgressoNumericoAlterado += atualizarBarra;
                         informar("Preparação");
                         analise.PrepararReferencia(referencia.id, true);
+                        atualizarBarra(5);
                         informar("Montagem da rigidez e da matriz geométrica");
                         analise.MontarMatrizes();
+                        atualizarBarra(15);
                         informar("Fatoração da rigidez");
                         analise.PrepararRigidez();
-                        analise.CalcularModos();
+                        atualizarBarra(25);
+
+                        if (!lanczos) 
+                            analise.CalcularModosPorSubespaco();
+                        else
+                            analise.CalcularModos();
+
                         resultado.Convergiu = analise.Convergiu;
                         if (!resultado.Convergiu) 
                             resultado.Erro = "Modos solicitados nao convergiram.";
@@ -1582,14 +1631,18 @@ namespace PG
                     catch (InvalidOperationException ex) { resultado.Erro = ex.Message; }
                     catch (ArgumentException ex) { resultado.Erro = ex.Message; }
                     catch (NotSupportedException ex) { resultado.Erro = ex.Message; }
-                    finally { analise.ProgressoAlterado -= informar; }
+                    finally
+                    {
+                        analise.ProgressoAlterado -= informar;
+                        analise.ProgressoNumericoAlterado -= atualizarBarra;
+                    }
 
                     if (resultado.Convergiu)
                     {
                         if (mensagemAtual != null) historico("      > " + mensagemAtual + " - [Ok]", true);
                         historico("      > Análise de estabilidade concluída - [Ok]", false);
                         historico("", false);
-                        if (Progresso != null) Progresso.Value = Progresso.Maximum;
+                        atualizarBarra(95);
                     }
                     else
                     {
@@ -1600,14 +1653,14 @@ namespace PG
                     
                     // Guarda apenas os resultados, sem reter matrizes/fatores de todas as referencias.
                     resultado.Multiplicadores = analise.MultiplicadoresCriticos;
-                    resultado.Modos = analise.ModosFlambagem;
+                    resultado.Modos = ExpandirModosMPC(analise.ModosFlambagem);
                     resultado.Residuos = analise.ResiduosRelativos;
                     resultado.GrausInternosBarras = analise.GrausInternosBarras;
                    
                     if (resultado.Convergiu && resultado.Modos != null)
                     {
                         var maximos = new double[resultado.Modos.GetLength(1)];
-                        for (int gl = 1; gl <= Ngl; gl += 6)
+                        for (int gl = 1; gl <= nNos * 6; gl += 6)
                             for (int modo = 0; modo < maximos.Length; modo++)
                             {
                                 double soma = 0;
@@ -1623,11 +1676,12 @@ namespace PG
                             barras[barra].PrepararDesenhoFlambagem(resultado.Modos, id, glRestrito,
                                 maximos, resultado.IdReferencia);
                     }
+                    if (resultado.Convergiu) atualizarBarra(100);
                 }
             }
         }
 
-        void CalculaModal(bool UsarDll, int numModos)
+        void CalculaModal(bool UsarDll, int numModos, bool lanczos)
         {
             // A análise estática e seus resultados já foram concluídos.
             Progresso.Value = 0;
@@ -1659,6 +1713,8 @@ namespace PG
                     mensagem = "Montagem da matriz de massa";
                 else if (etapa == "Análise modal: fatoração da rigidez")
                     mensagem = "Fatoração da rigidez";
+                else if (etapa.StartsWith("Análise modal: Subespaço,"))
+                    mensagem = "Subespaço:" + etapa.Substring("Análise modal: Subespaço,".Length);
                 else if (etapa.StartsWith("Análise modal: Lanczos,"))
                     mensagem = "Lanczos:" + etapa.Substring("Análise modal: Lanczos,".Length);
                 else if (etapa == "Análise modal: recuperação dos modos e frequências")
@@ -1668,7 +1724,7 @@ namespace PG
 
                 if (mensagem != null)
                 {
-                    string chaveEtapa = mensagem.StartsWith("Lanczos:") ? "Lanczos" : mensagem;
+                    string chaveEtapa = mensagem.StartsWith("Lanczos:") ? "Lanczos" : mensagem.StartsWith("Subespaço:") ? "Subespaço" : mensagem;
                     if (chaveEtapa == etapaModalEmAndamento)
                     {
                         // Atualizar o vetor na linha atual, sem adicionar uma linha por iteração.
@@ -1685,18 +1741,18 @@ namespace PG
                 }
                 Progresso.Refresh();
             };
-            porticoModal.Calcular(numModos);
+            porticoModal.Calcular(numModos, lanczos);
 
             if (mensagemModalEmAndamento != null)
             {
                 HistoricoCalculo("      > " + mensagemModalEmAndamento + " - [Ok]", true);
-                ModosVibracao = porticoModal.ModosVibracao;
+                ModosVibracao = ExpandirModosMPC(porticoModal.ModosVibracao);
                 Autovalores = porticoModal.Autovalores;
                 FrequenciasAngulares = porticoModal.FrequenciasAngulares;
                 FrequenciasNaturais = porticoModal.FrequenciasNaturais;
                 PercentuaisMassaModal = porticoModal.PercentuaisMassaModal;
                 double[] maximosModais = new double[ModosVibracao.GetLength(1)];
-                for (int gl = 1; gl <= Ngl; gl += 6)
+                for (int gl = 1; gl <= nNos * 6; gl += 6)
                     for (int modo = 0; modo < maximosModais.Length; modo++)
                     {
                         double soma = 0.0;
@@ -1821,7 +1877,7 @@ namespace PG
 
                     while (iteracao < maxIteracoesTensionOnly && precisaIterar)
                     {
-                        bool fatorarNestaSolucao = possuiTirantes || !matrizLinearDisponivel;
+                        bool fatorarNestaSolucao = TemMPC || possuiTirantes || !matrizLinearDisponivel;
 
                         if (iteracao > 0)
                         {
@@ -1846,7 +1902,7 @@ namespace PG
                             HistoricoCalculo("      > Gerando o sistema de equações...");
                             if (!MatrizDeRigidez(UsarDll))
                                 throw new TErroPavimento(this, "   >ERRO: ERRO NA MONTAGEM DO SISTEMA DE EQUAÇÕES.");
-                            HistoricoCalculo("      - Geração do sistema de equações - [Ok]", true);
+                            HistoricoCalculo("      - Geração do sistema de equações - "+Ngl+" - [Ok]", true);
                         }
 
                         Atualiza(1);
@@ -1856,7 +1912,7 @@ namespace PG
                   //      else
                     //        HistoricoCalculo("      > Resolvendo o sistema de equações...");
 
-                        resultado = MatrizRigidez.ResolveMatrizBanda(this, ref forcas_caso,
+                        resultado = ResolverSistemaEstatico(ref forcas_caso,
                             ref df,
                             this.Descricao, "Pórtico - Resolvendo matriz - Caso: " + caso.Nome,
                             gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_cholesky_supernodal,
@@ -1930,7 +1986,7 @@ namespace PG
 
                     while (iteracao < maxIteracoesTensionOnly && precisaIterar)
                     {
-                        bool fatorarNestaSolucao = possuiTirantes || !matrizLinearDisponivel;
+                        bool fatorarNestaSolucao = TemMPC || possuiTirantes || !matrizLinearDisponivel;
 
                         if (iteracao > 0)
                         {
@@ -1952,7 +2008,7 @@ namespace PG
                             HistoricoCalculo("      > Gerando o sistema de equações...");
                             if (!MatrizDeRigidez(UsarDll))
                                 throw new TErroPavimento(this, "   >ERRO: ERRO NA MONTAGEM DO SISTEMA DE EQUAÇÕES.");
-                            HistoricoCalculo("      - Geração do sistema de equações - [Ok]", true);
+                            HistoricoCalculo("      - Geração do sistema de equações - "+Ngl+" - [Ok]", true);
 
                         }
 
@@ -1961,7 +2017,7 @@ namespace PG
                     //    if (possuiTirantes)
                             HistoricoCalculo("      > Resolvendo o sistema de equações para a combinação: " + combinacao.Nome);
 
-                        resultado = MatrizRigidez.ResolveMatrizBanda(this, ref forcas_combinacao,
+                        resultado = ResolverSistemaEstatico(ref forcas_combinacao,
                             ref df,
                             this.Descricao, "Pórtico - Resolvendo matriz - Combinação: " + combinacao.Descricao,
                             gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_cholesky_supernodal,
@@ -2018,7 +2074,7 @@ namespace PG
                 HistoricoCalculo("      - Solução finalizada - " +
                     span2.Subtract(span1).ToString("mm") + ":" +
                     span2.Subtract(span1).ToString("ss"));
-                MatrizRigidez.s = null;
+                if (MatrizRigidez != null) MatrizRigidez.s = null;
 
                 return true;  // Sempre retorna true (aceita resultado com ou sem convergência)
             }
@@ -2029,5 +2085,15 @@ namespace PG
             }
         }
 
+        int ResolverSistemaEstatico(ref double[] cargas, ref double[] deslocamentos,
+            string titulo, string mensagem, bool cholesky, bool cg, bool fatorar)
+        {
+            if (UsaEliminacaoMPC) return ResolverEliminacaoMPC(cargas, ref deslocamentos);
+            if (TemMPC && gerenciador.ConfiguracoesPGi.CfgProjeto.sistema.Solver_choleskypadrao)
+                if (!MatrizRigidez.FatoraMatrizBanda(titulo, mensagem, false))
+                    throw new InvalidOperationException("MPC: falha ao fatorar a rigidez.");
+            return MatrizRigidez.ResolveMatrizBanda(this, ref cargas, ref deslocamentos,
+                titulo, mensagem, cholesky, cg, fatorar);
+        }
     }
 }
