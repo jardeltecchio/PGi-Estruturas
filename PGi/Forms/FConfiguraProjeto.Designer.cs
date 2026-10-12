@@ -170,6 +170,7 @@
             this.label26 = new System.Windows.Forms.Label();
             this.numModosFlambagem = new System.Windows.Forms.NumericUpDown();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.chMostrarDiafragmas = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -1529,6 +1530,7 @@
             // 
             // tabPage8
             // 
+            this.tabPage8.Controls.Add(this.chMostrarDiafragmas);
             this.tabPage8.Controls.Add(this.label24);
             this.tabPage8.Controls.Add(this.btCorEstruturaGeral);
             this.tabPage8.Controls.Add(this.MostrarNumeroElementos);
@@ -1546,17 +1548,17 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(13, 82);
+            this.label24.Location = new System.Drawing.Point(10, 122);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(71, 13);
+            this.label24.Size = new System.Drawing.Size(128, 13);
             this.label24.TabIndex = 113;
-            this.label24.Text = "Cor das vigas";
+            this.label24.Text = "Cor dos elementos (vigas)";
             // 
             // btCorEstruturaGeral
             // 
-            this.btCorEstruturaGeral.BackColor = System.Drawing.Color.Olive;
+            this.btCorEstruturaGeral.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.btCorEstruturaGeral.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btCorEstruturaGeral.Location = new System.Drawing.Point(89, 75);
+            this.btCorEstruturaGeral.Location = new System.Drawing.Point(144, 115);
             this.btCorEstruturaGeral.Name = "btCorEstruturaGeral";
             this.btCorEstruturaGeral.Size = new System.Drawing.Size(24, 20);
             this.btCorEstruturaGeral.TabIndex = 112;
@@ -1798,6 +1800,16 @@
             0,
             0});
             // 
+            // chMostrarDiafragmas
+            // 
+            this.chMostrarDiafragmas.AutoSize = true;
+            this.chMostrarDiafragmas.Location = new System.Drawing.Point(13, 59);
+            this.chMostrarDiafragmas.Name = "chMostrarDiafragmas";
+            this.chMostrarDiafragmas.Size = new System.Drawing.Size(150, 17);
+            this.chMostrarDiafragmas.TabIndex = 114;
+            this.chMostrarDiafragmas.Text = "Mostrar diafragmas rígidos";
+            this.chMostrarDiafragmas.UseVisualStyleBackColor = true;
+            // 
             // FConfiguraProjeto
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2015,5 +2027,6 @@
         private System.Windows.Forms.GroupBox groupBox14;
         private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.ComboBox cbMetodoMPC;
+        private System.Windows.Forms.CheckBox chMostrarDiafragmas;
     }
 }

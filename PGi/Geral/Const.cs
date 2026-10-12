@@ -259,6 +259,7 @@ namespace PG
         public const string ID_MOVER_EXTREMO_ELEMENTOS = "mover extremidade elementos";
         public const string ID_COPIA_PADRAO = "cópia padrão";
         public const string ID_DIVIDIR_NAS_INTERSECOES = "dividir nas interseções";
+        public const string ID_IGUALAR_SECOES = "igualar seções";
 
         public const string ID_ARTICULAR_ELEMENTO = "articular elemento";
 

@@ -85,11 +85,11 @@
             this.pnCorSecao = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.imageList3 = new System.Windows.Forms.ImageList(this.components);
-            this.lbComprimento = new System.Windows.Forms.Label();
             this.numero = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cbTipo = new System.Windows.Forms.ComboBox();
             this.lbNumero = new System.Windows.Forms.Label();
+            this.btInfo = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.gbSecoes.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -136,6 +136,7 @@
             this.imageList2.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList2.Images.SetKeyName(0, "confirmar.bmp");
             this.imageList2.Images.SetKeyName(1, "fechar.bmp");
+            this.imageList2.Images.SetKeyName(2, "info 2.bmp");
             // 
             // btSalvar
             // 
@@ -829,6 +830,7 @@
             // 
             // timer1
             // 
+            this.timer1.Interval = 500;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // imageList3
@@ -852,16 +854,6 @@
             this.imageList3.Images.SetKeyName(14, "canc cota.bmp");
             this.imageList3.Images.SetKeyName(15, "PERFIL DOBRADO.bmp");
             this.imageList3.Images.SetKeyName(16, "novo.png");
-            // 
-            // lbComprimento
-            // 
-            this.lbComprimento.AutoSize = true;
-            this.lbComprimento.Location = new System.Drawing.Point(120, 11);
-            this.lbComprimento.Name = "lbComprimento";
-            this.lbComprimento.Size = new System.Drawing.Size(74, 13);
-            this.lbComprimento.TabIndex = 81;
-            this.lbComprimento.Text = "Comprimento: ";
-            this.lbComprimento.Visible = false;
             // 
             // numero
             // 
@@ -906,6 +898,24 @@
             this.lbNumero.TabIndex = 77;
             this.lbNumero.Text = "Número";
             // 
+            // btInfo
+            // 
+            this.btInfo.AccessibleName = "Selecionar todos os elementos dessa seção";
+            this.btInfo.BackColor = System.Drawing.Color.Transparent;
+            this.btInfo.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            this.btInfo.FlatAppearance.BorderSize = 0;
+            this.btInfo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btInfo.ImageIndex = 2;
+            this.btInfo.ImageList = this.imageList2;
+            this.btInfo.Location = new System.Drawing.Point(122, 2);
+            this.btInfo.Name = "btInfo";
+            this.btInfo.Size = new System.Drawing.Size(24, 23);
+            this.btInfo.TabIndex = 157;
+            this.btInfo.UseVisualStyleBackColor = false;
+            this.btInfo.Visible = false;
+            this.btInfo.Click += new System.EventHandler(this.btInfo_Click);
+            this.btInfo.MouseEnter += new System.EventHandler(this.btInfo_MouseEnter);
+            // 
             // FDadosBarra
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -913,7 +923,7 @@
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.CancelButton = this.button3;
             this.ClientSize = new System.Drawing.Size(254, 497);
-            this.Controls.Add(this.lbComprimento);
+            this.Controls.Add(this.btInfo);
             this.Controls.Add(this.numero);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cbTipo);
@@ -975,7 +985,6 @@
         public System.Windows.Forms.Button button7;
         public System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Button button8;
-        public System.Windows.Forms.Label lbComprimento;
         public System.Windows.Forms.TextBox numero;
         private System.Windows.Forms.Label label1;
         public System.Windows.Forms.ComboBox cbTipo;
@@ -1016,5 +1025,6 @@
         private System.Windows.Forms.Button button14;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox edEx_f;
+        public System.Windows.Forms.Button btInfo;
     }
 }

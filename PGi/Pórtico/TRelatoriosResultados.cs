@@ -25,9 +25,9 @@ namespace PG
             string cabecalho = string.Format(formato, "Modo", "Multiplicador crítico");
             foreach (var resultado in resultados)
             {
-                var combinacao = descricoes.FirstOrDefault(c => c.Id == resultado.IdReferencia);
+                var combinacao = descricoes.FirstOrDefault(c => c.Id == resultado.IdCombinacao);
                 texto.AppendLine();
-                texto.AppendLine($"Combinação ID {resultado.IdReferencia} — {combinacao?.Descricao ?? "Descrição indisponível"}");
+                texto.AppendLine($"Combinação ID {resultado.IdCombinacao} — {combinacao?.Descricao ?? "Descrição indisponível"}");
                 texto.AppendLine();
                 if (!resultado.Convergiu)
                     texto.AppendLine("Não concluída: " + (resultado.Erro ?? "Modos sem convergência."));

@@ -391,6 +391,12 @@
     <Compile Include="Forms\FCasosCombinacoes.Designer.cs">
       <DependentUpon>FCasosCombinacoes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FDividirElementos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FDividirElementos.Designer.cs">
+      <DependentUpon>FDividirElementos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FEspelharElementos.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -802,6 +808,9 @@
     <EmbeddedResource Include="3rd Party\DockExtender\Overlay.resx" />
     <EmbeddedResource Include="Forms\FCasosCombinacoes.resx">
       <DependentUpon>FCasosCombinacoes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FDividirElementos.resx">
+      <DependentUpon>FDividirElementos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FEspelharElementos.resx">
       <DependentUpon>FEspelharElementos.cs</DependentUpon>

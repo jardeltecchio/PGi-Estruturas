@@ -49,7 +49,7 @@ namespace PG
     {
         public byte Transparencia;
         public Color CorFundoCima, CorFundoBaixo;
-        public bool EixosCentrais, UsarPlanoFundoGradiente, MostrarNumeroElementos, MostrarDescricaoElementos, MostrarEixosLocais, OpenGlSuavizacao, Arestas, ArestasConformeObjetos, Nos, Unifilar, Perspectiva, CorPorTipoDeElemento, CorPorSecao, CorPorMaterial, MostrarTexturas, MostrarChao;
+        public bool EixosCentrais, UsarPlanoFundoGradiente,MostrarDiafragmasRigidos, MostrarNumeroElementos, MostrarDescricaoElementos, MostrarEixosLocais, OpenGlSuavizacao, Arestas, ArestasConformeObjetos, Nos, Unifilar, Perspectiva, CorPorTipoDeElemento, CorPorSecao, CorPorMaterial, MostrarTexturas, MostrarChao;
         public byte[] RgbArestas;
         public double tamanhoNo;
         public Color CorNo, CorDescElementos;
@@ -58,6 +58,7 @@ namespace PG
         {
             UsarPlanoFundoGradiente = false;
             Transparencia = 255;
+            MostrarDiafragmasRigidos = true;
             tamanhoNo = 3;
             MostrarChao = false;
             Perspectiva = true;

@@ -874,6 +874,7 @@ namespace PG
                 Estrutura.barras.RemoveAll(obj => obj.Selecionado);
                 Estrutura.cargaLinear.RemoveAll(obj => obj.Selecionado);
                 Estrutura.bracosRigidos.RemoveAll(obj => obj.Selecionado);
+                Estrutura.diafragmasRigidos.RemoveAll(obj => obj.Selecionado);
 
                 /*  bool noConectado = false;
                   foreach (TPonto p in Estrutura.nos)
@@ -2776,7 +2777,7 @@ namespace PG
                 MessageBox.Show("erro handlemousedownedit" + ee.Message);
             }
         }
-        public void RemeverDosObjetosSelecionados_Nao_Copiaveis()
+        public void RemoverDosObjetosSelecionados_Nao_Copiaveis()
         {
             foreach (TObjetoDesenho obj in ObjetosSelecionados)
                 if (obj.NaoPermiteMoverOuCopiar)
@@ -2847,7 +2848,6 @@ namespace PG
 
                     if ((IdFerramentaEdicao == Const.ID_ROTACIONAR_ELEMENTOS) && chApagarOriginalRotacao.Checked)
                         DeletaSelecionados(-1);
-
 
                     if (FerramentaEdicao.ApagarSelecionados)
                         DeletaSelecionados(-1);
@@ -3326,15 +3326,23 @@ namespace PG
 
                             CriaLinhasProjecaoTemporarias(ref point, true,false, ObjetoNovo as TBarraGenerica);
 
-                            ObjetoNovo = null;
-                            ObjetoNovo = InicializaObjeto(IdObjetoDesenho, ref point);
+                            if (IdObjetoDesenho == Const.ID_DIAFRAGMA_RIGIDO)
+                            {
+                                ComandoDesenhar(Const.ID_DIAFRAGMA_RIGIDO, null, string.Empty, Const.ID_INSERCAO_INDIVIDUAL);
+                            }
+                            else
+                            { 
+                               ObjetoNovo = null;
+                               ObjetoNovo = InicializaObjeto(IdObjetoDesenho, ref point);
+                            }
+
                             comandosMover = new List<ComandoMover>();
 
-
-                             //AtualizaElementosEstrutura();
-                          //  AtualizaListaSnap();
-                        //    CancelaResultados();
-                            AtualizaUltimaBarra();
+                            //AtualizaElementosEstrutura();
+                            //  AtualizaListaSnap();
+                            //    CancelaResultados();
+                            if (IdObjetoDesenho == Const.ID_BARRAGENERICA)
+                                AtualizaUltimaBarra();
 
                          //   if (IdObjetoDesenho == Const.ID_BARRAGENERICA)
                           //      Atualiza_Segmentos_e_Snap();
@@ -3925,6 +3933,8 @@ namespace PG
                 if (obj.Tipo == Const.ID_DIAFRAGMA_RIGIDO)
                 {
                     Estrutura.diafragmasRigidos.Add(obj as TDiafragmaRigido);
+
+                    Estrutura.diafragmasRigidos[Estrutura.diafragmasRigidos.Count - 1].IdentificarDiafragma(Estrutura.nos);
                     (obj as TDiafragmaRigido).ID = Estrutura.diafragmasRigidos.Max(o => o.ID) + 1;
                 }
                 else
@@ -5883,9 +5893,10 @@ namespace PG
                                                                             ref LinhaContornoDeformacao, 
                                                                             gerenciador.cbModosVibracao.SelectedIndex,
                                                                             ModoVibracaoColorido);
-                               }
 
-                               coords_triangulos_deformacao.AddRange(Estrutura.PorticoEspacial.barras[j].BatchTriangulos);
+                                    coords_triangulos_deformacao.AddRange(Estrutura.PorticoEspacial.barras[j].BatchTriangulos);
+                                }
+
                             }
                         }
                         else
@@ -5905,9 +5916,10 @@ namespace PG
                                                                              gerenciador.cbModosFlambagem.SelectedIndex,
                                                                              FlambagemColorido,
                                                                              gerenciador.id_combinacao_flambagem);
+                           
+                                    coords_triangulos_deformacao.AddRange(Estrutura.PorticoEspacial.barras[j].BatchTriangulos);
                                 }
 
-                                coords_triangulos_deformacao.AddRange(Estrutura.PorticoEspacial.barras[j].BatchTriangulos);
                             }
                         }
                         else
@@ -5960,10 +5972,11 @@ namespace PG
                                                                                         tipoCargaResultado, id_caso, id_combinacao, DeformacaoColorida, MostraTensoesNormaisGradiente, MostraTensoesNormaisIsobandas);
                                             }
 
-                                      //   if (!AnimarDeformacao)
+                                            coords_triangulos_deformacao.AddRange(Estrutura.PorticoEspacial.barras[j].BatchTriangulos);
+                                            //   if (!AnimarDeformacao)
                                         }
 
-                                        coords_triangulos_deformacao.AddRange(Estrutura.PorticoEspacial.barras[j].BatchTriangulos);
+                                   //     coords_triangulos_deformacao.AddRange(Estrutura.PorticoEspacial.barras[j].BatchTriangulos);
                                     }
                                 }
                             }
@@ -6206,11 +6219,14 @@ namespace PG
                     coords_arestas.AddRange(b.BatchArestas);
                 }
 
-                foreach (TDiafragmaRigido b in Estrutura.diafragmasRigidos)
+                if (gerenciador.ConfiguracoesPGi.F3DOpcoesVisualizacao.MostrarDiafragmasRigidos)
                 {
-                    b.AtualizaArestas();
+                    foreach (TDiafragmaRigido b in Estrutura.diafragmasRigidos)
+                    {
+                        b.AtualizaArestas();
 
-                    coords_arestas.AddRange(b.BatchArestas);
+                        coords_arestas.AddRange(b.BatchArestas);
+                    }
                 }
 
                 foreach (TApoio b in Estrutura.apoios)
@@ -8113,7 +8129,7 @@ namespace PG
               e.Cancel = true;
 
             if (IdFerramentaEdicao == Const.ID_ROTACIONAR_ELEMENTOS || IdFerramentaEdicao == Const.ID_DIVIDIR_NAS_INTERSECOES ||
-                IdFerramentaEdicao == Const.ID_ARTICULAR_ELEMENTO)
+                IdFerramentaEdicao == Const.ID_ARTICULAR_ELEMENTO || IdFerramentaEdicao == Const.ID_IGUALAR_SECOES)
               e.Cancel = true;
 
             if (Estrutura.GetCountElementosSelecionados() == 0)
@@ -8154,6 +8170,38 @@ namespace PG
                 editarApoios.Visible = false;
             }
 
+            if (Estrutura.nos.Exists(o => o.Selecionado))
+            {
+                editarNos.Visible = true;
+                List<TPonto> pts = Estrutura.nos.FindAll(o => o.Selecionado).ToList();
+                int totalSelecao = pts.Count();
+                if (totalSelecao == 1)
+                {
+                    editarNos.Text = "Editar nó";
+                }
+                else
+                {
+                    List<TPonto> sels = new List<TPonto>();
+                    int repeticoesNoMesmaCoordenada = 0;
+
+                    foreach (TPonto o in pts)
+                    {
+                        if (TIntersecoes.LocalizaPonto(ref sels, o.x, o.y, o.z) > -1)
+                            continue;
+                        sels.Add(o);
+
+//                        int rrr = pts.FindAll(p => Geom.Iguais(p.x, o.x) && Geom.Iguais(p.y, o.y) && Geom.Iguais(p.z, o.z)).Count();
+  //                      if (rrr > 1)
+    //                        repeticoesNoMesmaCoordenada++;
+                    }
+                    editarNos.Text = sels.Count > 1 ? "Editar nós" : "Editar nó";
+                }
+            }
+            else
+            {
+                editarNos.Visible = false;
+            }
+
             if (Estrutura.cargaLinear.Exists(o => o.Selecionado))
             {
                 editarCargaDistribuida.Visible = true;
@@ -8177,6 +8225,12 @@ namespace PG
             {
                 editarCargaPontual.Visible = false;
             }
+        }
+        bool edicaoNo_clique = true;
+        private void editarNos_Click(object sender, EventArgs e)
+        {
+            edicaoNo_clique = false;
+            ChamaEditObjeto(Const.ID_PONTO);
         }
 
         private void qtdRepeticoesRotacao_ValueChanged(object sender, EventArgs e)
@@ -8583,9 +8637,7 @@ namespace PG
                  Estrutura.Rgb_Barras[1] = Estrutura.layers[5].Rgb[1];
                  Estrutura.Rgb_Barras[2] = Estrutura.layers[5].Rgb[2];*/
    
-                List<TBarraGenerica> barras = ObjetosSelecionados
-                    .OfType<TBarraGenerica>()
-                    .ToList();
+                List<TBarraGenerica> barras = ObjetosSelecionados.OfType<TBarraGenerica>().ToList();
 
                 for (int i = 0; i < barras.Count; i++)
                 {                   
@@ -8643,9 +8695,50 @@ namespace PG
 
                         gerenciador.fEditaNos = new FEdicaoNos(gerenciador);
                         objetoUnico = ObjetosSelecionados.First(o => o.Tipo == Const.ID_PONTO);
-                        gerenciador.fEditaNos.edX.Text = (objetoUnico as TPonto).x.ToString("n5");
-                        gerenciador.fEditaNos.edY.Text = ((objetoUnico as TPonto).y*-1).ToString("n5");
-                        gerenciador.fEditaNos.edZ.Text = ((objetoUnico as TPonto).z * -1).ToString("n5");
+
+                        gerenciador.fEditaNos.multi = false;
+
+                        gerenciador.fEditaNos.Text = editarNos.Text;
+                        if (!edicaoNo_clique)
+                          gerenciador.fEditaNos.multi = editarNos.Text == "Editar nós";
+                        else
+                          gerenciador.fEditaNos.Text = "Editar nó";
+
+                        if (!gerenciador.fEditaNos.multi)
+                        {
+                            gerenciador.fEditaNos.edX.Text = (objetoUnico as TPonto).x.ToString("n7");
+                            gerenciador.fEditaNos.edY.Text = ((objetoUnico as TPonto).y * -1).ToString("n7");
+                            gerenciador.fEditaNos.edZ.Text = ((objetoUnico as TPonto).z * -1).ToString("n7");
+                        }
+                        else
+                        {
+                            List<TPonto> pts = gerenciador.formDesenho.Estrutura.nos.FindAll(o => o.Selecionado).ToList();
+                            bool mesmoY = true;
+                            bool mesmoZ = true;
+                            bool mesmoX = true;
+                            double iy = pts[0].y;
+                            double ix = pts[0].x;
+                            double iz = pts[0].z;
+
+                            for (int i = 1; i < pts.Count; i++)
+                            {
+                                if (!Geom.Iguais(pts[i].x,ix) && mesmoX)
+                                    mesmoX = false;
+                                if (!Geom.Iguais(pts[i].y ,iy) && mesmoY)
+                                    mesmoY = false;
+                                if (!Geom.Iguais(pts[i].z, iz) && mesmoZ)
+                                    mesmoZ = false;
+                            }
+                            if (mesmoX)
+                              gerenciador.fEditaNos.edX.Text = pts[0].x.ToString("n7");
+                            if (mesmoY)
+                                gerenciador.fEditaNos.edY.Text = (pts[0].y * -1).ToString("n7");
+                            if (mesmoZ)
+                                gerenciador.fEditaNos.edZ.Text = (pts[0].z * -1).ToString("n7");
+
+
+                        }
+
                         DialogResult result = gerenciador.fEditaNos.ShowDialog();
 
                         if (result == DialogResult.Yes)
@@ -8658,6 +8751,8 @@ namespace PG
 
                             gerenciador.FechaAguardar();
                         }
+                        edicaoNo_clique = true;
+                        editarNos.Text = "Editar nós";
                     }
                     else
                     if (tipo == Const.ID_BARRAGENERICA)
@@ -8683,19 +8778,34 @@ namespace PG
                         gerenciador.DadosBarra = new FDadosBarra(gerenciador, (objetoUnico as TBarraGenerica).Dados);
                         gerenciador.DadosBarra.alterando = true;
                         gerenciador.DadosBarra.Text = "Alterar elemento";
-                        gerenciador.DadosBarra.lbComprimento.Visible = true;
-                        gerenciador.DadosBarra.lbComprimento.Text =
-                        "Comprimento: " + (objetoUnico as TBarraGenerica).comprimento.ToString("n3") + " m";
+                        gerenciador.DadosBarra.btInfo.Visible = true;
+                        //  gerenciador.DadosBarra.lbComprimento.Text =
+                        gerenciador.DadosBarra.info = new StringBuilder();
+
+                        gerenciador.DadosBarra.info.AppendLine("Comprimento: " + (objetoUnico as TBarraGenerica).comprimento.ToString("n3") + " m");
+
+                        double peso = ((objetoUnico as TBarraGenerica).Dados.secao.PesoProprio * (objetoUnico as TBarraGenerica).comprimento * 100);
+                        gerenciador.DadosBarra.info.AppendLine("Peso: " + peso.ToString("n2") + " kg");
+
+                        //   "Comprimento: " + (objetoUnico as TBarraGenerica).comprimento.ToString("n3") + " m";
                         gerenciador.DadosBarra.numero.Text = (objetoUnico as TBarraGenerica).IDBarra.ToString();
 
                         //     gerenciador.DadosBarra.cbPosicaoArticulacao.SelectedIndex = (objetoUnico as TBarraGenerica).Articulacao;
 
                         if (ObjetosSelecionados.Count > 1)
                         {
+                            List<TBarraGenerica> bars = ObjetosSelecionados.OfType<TBarraGenerica>().Where(o => o.Tipo == Const.ID_BARRAGENERICA).ToList();
+                            peso = bars.Sum(o=>o.Dados.secao.PesoProprio * o.comprimento) * 100;
+                            double compTotal = bars.Sum(o => o.comprimento);
+
                             gerenciador.DadosBarra.numero.Visible = false;
                             gerenciador.DadosBarra.lbNumero.Visible = false;
                             gerenciador.DadosBarra.Text = "Alterar elementos";
                             gerenciador.DadosBarra.multi = true;
+
+                            gerenciador.DadosBarra.info = new StringBuilder();
+                            gerenciador.DadosBarra.info.AppendLine("Comprimento total: " + compTotal.ToString("n3") + " m");
+                            gerenciador.DadosBarra.info.AppendLine("Peso total: " + peso.ToString("n2") + " kg");
                         }
 
                         DialogResult result = gerenciador.DadosBarra.ShowDialog();
@@ -9268,6 +9378,69 @@ namespace PG
         float[] modelview = new float[16];
         float[] projection = new float[16];
         float[] mvm = new float[16];
+        bool VerificaSelecaoObjeto(Vector3d pa, Vector3d pb)
+        {
+            selec = false;
+            double x1 = 0, y1 = 0, z1 = 0;
+            double x2 = 0, y2 = 0, z2 = 0;
+            PontoD a = new PontoD(0, 0, 0);
+            PontoD b = new PontoD(0, 0, 0);
+            PontoD c = new PontoD(0, 0, 0);
+            PontoD d = new PontoD(0, 0, 0);
+            PontoD intersec = new PontoD(0, 0, 0);
+
+            Vector3d p1 = new Vector3d(), p2 = new Vector3d();
+
+            p1 = pa;
+            p2 = pb;
+
+            double zx1 = 0, zy1 = 0, zx2 = 0, zy2 = 0;
+
+            if (!Clipper3D.ProjetarLinhaSelecao(View_x_Proj, cameraPerspectiva, p1, p2, out zx1, out zy1, out zx2, out zy2))
+                return false;
+
+            a.x = zx1;//RetPixelX(ref o.setas[o.qtdSetas].l_principal.p1.x, ref o.setas[o.qtdSetas].l_principal.p1.y, ref o.setas[o.qtdSetas].l_principal.p1.z, ref z_pixel1);
+            a.y = ViewPortSelecao[3] - zy1;//RetPixelY(ref o.setas[o.qtdSetas].l_principal.p1.x, ref o.setas[o.qtdSetas].l_principal.p1.y, ref o.setas[o.qtdSetas].l_principal.p1.z, ref z_pixel2);
+            b.x = zx2;//RetPixelX(ref o.setas[0].l_principal.p1.x, ref o.setas[0].l_principal.p1.y, ref o.setas[0].l_principal.p1.z, ref z_pixel3);
+            b.y = ViewPortSelecao[3] - zy2;//RetPixelY(ref o.setas[0].l_principal.p1.x, ref o.setas[0].l_principal.p1.y, ref o.setas[0].l_principal.p1.z, ref z_pixel4);
+
+            c.x = RetanguloSelecao2[0].x;
+            c.y = RetanguloSelecao2[0].y;
+            d.x = RetanguloSelecao2[1].x;
+            d.y = RetanguloSelecao2[1].y;
+
+            if (Geom.calcIntersecEQU_RETA(ref a, ref b, ref c, ref d, ref intersec))
+                selec = true;
+
+            c.x = RetanguloSelecao2[0].x;
+            c.y = RetanguloSelecao2[0].y;
+            d.x = RetanguloSelecao2[3].x;
+            d.y = RetanguloSelecao2[3].y;
+
+            if (Geom.calcIntersecEQU_RETA(ref a, ref b, ref c, ref d, ref intersec))
+                selec = true;
+
+            c.x = RetanguloSelecao2[1].x;
+            c.y = RetanguloSelecao2[1].y;
+            d.x = RetanguloSelecao2[2].x;
+            d.y = RetanguloSelecao2[2].y;
+
+            if (Geom.calcIntersecEQU_RETA(ref a, ref b, ref c, ref d, ref intersec))
+                selec = true;
+
+            c.x = RetanguloSelecao2[2].x;
+            c.y = RetanguloSelecao2[2].y;
+            d.x = RetanguloSelecao2[3].x;
+            d.y = RetanguloSelecao2[3].y;
+
+            if (Geom.calcIntersecEQU_RETA(ref a, ref b, ref c, ref d, ref intersec))
+                selec = true;
+
+            if (PontoEmRetanguloSelecao(a.x, a.y) && PontoEmRetanguloSelecao(b.x, b.y))
+                selec = true;
+
+            return selec;
+        }
 
         void TestaSelecao(System.Windows.Forms.MouseEventArgs e)
         {
@@ -9438,7 +9611,6 @@ namespace PG
                                             ObjetosSelecionados.Add((eixo.Barra as TBarraGenerica));
                                         }
                                     }
-
                                 }
 
                                 else
@@ -9499,9 +9671,13 @@ namespace PG
                         {
                             selec = false;
 
-                            if (!o.Visivel) continue;
+                            if (!o.Visivel) 
+                                continue;
 
-                            p1 = new Vector3d(o.pIni.x, o.pIni.y, o.pIni.z);
+                            bool selecionou = VerificaSelecaoObjeto(new Vector3d(o.pIni.x, o.pIni.y, o.pIni.z), new Vector3d(o.pFin.x, o.pFin.y, o.pFin.z));
+
+
+                          /*  p1 = new Vector3d(o.pIni.x, o.pIni.y, o.pIni.z);
                             p2 = new Vector3d(o.pFin.x, o.pFin.y, o.pFin.z);
 
                             double zx1 = 0, zy1 = 0, zx2 = 0, zy2 = 0;
@@ -9547,12 +9723,34 @@ namespace PG
                                 selec = true;
 
                             if (PontoEmRetanguloSelecao(a.x, a.y) && PontoEmRetanguloSelecao(b.x, b.y))
-                                selec = true;
+                                selec = true;*/
 
-                            if (selec)
+                            if (selecionou)
                             {
                                 o.SetaSelecao(true, true);
-                                ObjetosSelecionados.Add((o as TBracoRigido));
+                                ObjetosSelecionados.Add(o);
+                            }
+                        }
+
+                        foreach (TDiafragmaRigido o in Estrutura.diafragmasRigidos)
+                        {
+                            selec = false;
+
+                            if (!o.Visivel)
+                                continue;
+
+                            bool selecionou = false;
+                            for (int i = 0; i < o.nos_contorno.Count; i++)
+                            {
+                               selecionou = VerificaSelecaoObjeto(new Vector3d(o.nos_contorno[i].x, o.nos_contorno[i].y, o.nos_contorno[i].z), new Vector3d(o.centroDiafragma.x, o.centroDiafragma.y, o.centroDiafragma.z));
+                                if (selecionou)
+                                    break;
+                            }
+
+                            if (selecionou)
+                            {
+                                o.SetaSelecao(true, true);
+                                ObjetosSelecionados.Add(o);
                             }
                         }
 
@@ -9854,6 +10052,28 @@ namespace PG
                             }
                         }
 
+                        foreach (TDiafragmaRigido o in Estrutura.diafragmasRigidos)
+                        {
+                            selec = false;
+
+                            if (!o.Visivel) continue;
+
+                            for (int i = 0; i < o.nos_contorno.Count; i++)
+                            {
+                                a.x = RetPixelX(ref o.nos_contorno[i].x, ref o.nos_contorno[i].y, ref o.nos_contorno[i].z, ref z_pixel1);
+                                a.y = RetPixelY(ref o.nos_contorno[i].x, ref o.nos_contorno[i].y, ref o.nos_contorno[i].z, ref z_pixel2);
+                                b.x = RetPixelX(ref o.centroDiafragma.x, ref o.centroDiafragma.y, ref o.centroDiafragma.z, ref z_pixel3);
+                                b.y = RetPixelY(ref o.centroDiafragma.x, ref o.centroDiafragma.y, ref o.centroDiafragma.z, ref z_pixel4);
+
+                                if (PontoEmRetanguloSelecao(a.x, a.y) && PontoEmRetanguloSelecao(b.x, b.y))
+                                {
+                                    o.SetaSelecao(true, true);
+                                    ObjetosSelecionados.Add(o);
+                                    break;
+                                }
+                            }
+                        }
+
                         foreach (TCargaLinear o in Estrutura.cargaLinear)
                         {
                             selec = false;
@@ -10041,12 +10261,17 @@ namespace PG
                             if (IdObjetoDesenho == Const.ID_APOIO)
                             {
                                 SetaSelecionados(false, -1, false);
+
                                 foreach (TObjetoDesenho o in NosSelecionados)
                                 {
+                                    if (Estrutura.apoios.Exists(a => a.pIni.x == (o as TPonto).x && a.pIni.y == (o as TPonto).y && a.pIni.z == (o as TPonto).z))
+                                        continue;
+
                                     MouseDrawing((o as TPonto).x, (o as TPonto).y, (o as TPonto).z);
                                     (ObjetoNovo as TApoio).InsercaoIndividual = false;
                                     MouseDrawing((o as TPonto).x, (o as TPonto).y, (o as TPonto).z);
                                 }
+
                                 IdObjetoDesenho = string.Empty;
 
                                 if (gerenciador.fApoio != null)
@@ -11498,6 +11723,15 @@ namespace PG
                     b.Visivel = true;
             }
 
+
+            foreach (TDiafragmaRigido b in Estrutura.diafragmasRigidos)
+            {
+                b.Visivel = false;
+
+                if (b.Selecionado)
+                    b.Visivel = true;
+            }
+
             foreach (TApoio b in Estrutura.apoios)
             {
                 b.Visivel = false;
@@ -11572,6 +11806,16 @@ namespace PG
                     b.Selecionado = false;
                 }
             }
+            foreach (TDiafragmaRigido b in Estrutura.diafragmasRigidos)
+            {
+                if (b.Selecionado)
+                {
+                    b.Visivel = false;
+                    b.Selecionado = false;
+                }
+            }
+
+
             if (MostraTextoDiagramas)
                 if (fx || my || mz || mx || fy || fz)
                 {
@@ -11609,7 +11853,8 @@ namespace PG
 
             foreach (TBracoRigido b in Estrutura.bracosRigidos)
                 b.Visivel = true;
-
+            foreach (TDiafragmaRigido b in Estrutura.diafragmasRigidos)
+                b.Visivel = true;
             foreach (TObjetoDesenho o in Estrutura.objetos)
                 o.Visivel = true;
 

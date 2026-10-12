@@ -120,6 +120,123 @@ namespace PG
         {
         }
     }
+
+    public class TIgualarSecoes : IEditTool
+    {
+        public List<string> ListaComandos;
+        bool DefinindoPontoBase = false;
+        bool DefinindoPosicoes = false;
+        public string Comando;
+        TPonto centro;
+        public List<TBarraGenerica> Objetos;
+        TTexto TextoInfo;
+        int pavimento;
+        public TIgualarSecoes()
+        {
+            ListaComandos = new List<string>();
+            ListaComandos.Add("Igualar - Selecione o elemento que contém a seção de origem <direito do mouse para confirmar>");
+            ListaComandos.Add("Igualar - Selecione o(s) elemento(s) destino <direito do mouse para confirmar>");
+        }
+
+        public IEditTool Clone()
+        {
+            return new TIgualarSecoes();
+        }
+
+        public void Initialize(TObjetoDesenho objeto, ref TPonto point, ref string command, ISettings settings, TLayer layer)
+        {
+        }
+
+        TBarraGenerica origem;
+
+        public eObjetoDesenhoMouseDown OnMouseDown(Gerenciador gerenciador, FPrincipal desenho, ref List<TObjetoDesenho> ObjetosSelecionados, ref List<TObjetoDesenho> ObjetosResultado, ref TPonto point, ref string command, List<TLinha> Linhas, List<TPonto> Pontos, bool FromGrip = false)
+        {
+            if (Comando == ListaComandos[0])
+            {
+                Objetos = new List<TBarraGenerica>();
+                origem = ObjetosSelecionados.OfType<TBarraGenerica>().First(o=>o.Tipo == Const.ID_BARRAGENERICA);
+                origem.SetaSelecao(false, false);
+                command = GetComando(1);
+                gerenciador.formDesenho.tipoComando = eTipoComando.selecionar;
+                return eObjetoDesenhoMouseDown.Continue;
+            }
+            else
+            if (Comando == ListaComandos[1])
+            {
+                foreach (TObjetoDesenho obj in ObjetosSelecionados)
+                {
+                    if (obj.Tipo == Const.ID_BARRAGENERICA)
+                    {
+                        Objetos.Add((TBarraGenerica)obj);
+                        Objetos[Objetos.Count - 1].SetaSelecao(false, false);
+                    }
+                }
+
+                TSecao secaux = new TSecao();
+                foreach (TBarraGenerica destino in Objetos)
+                {
+                    destino.Dados.secao = (TSecao)origem.Dados.secao.Clone();
+                    destino.Dados.secaoSemRotacao = (TSecao)origem.Dados.secaoSemRotacao.Clone();
+                    destino.Dados.idsecao = origem.Dados.idsecao;
+                }
+
+                command = GetComando(0);
+                return eObjetoDesenhoMouseDown.DoneRepeat;
+            }
+            else
+                return eObjetoDesenhoMouseDown.Done;
+        }
+        public string GetComando(int numeroComando)
+        {
+            Comando = ListaComandos[numeroComando];
+            return ListaComandos[numeroComando];
+        }
+        public void Continue()
+        {
+            DefinindoPontoBase = true;
+        }
+        public bool ApagarSelecionados
+        {
+            get { return false; }
+        }
+
+        public string TipoObjetoParaSelecionar
+        {
+            get { return "TODOS"; }
+        }
+        public string LayerObjetoParaSelecionar
+        {
+            get { return "TODOS"; }
+        }
+        public eEditToolTipoSelecao editToolTipoSelecao
+        {
+            get { return eEditToolTipoSelecao.multiSelecao; }
+        }
+        [NonSerialized]
+        public Pen mPen = new Pen(Color.White);
+        public double angRotacao;
+
+        public void OnMouseMove(ref TPonto point, bool ShowInfo, bool orto = true, double angulo = 0, bool PontoInicial = false)
+        {
+        }
+
+        public void OnMouseUp(ref TPonto point)
+        {
+        }
+        public void OnKeyDown(System.Windows.Forms.KeyEventArgs e)
+        {
+        }
+        public void Finished()
+        {
+        }
+        public void Undo()
+        {
+        }
+        public void Redo()
+        {
+        }
+    }
+
     public class TDividirNasInterseccoes : IEditTool
     {
         public List<string> ListaComandos;
@@ -151,6 +268,7 @@ namespace PG
             if (Comando == ListaComandos[0])
             {
                 Objetos = new List<TBarraGenerica>();
+                List<TPonto> nos = new List<TPonto>();      
                 double tt = 0, uu = 0;
                 vec3 p_1, p_2, p_3, p_4;
                 vec3 p_r = new vec3(0, 0, 0);
@@ -181,77 +299,107 @@ namespace PG
                         Objetos.Add((TBarraGenerica)obj.Clone());
                         Objetos[Objetos.Count - 1].IDBarra = (obj as TBarraGenerica).IDBarra;
                         Objetos[Objetos.Count - 1].SetaSelecao(false, false);
-
-                       /* if ((obj as TBarraGenerica).ids_barras_rigidas != null)
+                    }
+                    if (obj.Tipo == Const.ID_PONTO)
+                    {
+                        if (!nos.Exists(o => o.x == (obj as TPonto).x && o.y == (obj as TPonto).y && o.z == (obj as TPonto).z))
                         {
-                            barras_com_offset.Add((obj as TBarraGenerica));
-                        }*/
+                            nos.Add((TPonto)obj.Clone());
+                            nos[nos.Count - 1].SetaSelecao(false, false);
+                        }
                     }
                 }
 
-
-                //return eObjetoDesenhoMouseDown.DoneRepeat;
-
-                foreach (TBarraGenerica b1 in Objetos)
+                if (gerenciador.dividirElementos.rbDividirNos.Checked)
                 {
-                  //  if (b1.barra_offset) continue;
-
+                    foreach (TBarraGenerica b1 in Objetos)
                     {
                         p_1 = new vec3(b1.pIni.x, b1.pIni.y, b1.pIni.z);
                         p_2 = new vec3(b1.pFin.x, b1.pFin.y, b1.pFin.z);
-                    }
 
-                    IntersecBarras ib = new IntersecBarras(b1);
-   
-                    foreach (TBarraGenerica b2 in Objetos)
-                    {
-                        if (!b2.Visivel/*|| b2.barra_offset*/) continue;
-                        
-                        if (b1.IDBarra != b2.IDBarra)
+                        IntersecBarras ib = new IntersecBarras(b1);
+
+                        foreach (TPonto no in nos)
                         {
-                            p_3 = new vec3(b2.pIni.x, b2.pIni.y, b2.pIni.z);
-                            p_4 = new vec3(b2.pFin.x, b2.pFin.y, b2.pFin.z);
+                            p_3 = new vec3(no.x, no.y, no.z);
 
+                            var r1 = Geom.ClassificarPontoNoSegmento(p_3, p_1, p_2);
+
+                            if (r1.Posicao == PosicaoNoSegmento.Interior)
+                            {
+                                ib.pontos.Add(new vec3(p_3.x, p_3.y, p_3.z));
+                                ib.barras.Add(b1);
+                            }
+                        }
+
+                        if (ib.pontos.Count > 0)
+                          IntersecoesBarras.Add(ib);
+                    }
+                }
+                else
+                if (gerenciador.dividirElementos.rbDividirIntersecoes.Checked)
+                {
+                    foreach (TBarraGenerica b1 in Objetos)
+                    {
+                        //  if (b1.barra_offset) continue;
+
+                        {
+                            p_1 = new vec3(b1.pIni.x, b1.pIni.y, b1.pIni.z);
+                            p_2 = new vec3(b1.pFin.x, b1.pFin.y, b1.pFin.z);
+                        }
+
+                        IntersecBarras ib = new IntersecBarras(b1);
+
+                        foreach (TBarraGenerica b2 in Objetos)
+                        {
+                            if (!b2.Visivel/*|| b2.barra_offset*/) continue;
+
+                            if (b1.IDBarra != b2.IDBarra)
                             {
                                 p_3 = new vec3(b2.pIni.x, b2.pIni.y, b2.pIni.z);
                                 p_4 = new vec3(b2.pFin.x, b2.pFin.y, b2.pFin.z);
-                            }
 
-                            if (Geom.PontoTocaAresta(p_3, p_1, p_2, ref pontoToque, false))
-                            {
-                                if (TIntersecoes.LocalizaPonto(ref ib.pontos, pontoToque.x, pontoToque.y, pontoToque.z) > -1)
-                                    continue;
-
-                                ib.pontos.Add(new vec3(pontoToque.x, pontoToque.y, pontoToque.z));
-                                ib.barras.Add(b2);
-                            }
-                            else
-                            if (Geom.PontoTocaAresta(p_4, p_1, p_2, ref pontoToque, false))
-                            {
-                                if (TIntersecoes.LocalizaPonto(ref ib.pontos, pontoToque.x, pontoToque.y, pontoToque.z) > -1)
-                                    continue;
-                                
-                                ib.pontos.Add(new vec3(pontoToque.x, pontoToque.y, pontoToque.z));
-                                ib.barras.Add(b2);                        
-                            }
-                            else
-                            if (Geom.TemInterseccao3D(ref p_1, ref p_2, ref p_3, ref p_4, ref ponto, ref tt, ref uu))
-                            {
-                                pontoToque = new vec3(0);
-                                if (TIntersecoes.LocalizaPonto(ref ib.pontos, ponto.x, ponto.y, ponto.z) > -1)
-                                    continue;
-                                
-                                if (Geom.PontoTocaAresta(ponto, p_1, p_2, ref pontoToque, false) &&  //testa se realmente o ponto de intersec esta contido nas duas barras
-                                    Geom.PontoTocaAresta(ponto, p_3, p_4, ref pontoToque, false))
                                 {
-                                    ib.pontos.Add(new vec3(ponto.x, ponto.y, ponto.z));
+                                    p_3 = new vec3(b2.pIni.x, b2.pIni.y, b2.pIni.z);
+                                    p_4 = new vec3(b2.pFin.x, b2.pFin.y, b2.pFin.z);
+                                }
+
+                                if (Geom.PontoTocaAresta(p_3, p_1, p_2, ref pontoToque, false))
+                                {
+                                    if (TIntersecoes.LocalizaPonto(ref ib.pontos, pontoToque.x, pontoToque.y, pontoToque.z) > -1)
+                                        continue;
+
+                                    ib.pontos.Add(new vec3(pontoToque.x, pontoToque.y, pontoToque.z));
                                     ib.barras.Add(b2);
+                                }
+                                else
+                                if (Geom.PontoTocaAresta(p_4, p_1, p_2, ref pontoToque, false))
+                                {
+                                    if (TIntersecoes.LocalizaPonto(ref ib.pontos, pontoToque.x, pontoToque.y, pontoToque.z) > -1)
+                                        continue;
+
+                                    ib.pontos.Add(new vec3(pontoToque.x, pontoToque.y, pontoToque.z));
+                                    ib.barras.Add(b2);
+                                }
+                                else
+                                if (Geom.TemInterseccao3D(ref p_1, ref p_2, ref p_3, ref p_4, ref ponto, ref tt, ref uu))
+                                {
+                                    pontoToque = new vec3(0);
+                                    if (TIntersecoes.LocalizaPonto(ref ib.pontos, ponto.x, ponto.y, ponto.z) > -1)
+                                        continue;
+
+                                    if (Geom.PontoTocaAresta(ponto, p_1, p_2, ref pontoToque, false) &&  //testa se realmente o ponto de intersec esta contido nas duas barras
+                                        Geom.PontoTocaAresta(ponto, p_3, p_4, ref pontoToque, false))
+                                    {
+                                        ib.pontos.Add(new vec3(ponto.x, ponto.y, ponto.z));
+                                        ib.barras.Add(b2);
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    IntersecoesBarras.Add(ib);
+                        IntersecoesBarras.Add(ib);
+                    }
                 }
 
                 TBarraGenerica barranova = null;

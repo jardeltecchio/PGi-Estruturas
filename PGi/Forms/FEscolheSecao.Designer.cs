@@ -392,7 +392,7 @@
             // button18
             // 
             this.button18.AccessibleDescription = "Concreto\\sec8";
-            this.button18.AccessibleName = "Viga i - Arredondada";
+            this.button18.AccessibleName = "Viga i";
             this.button18.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.button18.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button18.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -441,7 +441,7 @@
             // button17
             // 
             this.button17.AccessibleDescription = "Concreto\\sec4";
-            this.button17.AccessibleName = "Viga i - Chanfro";
+            this.button17.AccessibleName = "Viga i";
             this.button17.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.button17.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button17.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

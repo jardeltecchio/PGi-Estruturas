@@ -43,6 +43,7 @@
             this.editarApoios = new System.Windows.Forms.ToolStripMenuItem();
             this.editarCargaPontual = new System.Windows.Forms.ToolStripMenuItem();
             this.editarCargaDistribuida = new System.Windows.Forms.ToolStripMenuItem();
+            this.editarNos = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.Elemento_rotacionar45 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
@@ -76,7 +77,7 @@
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.button8 = new System.Windows.Forms.Button();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
-        //    this.glControl = new OpenTK.GLControl();
+            //this.glControl = new OpenTK.GLControl();
             this.edZ = new System.Windows.Forms.TextBox();
             this.edY = new System.Windows.Forms.TextBox();
             this.edX = new System.Windows.Forms.TextBox();
@@ -189,6 +190,7 @@
             this.editarApoios,
             this.editarCargaPontual,
             this.editarCargaDistribuida,
+            this.editarNos,
             this.toolStripMenuItem3,
             this.Elemento_rotacionar45,
             this.toolStripMenuItem5,
@@ -203,7 +205,7 @@
             this.toolStripMenuItem4,
             this.cancelarToolStripMenuItem});
             this.menuPrincipal.Name = "contextMenuStrip1";
-            this.menuPrincipal.Size = new System.Drawing.Size(207, 298);
+            this.menuPrincipal.Size = new System.Drawing.Size(207, 342);
             this.menuPrincipal.Opening += new System.ComponentModel.CancelEventHandler(this.menuPrincipal_Opening);
             // 
             // editarBarras
@@ -239,6 +241,13 @@
             this.editarCargaDistribuida.Size = new System.Drawing.Size(206, 22);
             this.editarCargaDistribuida.Text = "Editar carga no elemento";
             this.editarCargaDistribuida.Click += new System.EventHandler(this.editarCargaDistribuida_Click);
+            // 
+            // editarNos
+            // 
+            this.editarNos.Name = "editarNos";
+            this.editarNos.Size = new System.Drawing.Size(206, 22);
+            this.editarNos.Text = "Editar nós";
+            this.editarNos.Click += new System.EventHandler(this.editarNos_Click);
             // 
             // toolStripMenuItem3
             // 
@@ -1277,5 +1286,6 @@
         public System.Windows.Forms.NumericUpDown qtdRepeticoesRotacao;
         public System.Windows.Forms.Panel pnRotacionar;
         private System.Windows.Forms.Button button9;
+        public System.Windows.Forms.ToolStripMenuItem editarNos;
     }
 }

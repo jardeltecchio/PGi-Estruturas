@@ -1,13 +1,22 @@
-﻿using MathNet.Numerics.Distributions;
+﻿using MathNet.Numerics;
+using MathNet.Numerics.Distributions;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using OpenTK.Platform;
+using Poly2Tri;
+using PolygonCuttingEar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TriangleNet;
+using TriangleNet.Geometry;
+using TriangleNet.Meshing;
+using TriangleNet.Smoothing;
+using TriangleNet.Topology;
+using static PG.Geom;
 
 namespace PG
 {
@@ -66,6 +75,7 @@ namespace PG
         public string Comando;
         public List<string> ListaComandos;
         public List<TPonto> pontosContorno;
+        [NonSerialized]
         public Plano plano;
         vec3 p1, p2, p3, p4, p5, p6, normal;
 
@@ -89,6 +99,187 @@ namespace PG
             plano = new Plano(normal, posicao, "", false);
         }
 
+        bool LocalizaPonto(ref List<TPonto> lista, double x, double y, double z)
+        {
+            for (int jk = 0; jk < lista.Count; jk++)
+                if (Geom.Iguais(x, lista[jk].x) && Geom.Iguais(y, lista[jk].y) && Geom.Iguais(z, lista[jk].z))
+                    return true;
+            return false;
+        }
+
+        public void IdentificarDiafragma(List<TPonto> ptsGeometria)
+        {
+            const double tolerancia = 0.01;
+            string erro = "Diafragma " + ID + ": ";
+            var pontos = pontosContorno;
+            if (pontos == null || pontos.Count < 3)
+                throw new InvalidOperationException(erro + "informe pelo menos tres vértices.");
+            var vertices = pontos.Select(p => new OpenTK.Vector3d(p.x, p.y, p.z)).ToList();
+            if (vertices.Any(p => double.IsNaN(p.X) || double.IsNaN(p.Y) || double.IsNaN(p.Z)
+                || double.IsInfinity(p.X) || double.IsInfinity(p.Y) || double.IsInfinity(p.Z)))
+                throw new InvalidOperationException(erro + "coordenadas inválidas.");
+            if ((vertices[vertices.Count - 1] - vertices[0]).Length <= tolerancia)
+                vertices.RemoveAt(vertices.Count - 1);
+            if (vertices.Count < 3)
+                throw new InvalidOperationException(erro + "contorno insuficiente.");
+
+            var origem = vertices[0];
+            
+            var u = vertices.Select(p => p - origem).OrderByDescending(p => p.LengthSquared).First();
+            
+            if (u.Length <= tolerancia)
+                throw new InvalidOperationException(erro + "vertices coincidentes.");
+            u.Normalize();
+           
+            // Nao depende dos primeiros tres vertices serem nao colineares.
+            var normal = vertices.Select(p => OpenTK.Vector3d.Cross(u, p - origem)).OrderByDescending(p => p.LengthSquared).First();
+          
+            if (normal.Length <= tolerancia)
+                throw new InvalidOperationException(erro + "vertices colineares.");
+            normal.Normalize();
+            
+            var v = OpenTK.Vector3d.Cross(normal, u);
+
+            var poligono = new List<OpenTK.Vector2d>();
+            foreach (var ponto in vertices)
+            {
+                var r = ponto - origem;
+                if (Math.Abs(OpenTK.Vector3d.Dot(r, normal)) > tolerancia)
+                    throw new InvalidOperationException(erro + "vértices fora do mesmo plano.");
+                poligono.Add(new OpenTK.Vector2d(OpenTK.Vector3d.Dot(r, u), OpenTK.Vector3d.Dot(r, v)));
+            }
+
+            List<PolygonPoint> ptos_triangulacao = new List<PolygonPoint>();
+
+            int quantidade = poligono.Count;
+            double areaDupla = 0, centroU = 0, centroV = 0;
+            for (int i = 0; i < quantidade; i++)
+            {
+                var a = poligono[i];
+                var b = poligono[(i + 1) % quantidade];
+                if ((b - a).Length <= tolerancia)
+                    throw new InvalidOperationException(erro + "vertices consecutivos coincidentes.");
+                // Rejeita cruzamentos e contatos entre arestas nao adjacentes.
+                for (int j = i + 2; j < quantidade; j++) 
+                {
+                    if (i == 0 && j == quantidade - 1) continue;
+                    var c = poligono[j];
+                    var d = poligono[(j + 1) % quantidade];
+                    double abC = (b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X);
+                    double abD = (b.X - a.X) * (d.Y - a.Y) - (b.Y - a.Y) * (d.X - a.X);
+                    double cdA = (d.X - c.X) * (a.Y - c.Y) - (d.Y - c.Y) * (a.X - c.X);
+                    double cdB = (d.X - c.X) * (b.Y - c.Y) - (d.Y - c.Y) * (b.X - c.X);
+                    if (abC * abD <= 0 && cdA * cdB <= 0
+                        && Math.Max(a.X, b.X) >= Math.Min(c.X, d.X) && Math.Max(c.X, d.X) >= Math.Min(a.X, b.X)
+                        && Math.Max(a.Y, b.Y) >= Math.Min(c.Y, d.Y) && Math.Max(c.Y, d.Y) >= Math.Min(a.Y, b.Y))
+                        throw new InvalidOperationException(erro + "contorno com cruzamentos.");
+                }
+                double cruzado = a.X * b.Y - b.X * a.Y;
+                areaDupla += cruzado;
+                centroU += (a.X + b.X) * cruzado;
+                centroV += (a.Y + b.Y) * cruzado;
+            }
+            if (Math.Abs(areaDupla) <= tolerancia * tolerancia)
+                throw new InvalidOperationException(erro + "área nula ou insuficiente.");
+            var centro = origem + u * (centroU / (3 * areaDupla)) + v * (centroV / (3 * areaDupla));
+            centroDiafragma = new TPonto(centro.X, centro.Y, centro.Z);
+            nos_contorno = new List<TPonto>();
+
+            for (int i = 0; i < ptsGeometria.Count; i++)
+            {
+                if (LocalizaPonto(ref nos_contorno, ptsGeometria[i].x, ptsGeometria[i].y, ptsGeometria[i].z))
+                    continue;
+
+                var ponto = new OpenTK.Vector3d(ptsGeometria[i].x, ptsGeometria[i].y, ptsGeometria[i].z);
+
+                var r = ponto - origem;
+
+                if (Math.Abs(OpenTK.Vector3d.Dot(r, normal)) > tolerancia)
+                    continue;
+
+                double x = OpenTK.Vector3d.Dot(r, u);
+                double y = OpenTK.Vector3d.Dot(r, v);
+
+                bool dentro = false, borda = false;
+                for (int j = 0; j < quantidade; j++)
+                {
+                    var a = poligono[j];
+                    var b = poligono[(j + 1) % quantidade];
+                    var ab = b - a;
+                    double t = Math.Max(0, Math.Min(1, ((x - a.X) * ab.X + (y - a.Y) * ab.Y) / ab.LengthSquared));
+                    double dx = x - a.X - t * ab.X, dy = y - a.Y - t * ab.Y;
+                    if (dx * dx + dy * dy <= tolerancia * tolerancia)
+                    {
+                        borda = true;
+                        break;
+                    }
+
+                    if ((a.Y > y) != (b.Y > y) && x < a.X + (y - a.Y) * (b.X - a.X) / (b.Y - a.Y))
+                        dentro = !dentro;
+                }
+
+                if (dentro || borda)
+                {
+                    Vector2d plano = Geometry.ProjetarNoPlano(new Vector3d(ptsGeometria[i].x, ptsGeometria[i].y, ptsGeometria[i].z),
+                                             new Vector3d(origem.X, origem.Y, origem.Z),
+                                             u,
+                                             v);
+                    if (borda)
+                      ptos_triangulacao.Add(new PolygonPoint(plano.X, plano.Y));
+                    
+                    nos_contorno.Add(ptsGeometria[i]);
+                }
+            }
+
+         /*   tris = new List<TTrianguloDiafragma>();
+            TriangulosDiafragma = new Polygon_Poly2Tri(ptos_triangulacao);
+            TriangulationContext tcx = new DTSweepContext();
+            tcx.PrepareTriangulation(TriangulosDiafragma);
+            DTSweep.Triangulate((DTSweepContext)tcx);
+
+            foreach (DelaunayTriangle t in TriangulosDiafragma.Triangles)
+            {
+                TTrianguloDiafragma tt = new TTrianguloDiafragma();
+                for (int j = 0; j < t.Points.Count(); j++)
+                {
+                    Vector3d pt_3d = Geometry.ReprojetarDoPlano(new Vector2d(t.Points[j].X, t.Points[j].Y),
+                                                                new Vector3d(origem.X, origem.Y, origem.Z), u, v);
+                    if (j == 0)
+                    {
+                        tt.p1.x = pt_3d.X; tt.p1.y = pt_3d.Y; tt.p1.z = pt_3d.Z;
+                    }
+                    if (j == 1)
+                    {
+                        tt.p2.x = pt_3d.X; tt.p2.y = pt_3d.Y; tt.p2.z = pt_3d.Z;
+                    }
+                    if (j == 2)
+                    {
+                        tt.p3.x = pt_3d.X; tt.p3.y = pt_3d.Y; tt.p3.z = pt_3d.Z;
+                    }
+                    //    correspondencia_local_global.Add(new uv_XYZ(plano.X, plano.Y, ptsGeometria[i].x, ptsGeometria[i].y, ptsGeometria[i].z));
+                }
+                tris.Add(tt);
+            }*/
+
+        }
+
+        List<TTrianguloDiafragma> tris;
+
+        class TTrianguloDiafragma
+        {
+            public TPonto p1;
+            public TPonto p2;
+            public TPonto p3;
+            public TTrianguloDiafragma()
+            {
+                p1 = new TPonto(0, 0, 0);
+                p2 = new TPonto(0, 0, 0);
+                p3 = new TPonto(0, 0, 0);
+            }
+        }
+        public List<TPonto> nos_contorno;
+
+        public TPonto centroDiafragma;
         public override eObjetoDesenhoMouseDown OnMouseDown(ref TPonto point, ref string command, List<TLinha> Linhas, List<TPonto> Pontos, List<TPilar> Pilares, ref List<TObjetoDesenho> Objects, bool FromGrip = false)
         {
             if (command == "finalizar")
@@ -115,6 +306,7 @@ namespace PG
 
                     return eObjetoDesenhoMouseDown.DoneRepeat;
                 }
+
                 NaoPermiteMoverOuCopiar = false;
 
                 pFin = (TPonto)point.Clone();
@@ -137,7 +329,8 @@ namespace PG
 
                 this.comprimento = (float)pFin.DistanceTo(pIni);
 
-                pontosContorno.Add((TPonto)point.Clone());
+                TPonto pp = (TPonto)point.Clone();
+                pontosContorno.Add(new TPonto(pp.x, pp.y, pp.z));
 
                 return eObjetoDesenhoMouseDown.Continue;
             }
@@ -147,7 +340,7 @@ namespace PG
         {
             try
             {
-                GL.Color4(System.Drawing.Color.FromArgb(50, 0, 200, 100));
+                GL.Color3(System.Drawing.Color.FromArgb(0, 0, 200));
 
                /* GL.Begin(PrimitiveType.Polygon);
                 for (int i = 0; i < pontosContorno.Count; i++)
@@ -266,14 +459,31 @@ namespace PG
                     b = 1;
                 }
 
-                for (int i = 0; i < pontosContorno.Count-1; i++)
+              /*  for (int i = 0; i < pontosContorno.Count - 1; i++)
                 {
-                    int next = (i + 1) % pontosContorno.Count;
-
                     setLista(ref coords_arestas, pontosContorno[i].x, pontosContorno[i].y, pontosContorno[i].z);
                     setLista(ref coords_arestas, r, g, b);
-                    setLista(ref coords_arestas, pontosContorno[i+1].x, pontosContorno[i+1].y, pontosContorno[i+1].z);
+                    setLista(ref coords_arestas, pontosContorno[i + 1].x, pontosContorno[i + 1].y, pontosContorno[i + 1].z);
                     setLista(ref coords_arestas, r, g, b);
+                }*/
+
+                for (int i = 0; i < nos_contorno.Count; i++)
+                {
+                    setLista(ref coords_arestas, nos_contorno[i].x, nos_contorno[i].y, nos_contorno[i].z);
+                    setLista(ref coords_arestas, r, g, b);
+                    setLista(ref coords_arestas, centroDiafragma.x, centroDiafragma.y, centroDiafragma.z);
+                    setLista(ref coords_arestas, r, g, b);
+                }
+
+                if (Selecionado)
+                {
+                   for (int i = 0; i < pontosContorno.Count - 1; i++)
+                   {
+                       setLista(ref coords_arestas, pontosContorno[i].x, pontosContorno[i].y, pontosContorno[i].z);
+                       setLista(ref coords_arestas, r, g, b);
+                       setLista(ref coords_arestas, pontosContorno[i + 1].x, pontosContorno[i + 1].y, pontosContorno[i + 1].z);
+                       setLista(ref coords_arestas, r, g, b);
+                   }
                 }
             }
             GL.LineWidth(1);

@@ -53,7 +53,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.ForeColor = System.Drawing.Color.Black;
-            this.label9.Location = new System.Drawing.Point(105, 19);
+            this.label9.Location = new System.Drawing.Point(119, 19);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(15, 13);
             this.label9.TabIndex = 120;
@@ -73,7 +73,7 @@
             // 
             this.edX.Location = new System.Drawing.Point(33, 12);
             this.edX.Name = "edX";
-            this.edX.Size = new System.Drawing.Size(71, 20);
+            this.edX.Size = new System.Drawing.Size(85, 20);
             this.edX.TabIndex = 118;
             this.edX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.edAngulo_KeyPress_1);
             this.edX.KeyUp += new System.Windows.Forms.KeyEventHandler(this.edAngulo_KeyUp);
@@ -102,7 +102,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(105, 45);
+            this.label3.Location = new System.Drawing.Point(119, 45);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(15, 13);
             this.label3.TabIndex = 123;
@@ -112,7 +112,7 @@
             // 
             this.edY.Location = new System.Drawing.Point(33, 38);
             this.edY.Name = "edY";
-            this.edY.Size = new System.Drawing.Size(71, 20);
+            this.edY.Size = new System.Drawing.Size(85, 20);
             this.edY.TabIndex = 122;
             // 
             // label4
@@ -129,7 +129,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.Color.Black;
-            this.label5.Location = new System.Drawing.Point(105, 71);
+            this.label5.Location = new System.Drawing.Point(119, 71);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(15, 13);
             this.label5.TabIndex = 126;
@@ -139,7 +139,7 @@
             // 
             this.edZ.Location = new System.Drawing.Point(33, 64);
             this.edZ.Name = "edZ";
-            this.edZ.Size = new System.Drawing.Size(71, 20);
+            this.edZ.Size = new System.Drawing.Size(85, 20);
             this.edZ.TabIndex = 125;
             // 
             // imageList2

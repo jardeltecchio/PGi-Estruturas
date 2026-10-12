@@ -77,6 +77,7 @@ namespace PG
         public TConfiguracoesPGi cfg;
         public List<TBarraGenerica> barras;
         public List<TBracoRigido> bracosRigidos;
+        public List<TDiafragmaRigido> diafragmasRigidos;
         public List<TCasosCarga> casos;
         public List<TCargaLinear> cargalinear;
         public List<TCargaPontual> cargapontual;
@@ -88,12 +89,13 @@ namespace PG
 
         public TArquivo(List<TApoio> _apoios, List<TSecao> _secoes, TEstrutura _estrutura, List<TCargaPontual> _cargapontual,
             List<TCargaLinear> _cargalinear, List<TCasosCarga> _casos, List<TCombinacoes> _combinacoes, List<TBarraGenerica> _barras, 
-            List<TBracoRigido> bracosrigidos,
+            List<TBracoRigido> bracosrigidos, List<TDiafragmaRigido> diafragmas,
             TConfiguracoesPGi _cfg)
         {
             this.apoios = _apoios;
             this.secoes = _secoes;
             this.bracosRigidos = bracosrigidos;
+            diafragmasRigidos = diafragmas;
             cargalinear = _cargalinear; 
             cargapontual = _cargapontual;
             this.barras = _barras;  

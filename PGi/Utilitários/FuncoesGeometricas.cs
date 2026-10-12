@@ -480,6 +480,19 @@ namespace PG
 
     public static class Geometry
     {
+
+        public static Vector2d ProjetarNoPlano(Vector3d ponto,Vector3d origem,Vector3d u,Vector3d v)
+        {
+            Vector3d r = ponto - origem;
+
+            return new Vector2d(Vector3d.Dot(r, u),Vector3d.Dot(r, v));
+        }
+
+        public static Vector3d ReprojetarDoPlano(Vector2d ponto,Vector3d origem,Vector3d u,Vector3d v)
+        {
+            return origem + u * ponto.X + v * ponto.Y;
+        }
+
         public static double AreaPoligono_Shoealace(List<vec3> pts)
         {
             if (pts == null || pts.Count < 3)

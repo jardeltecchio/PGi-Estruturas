@@ -885,14 +885,14 @@ namespace PG
             }
         }
 
-        internal double[] ObterFatoresTirantesReferencia(int idReferencia, bool ehCombinacao)
+        internal double[] ObterFatoresTirantesCombinacao(int idCombinacao, bool ehCombinacao)
         {
             var resultados = ehCombinacao ? combinacoes_x_deslocamentos : casos_x_deslocamentos;
             double[] fatores = null;
             bool encontrado = false;
             if (resultados != null)
                 foreach (var resultado in resultados)
-                    if (resultado.id == idReferencia)
+                    if (resultado.id == idCombinacao)
                     {
                         if (encontrado)
                             throw new InvalidOperationException("Referencia de tirantes duplicada.");
@@ -1503,7 +1503,7 @@ namespace PG
 
         public sealed class ResultadoFlambagemReferencia
         {
-            public int IdReferencia { get; internal set; }
+            public int IdCombinacao { get; internal set; }
             public bool EhCombinacao { get; internal set; }
             public bool Convergiu { get; internal set; }
             public string Erro { get; internal set; }
@@ -1544,13 +1544,13 @@ namespace PG
           
             for (int tipo = 0; tipo < 1; tipo++)
             {
-                var referencias = combinacoes_x_deslocamentos;
+                var combinacao_estabilidade = combinacoes_x_deslocamentos;
 
-                foreach (var referencia in referencias)
+                foreach (var comb in combinacao_estabilidade)
                 {
 //                    if (referencia.id == 1) continue;
                     
-                    combinacaoAtual = gerenciador.formDesenho.Estrutura.combinacoes.Find(o => o.Id == referencia.id);
+                    combinacaoAtual = gerenciador.formDesenho.Estrutura.combinacoes.Find(o => o.Id == comb.id);
                     if (combinacaoAtual.categoriaCombinacao != CategoriaCombinacao.Estabilidade)
                        continue;
 
@@ -1593,7 +1593,7 @@ namespace PG
 
                     var resultado = new ResultadoFlambagemReferencia
                     {
-                        IdReferencia = referencia.id,
+                        IdCombinacao = comb.id,
                         EhCombinacao = true,
                         EquacoesNodais = (int[])equacoes.Clone()
                     };
@@ -1610,7 +1610,7 @@ namespace PG
                         analise.ProgressoAlterado += informar;
                         analise.ProgressoNumericoAlterado += atualizarBarra;
                         informar("Preparação");
-                        analise.PrepararReferencia(referencia.id, true);
+                        analise.PrepararReferencia(comb.id, true);
                         atualizarBarra(5);
                         informar("Montagem da rigidez e da matriz geométrica");
                         analise.MontarMatrizes();
@@ -1674,7 +1674,7 @@ namespace PG
                             }
                         for (int barra = 1; barra <= nBarras; barra++)
                             barras[barra].PrepararDesenhoFlambagem(resultado.Modos, id, glRestrito,
-                                maximos, resultado.IdReferencia);
+                                maximos, resultado.IdCombinacao);
                     }
                     if (resultado.Convergiu) atualizarBarra(100);
                 }

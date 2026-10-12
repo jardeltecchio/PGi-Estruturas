@@ -209,6 +209,7 @@ namespace PG
 
             gerenciador.ConfiguracoesPGi.F3DOpcoesVisualizacao.MostrarDescricaoElementos = MostrarDescricaoElementos.Checked;
             gerenciador.ConfiguracoesPGi.F3DOpcoesVisualizacao.MostrarNumeroElementos = MostrarNumeroElementos.Checked;
+            gerenciador.ConfiguracoesPGi.F3DOpcoesVisualizacao.MostrarDiafragmasRigidos= chMostrarDiafragmas.Checked;
             gerenciador.ConfiguracoesPGi.F3DOpcoesVisualizacao.UsarPlanoFundoGradiente = chUsarPlanoFundoGradiente.Checked;
 
             gerenciador.ConfiguracoesPGi.F3DOpcoesVisualizacao.Transparencia = (byte)(255 - Transparencia.Value);
@@ -251,6 +252,7 @@ namespace PG
             btCorCima.BackColor = gerenciador.ConfiguracoesPGi.F3DOpcoesVisualizacao.CorFundoCima;
             MostrarDescricaoElementos.Checked = gerenciador.ConfiguracoesPGi.F3DOpcoesVisualizacao.MostrarDescricaoElementos;
             MostrarNumeroElementos.Checked = gerenciador.ConfiguracoesPGi.F3DOpcoesVisualizacao.MostrarNumeroElementos;
+            chMostrarDiafragmas.Checked = gerenciador.ConfiguracoesPGi.F3DOpcoesVisualizacao.MostrarDiafragmasRigidos;
             Nos.Checked = gerenciador.ConfiguracoesPGi.F3DOpcoesVisualizacao.Nos;
             MostrarEixosCentrais.Checked = gerenciador.ConfiguracoesPGi.F3DOpcoesVisualizacao.EixosCentrais;
             chPerspectiva.Checked = gerenciador.ConfiguracoesPGi.F3DOpcoesVisualizacao.Perspectiva;

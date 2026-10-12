@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web.UI.Design;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -16,6 +17,7 @@ namespace PG
 {
     public partial class FDadosBarra : Form
     {
+        public StringBuilder info;
         public FDadosBarra()
         {
             InitializeComponent();
@@ -1425,11 +1427,14 @@ namespace PG
                     Salvar();
                 gerenciador.formDesenho.Focus();
 
-                timer1.Enabled = true;
 
                 RodarSecao();
                 //  Enquadrar();
                 DesenhaSecao();
+
+               // Enquadrar();
+
+//                timer1.Enabled = true;
             }
             else
             {
@@ -1545,6 +1550,16 @@ namespace PG
         private void edAngulo_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void btInfo_Click(object sender, EventArgs e)
+        {
+            tipBotoes.SetToolTip(btInfo, info.ToString());
+        }
+
+        private void btInfo_MouseEnter(object sender, EventArgs e)
+        {
+            tipBotoes.SetToolTip(btInfo, info.ToString());
         }
 
         public void lbSecoes_Click(object sender, EventArgs e)

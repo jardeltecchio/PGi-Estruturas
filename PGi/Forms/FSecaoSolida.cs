@@ -398,5 +398,10 @@ namespace PG
         {
 
         }
+
+        private void btCalculaSecao_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

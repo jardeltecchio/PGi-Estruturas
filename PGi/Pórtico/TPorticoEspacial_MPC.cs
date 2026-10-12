@@ -213,7 +213,7 @@ namespace PG
                 var a = poligono[i];
                 var b = poligono[(i + 1) % quantidade];
                 if ((b - a).Length <= tolerancia)
-                    throw new InvalidOperationException(erro + "vertices consecutivos coincidentes.");
+                    throw new InvalidOperationException(erro + "vértices consecutivos coincidentes.");
                 // Rejeita cruzamentos e contatos entre arestas nao adjacentes.
                 for (int j = i + 2; j < quantidade; j++)
                 {
@@ -235,8 +235,9 @@ namespace PG
                 centroV += (a.Y + b.Y) * cruzado;
             }
             if (Math.Abs(areaDupla) <= tolerancia * tolerancia)
-                throw new InvalidOperationException(erro + "area nula ou insuficiente.");
+                throw new InvalidOperationException(erro + "área nula ou insuficiente.");
             var centro = origem + u * (centroU / (3 * areaDupla)) + v * (centroV / (3 * areaDupla));
+         
             var resultado = new DiafragmaPortico { origem = diafragma, eixoU = u, eixoV = v, normal = normal };
             for (int i = 1; i <= nNos; i++)
             {
@@ -244,11 +245,14 @@ namespace PG
                 if ((ponto - centro).Length <= tolerancia)
                 {
                     if (!ReferenceEquals(resultado.mestre, null))
-                        throw new InvalidOperationException(erro + "mais de um no no centroide.");
+                        throw new InvalidOperationException(erro + "mais de um nó no centroide.");
                     resultado.mestre = nos[i];
                 }
                 var r = ponto - origem;
-                if (Math.Abs(OpenTK.Vector3d.Dot(r, normal)) > tolerancia) continue;
+               
+                if (Math.Abs(OpenTK.Vector3d.Dot(r, normal)) > tolerancia) 
+                    continue;
+               
                 double x = OpenTK.Vector3d.Dot(r, u), y = OpenTK.Vector3d.Dot(r, v);
                 bool dentro = false, borda = false;
                 for (int j = 0; j < quantidade; j++)
@@ -258,12 +262,19 @@ namespace PG
                     var ab = b - a;
                     double t = Math.Max(0, Math.Min(1, ((x-a.X)*ab.X + (y-a.Y)*ab.Y) / ab.LengthSquared));
                     double dx = x - a.X - t*ab.X, dy = y - a.Y - t*ab.Y;
-                    if (dx*dx + dy*dy <= tolerancia*tolerancia) { borda = true; break; }
+                    if (dx*dx + dy*dy <= tolerancia*tolerancia) 
+                    { 
+                        borda = true; 
+                        break; 
+                    }
+
                     if ((a.Y > y) != (b.Y > y) && x < a.X + (y-a.Y)*(b.X-a.X)/(b.Y-a.Y))
                         dentro = !dentro;
                 }
-                if (dentro || borda) resultado.escravos.Add(nos[i]);
+                if (dentro || borda)
+                    resultado.escravos.Add(nos[i]);
             }
+
             resultado.mestreAuxiliar = ReferenceEquals(resultado.mestre, null);
             if (resultado.mestreAuxiliar)
                 resultado.mestre = new TNoPortico(centro.X, centro.Y, centro.Z);

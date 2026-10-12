@@ -45,6 +45,7 @@ namespace PG
             public DadosViga FDadosViga;
         public FDadosBarra DadosBarra;
         public FApoio fApoio;
+        public FDividirElementos dividirElementos;
         public FCasosCarga CasosCarga;
         public FMateriais Materiais;
         public FConfiguracaoPrograma fConfiguracaoPrograma;
@@ -809,6 +810,7 @@ namespace PG
                 formDesenho.AddEditTool(Const.ID_MOVER_EXTREMO_ELEMENTOS, new TMoverExtremoElemento());
                 formDesenho.AddEditTool(Const.ID_COPIA_PADRAO, new TCopiaPadrao());
                 formDesenho.AddEditTool(Const.ID_DIVIDIR_NAS_INTERSECOES, new TDividirNasInterseccoes());
+                formDesenho.AddEditTool(Const.ID_IGUALAR_SECOES, new TIgualarSecoes());
 
                 formDesenho.AddEditTool(Const.ID_ARTICULAR_ELEMENTO, new TArticularElemento());
 
@@ -1467,6 +1469,7 @@ namespace PG
                                                                      formDesenho.Estrutura.combinacoes,
                                                                      formDesenho.Estrutura.barras,
                                                                      formDesenho.Estrutura.bracosRigidos,
+                                                                     formDesenho.Estrutura.diafragmasRigidos,
                                                                      ConfiguracoesPGi);
 
                                 arquivo = new FileStream(nomePasta, FileMode.OpenOrCreate, FileAccess.Write);
@@ -1732,6 +1735,10 @@ namespace PG
                         if (arquivoProjeto.bracosRigidos == null)
                             arquivoProjeto.bracosRigidos = new List<TBracoRigido>();
 
+                        if (arquivoProjeto.diafragmasRigidos == null)
+                            arquivoProjeto.diafragmasRigidos = new List<TDiafragmaRigido>();
+
+                        formDesenho.Estrutura.diafragmasRigidos = arquivoProjeto.diafragmasRigidos;
                         formDesenho.Estrutura.bracosRigidos = arquivoProjeto.bracosRigidos;
                         formDesenho.Estrutura.cargaLinear = arquivoProjeto.cargalinear;
                         formDesenho.Estrutura.combinacoes = arquivoProjeto.combinacoes;
@@ -2265,7 +2272,7 @@ namespace PG
             if (!ConfiguracoesPGi.CfgProjeto.sistema.CalculaModosFlambagem || portico == null)
                 return;
 
-            var resultado = portico.ResultadosFlambagem.Find(r => r.EhCombinacao && r.IdReferencia == id_combinacao);
+            var resultado = portico.ResultadosFlambagem.Find(r => r.EhCombinacao && r.IdCombinacao == id_combinacao);
             if (resultado?.Modos == null || resultado.Modos.GetLength(1) == 0)
                 return;
 
@@ -2320,11 +2327,13 @@ namespace PG
                     maximo = Math.Max(maximo, maximos[modo]);
             }
 
-            // Mesmo deslocamento visual alvo das deformações: 0,5 unidade.
+            // Mesmo deslocamento visual alvo das deformações: 0,9 unidade.
             // Não truncar: modos normalizados pela massa podem exigir escala < 1.
-            escalaModoVibracao = maximo > 0.0 ? 0.5 / maximo : 1.0;
+            escalaModoVibracao = maximo > 0.0 ? 0.9 / maximo : 1.0;
+
             if (double.IsNaN(escalaModoVibracao) || double.IsInfinity(escalaModoVibracao))
                 escalaModoVibracao = 1.0;
+            
             vEscalaModoVibracao = escalaModoVibracao;
             formDesenho.fatorModoVibracao = escalaModoVibracao;
             formDesenho.EscalaModoVibracao = escalaModoVibracao;
@@ -2616,6 +2625,11 @@ namespace PG
             {
                 CriaNovaBarra(); 
             }
+            if (e.KeyCode == Keys.Oemplus)
+            {
+                IgualarSecoes();
+            }
+
             if ((e.KeyData == (Keys.Control | Keys.S)))
             {
                 Salvar();
@@ -4683,6 +4697,8 @@ namespace PG
                 if (formDesenho.MostraTensoesNormaisGradiente)
                     pnCorResultados.Visible = true;
 
+                btDinamica1.Visible = ConfiguracoesPGi.CfgProjeto.sistema.CalculaModosVibracao;
+                btFlambagem.Visible = ConfiguracoesPGi.CfgProjeto.sistema.CalculaModosFlambagem;
             }
             else
             {
@@ -4856,7 +4872,7 @@ namespace PG
 
         private void button35_Click(object sender, EventArgs e)
         {
-            formDesenho.RemeverDosObjetosSelecionados_Nao_Copiaveis();
+            formDesenho.RemoverDosObjetosSelecionados_Nao_Copiaveis();
 
             if (formDesenho.ObjetosSelecionados.Count > 0)
             {
@@ -4873,7 +4889,7 @@ namespace PG
 
         private void button33_Click(object sender, EventArgs e)
         {
-            formDesenho.RemeverDosObjetosSelecionados_Nao_Copiaveis();
+            formDesenho.RemoverDosObjetosSelecionados_Nao_Copiaveis();
 
             if (formDesenho.ObjetosSelecionados.Count > 0)
             {
@@ -4886,7 +4902,7 @@ namespace PG
 
         private void button32_Click(object sender, EventArgs e)
         {
-            formDesenho.RemeverDosObjetosSelecionados_Nao_Copiaveis();
+            formDesenho.RemoverDosObjetosSelecionados_Nao_Copiaveis();
 
             if (formDesenho.ObjetosSelecionados.Count > 0)
             {
@@ -6014,7 +6030,7 @@ namespace PG
                  fRotacionarElementos = new FRotacionarElementos(this);
 
              fRotacionarElementos.Show();*/
-            formDesenho.RemeverDosObjetosSelecionados_Nao_Copiaveis();
+            formDesenho.RemoverDosObjetosSelecionados_Nao_Copiaveis();
 
             if (formDesenho.ObjetosSelecionados.Count > 0)
             {
@@ -6068,7 +6084,7 @@ namespace PG
         public FEspelharElementos fEspelharelementos;
         private void button31_Click(object sender, EventArgs e)
         {
-            formDesenho.RemeverDosObjetosSelecionados_Nao_Copiaveis();
+            formDesenho.RemoverDosObjetosSelecionados_Nao_Copiaveis();
             formDesenho.ObjetosSelecionados.RemoveAll(o => o.Tipo != Const.ID_BARRAGENERICA);
 
             if (formDesenho.ObjetosSelecionados.Count > 0)
@@ -6567,7 +6583,7 @@ namespace PG
                         if (cbResultadoCombinacoes.SelectedIndex >= 0 &&
                             cbResultadoCombinacoes.SelectedIndex < formDesenho.Estrutura.combinacoes.Count &&
                             formDesenho.Estrutura.PorticoEspacial.ResultadosFlambagem[j].EhCombinacao &&
-                            formDesenho.Estrutura.PorticoEspacial.ResultadosFlambagem[j].IdReferencia ==
+                            formDesenho.Estrutura.PorticoEspacial.ResultadosFlambagem[j].IdCombinacao ==
                                 formDesenho.Estrutura.combinacoes[cbResultadoCombinacoes.SelectedIndex].Id)
                         {
                             index_combinacao_flambagem = j;
@@ -6583,7 +6599,7 @@ namespace PG
 
                     if (cbModosFlambagem.Items.Count > 0)
                     {
-                        id_combinacao_flambagem = formDesenho.Estrutura.PorticoEspacial.ResultadosFlambagem[index_combinacao_flambagem].IdReferencia;
+                        id_combinacao_flambagem = formDesenho.Estrutura.PorticoEspacial.ResultadosFlambagem[index_combinacao_flambagem].IdCombinacao;
                         cbModosFlambagem.SelectedIndex = 0;
                         CalcularEscalaModosFlambagem(id_combinacao_flambagem);
                     }
@@ -6709,7 +6725,9 @@ namespace PG
 
             foreach (TBracoRigido b in formDesenho.Estrutura.bracosRigidos)
                 b.Visivel = mostrar;
-
+            foreach (TDiafragmaRigido b in formDesenho.Estrutura.diafragmasRigidos)
+                b.Visivel = mostrar;
+            
             //    formDesenho.DirtyPortico();
             if ((string)btTensoes.Tag == "1")
                 ChamarAtualizacaoResultados(btOkTensoes, true);
@@ -7488,10 +7506,16 @@ namespace PG
                 MessageBox.Show(ex.Message, "Relatório da análise modal", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+       
 
         private void button51_Click(object sender, EventArgs e)
         {
-            formDesenho.RemeverDosObjetosSelecionados_Nao_Copiaveis();
+            if (dividirElementos == null)
+                dividirElementos = new FDividirElementos(this);
+            
+            dividirElementos.Show(this);
+
+            /*formDesenho.RemoverDosObjetosSelecionados_Nao_Copiaveis();
 
             if (formDesenho.ObjetosSelecionados.Count > 0)
             {
@@ -7499,7 +7523,7 @@ namespace PG
                 formDesenho.MouseEdit(0, 0, 0, 0, "", 0);
             }
             else
-                formDesenho.ComandoEdicao(Const.ID_DIVIDIR_NAS_INTERSECOES);
+                formDesenho.ComandoEdicao(Const.ID_DIVIDIR_NAS_INTERSECOES);*/
         }
 
         private void btFlambagem_Click(object sender, EventArgs e)
@@ -7814,6 +7838,23 @@ namespace PG
         {
             formDesenho.ComandoDesenhar(Const.ID_DIAFRAGMA_RIGIDO, null, arg, Const.ID_INSERCAO_INDIVIDUAL);
             formDesenho.HabilitaCoords(true);
+        }
+        void IgualarSecoes()
+        {
+            formDesenho.RemoverDosObjetosSelecionados_Nao_Copiaveis();
+
+            if (formDesenho.ObjetosSelecionados.Count > 0)
+            {
+                formDesenho.ComandoEdicao(Const.ID_IGUALAR_SECOES, eTipoComando.edit);
+                formDesenho.MouseEdit(0, 0, 0, 0, "", 0);
+            }
+            else
+                formDesenho.ComandoEdicao(Const.ID_IGUALAR_SECOES);
+
+        }
+        private void button43_Click_1(object sender, EventArgs e)
+        {
+            IgualarSecoes();
         }
 
         private void btAnimarFlambagem_Click(object sender, EventArgs e)

@@ -309,6 +309,7 @@ namespace PG
             this.button31 = new System.Windows.Forms.Button();
             this.button36 = new System.Windows.Forms.Button();
             this.panel26 = new System.Windows.Forms.Panel();
+            this.button43 = new System.Windows.Forms.Button();
             this.button32 = new System.Windows.Forms.Button();
             this.button33 = new System.Windows.Forms.Button();
             this.button35 = new System.Windows.Forms.Button();
@@ -2584,6 +2585,7 @@ namespace PG
             this.imgTemaEscuro_18x18.Images.SetKeyName(18, "historico de calculo.png");
             this.imgTemaEscuro_18x18.Images.SetKeyName(19, "braço rigido.png");
             this.imgTemaEscuro_18x18.Images.SetKeyName(20, "diafragma rigido.png");
+            this.imgTemaEscuro_18x18.Images.SetKeyName(21, "igualar secao.png");
             // 
             // menuSnap
             // 
@@ -2932,7 +2934,7 @@ namespace PG
             this.dockPanel.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.dockPanel.Location = new System.Drawing.Point(907, 172);
             this.dockPanel.Name = "dockPanel";
-            this.dockPanel.Size = new System.Drawing.Size(33812, 33853);
+            this.dockPanel.Size = new System.Drawing.Size(34028, 34069);
             dockPanelGradient1.EndColor = System.Drawing.SystemColors.ActiveCaptionText;
             dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
             autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
@@ -3384,7 +3386,7 @@ namespace PG
             this.panel31.BackColor = System.Drawing.Color.Black;
             this.panel31.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel31.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel31.Location = new System.Drawing.Point(755, 3);
+            this.panel31.Location = new System.Drawing.Point(778, 3);
             this.panel31.Name = "panel31";
             this.panel31.Size = new System.Drawing.Size(3, 76);
             this.panel31.TabIndex = 43;
@@ -3399,7 +3401,7 @@ namespace PG
             this.panel24.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel24.Location = new System.Drawing.Point(679, 3);
             this.panel24.Name = "panel24";
-            this.panel24.Size = new System.Drawing.Size(76, 76);
+            this.panel24.Size = new System.Drawing.Size(99, 76);
             this.panel24.TabIndex = 40;
             // 
             // button51
@@ -3426,9 +3428,9 @@ namespace PG
             // 
             this.label10.BackColor = System.Drawing.Color.DimGray;
             this.label10.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label10.Location = new System.Drawing.Point(2, 62);
+            this.label10.Location = new System.Drawing.Point(2, 63);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(72, 13);
+            this.label10.Size = new System.Drawing.Size(95, 13);
             this.label10.TabIndex = 26;
             this.label10.Text = "Modificar";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -3477,14 +3479,37 @@ namespace PG
             // 
             // panel26
             // 
+            this.panel26.Controls.Add(this.button43);
             this.panel26.Controls.Add(this.button32);
             this.panel26.Controls.Add(this.button33);
             this.panel26.Controls.Add(this.button35);
             this.panel26.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel26.Location = new System.Drawing.Point(0, 0);
             this.panel26.Name = "panel26";
-            this.panel26.Size = new System.Drawing.Size(76, 24);
+            this.panel26.Size = new System.Drawing.Size(99, 24);
             this.panel26.TabIndex = 21;
+            // 
+            // button43
+            // 
+            this.button43.AccessibleName = "Igualar seções (=)";
+            this.button43.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.button43.Dock = System.Windows.Forms.DockStyle.Left;
+            this.button43.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.button43.FlatAppearance.BorderSize = 0;
+            this.button43.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
+            this.button43.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
+            this.button43.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button43.ForeColor = System.Drawing.Color.White;
+            this.button43.ImageIndex = 21;
+            this.button43.ImageList = this.imgTemaEscuro_18x18;
+            this.button43.Location = new System.Drawing.Point(75, 0);
+            this.button43.Name = "button43";
+            this.button43.Size = new System.Drawing.Size(25, 24);
+            this.button43.TabIndex = 24;
+            this.button43.Text = "  ";
+            this.button43.UseVisualStyleBackColor = false;
+            this.button43.Click += new System.EventHandler(this.button43_Click_1);
+            this.button43.MouseEnter += new System.EventHandler(this.btBarra_MouseEnter);
             // 
             // button32
             // 
@@ -7522,6 +7547,7 @@ namespace PG
         private System.Windows.Forms.Panel panel37;
         private System.Windows.Forms.Button btDiafragmaRigido;
         private System.Windows.Forms.Button btBracoRigido;
+        private System.Windows.Forms.Button button43;
     }
 }
 

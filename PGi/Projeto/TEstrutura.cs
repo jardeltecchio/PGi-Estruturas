@@ -15,7 +15,7 @@ namespace PG
         public SClasses classeViga, classePilar, classeLaje;
         public float x_rot_angle, y_rot_angle, x_trans, y_trans, z_trans;
         public bool cameraOrto;
-        public byte[] Rgb_Barras = new byte[3] { 0, 0, 0 };
+        public byte[] Rgb_Barras = new byte[3] { 100, 100, 100};
         public List<TLayer> layers;
               [NonSerialized]
         public TPorticoEspacial PorticoEspacial;

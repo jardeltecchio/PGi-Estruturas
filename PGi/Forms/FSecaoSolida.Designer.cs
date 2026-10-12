@@ -379,6 +379,7 @@
             this.btCalculaSecao.TabIndex = 164;
             this.btCalculaSecao.Text = "Calculadora de seção - MEF";
             this.btCalculaSecao.UseVisualStyleBackColor = true;
+            this.btCalculaSecao.Click += new System.EventHandler(this.btCalculaSecao_Click);
             // 
             // FSecaoSolida
             // 

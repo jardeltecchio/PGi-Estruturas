@@ -916,7 +916,7 @@ namespace PG
         /// idReferencia e o ID armazenado em Esforcos_Barra, nao o indice da lista.
         /// O carregamento selecionado sera escalado proporcionalmente por lambda.
         /// </summary>
-        public void PrepararReferencia(int idReferencia, bool ehCombinacao)
+        public void PrepararReferencia(int idCombinacao, bool ehCombinacao)
         {
             InvalidarFatoracao();
             ReferenciaPreparada = false;
@@ -933,7 +933,7 @@ namespace PG
             for (int b = 1; b <= portico.nBarras; b++)
                 if (portico.barras[b] != null && portico.barras[b].SomenteTracao)
                 {
-                    fatores = portico.ObterFatoresTirantesReferencia(idReferencia, ehCombinacao);
+                    fatores = portico.ObterFatoresTirantesCombinacao(idCombinacao, ehCombinacao);
                     break;
                 }
 
@@ -945,31 +945,35 @@ namespace PG
                 if (barra == null)
                     throw new InvalidOperationException($"Barra {indice} inexistente.");
                 if (barra.SomenteTracao && fatores[indice] != 1.0 && fatores[indice] != 1e-8)
-                    throw new InvalidOperationException($"Estado do tirante {indice} invalido na referencia.");
+                    throw new InvalidOperationException($"Estado do tirante {indice} inválido na referência.");
+                
                 var resultados = ehCombinacao ? barra.combinacoes_x_esforcos : barra.casos_x_esforcos;
+                
                 Esforcos_Barra referencia = null;
                 if (resultados != null)
                     foreach (var resultado in resultados)
-                        if (resultado != null && resultado.id == idReferencia)
+                        if (resultado != null && resultado.id == idCombinacao)
                         {
                             if (referencia != null)
-                                throw new InvalidOperationException($"Referencia {idReferencia} duplicada na barra {indice}.");
+                                throw new InvalidOperationException($"Referência {idCombinacao} duplicada na barra {indice}.");
                             referencia = resultado;
                         }
 
                 if (referencia == null || referencia.Esforcos == null || referencia.Esforcos.Length < 13)
-                    throw new InvalidOperationException($"Resultados estáticos da referencia {idReferencia} ausentes na barra {indice}.");
+                    throw new InvalidOperationException($"Resultados estáticos da referência {idCombinacao} ausentes na barra {indice}.");
 
-                // Forcas nodais locais: em tracao, F1 e negativa e F7 positiva.
+                // Forças nodais locais: em tracao, F1 é negativa e F7 positiva.
                 double inicial = -referencia.Esforcos[1];
                 double final = referencia.Esforcos[7];
                 double normal = 0.5 * inicial + 0.5 * final;
+                
                 if (double.IsNaN(normal) || double.IsInfinity(normal))
-                    throw new InvalidOperationException($"Esforco normal invalido na barra {indice}.");
+                    throw new InvalidOperationException($"Esforco normal inválido na barra {indice}.");
+
                 normais[indice] = normal;
             }
 
-            IdReferencia = idReferencia;
+            IdReferencia = idCombinacao;
             ReferenciaEhCombinacao = ehCombinacao;
             EsforcosNormaisReferencia = normais;
             fatoresTirantesReferencia = fatores;
